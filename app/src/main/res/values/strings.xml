@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Sync Client</string>
+
+    <!--Repos-->
+    <string name="repos_title">Main</string>
+    <string name="owner_title">Owner</string>
+    <string name="btn_sync">Sync</string>
+    <string name="btn_send_file">Send files</string>
+
+    <!--Profile-->
+    <string name="settings_title">Settings</string>
+    <string name="settings_content_desc_avatar">The avatar image of my  github profile</string>
+    <string name="directory_selected_label">Directory selected:</string>
+    <string name="none">none</string>
+    <string name="btn_choose">Choose in Dialog</string>
+
+    <!--Data Keys-->
+    <string name="key_repo_id">RepoID</string>
+
+    <!--Errors-->
+    <string name="error_wrong_data">Wrong data type</string>
+
+    <string name="content_description_button_back">Back Button</string>
+
+
+    <!--Logger-->
+    <string name="logger_title">Logger</string>
+
+
+
+
+</resources>
