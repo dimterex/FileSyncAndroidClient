@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_bottom"
+    app:startDestination="@id/menuRepos"
+    >
+
+    <fragment
+        android:id="@+id/menuRepos"
+        android:name="net.dimterex.sync_client.ui.folder.sync.SyncFragment"
+        android:label="ReposFragment">
+        <action
+            android:id="@+id/action_homeFragment_to_reposDetailsFragment"
+            app:destination="@id/reposDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/menuProfile"
+        android:name="net.dimterex.sync_client.ui.folder.settings.SettingsFragment"
+        android:label="ProfileFragment"
+        />
+
+    <fragment
+            android:id="@+id/menuLogger"
+            android:name="net.dimterex.sync_client.ui.folder.sync.EventsFragment"
+            android:label="LoggerFragment" />
+
+    <fragment
+        android:id="@+id/reposDetailsFragment"
+        android:name="net.dimterex.sync_client.ui.repodetails.EventDetailsFragment"
+        android:label="ReposDetailsFragment" >
+        <argument
+            android:name="@string/key_repo_id"
+            app:argType="long"
+            android:defaultValue="0L" />
+
+
+    </fragment>
+
+</navigation>
