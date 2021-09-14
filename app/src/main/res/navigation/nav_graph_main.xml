@@ -9,11 +9,7 @@
     <fragment
         android:id="@+id/menuRepos"
         android:name="net.dimterex.sync_client.ui.folder.sync.SyncFragment"
-        android:label="ReposFragment">
-        <action
-            android:id="@+id/action_homeFragment_to_reposDetailsFragment"
-            app:destination="@id/reposDetailsFragment" />
-    </fragment>
+        android:label="ReposFragment"/>
 
     <fragment
         android:id="@+id/menuProfile"
@@ -25,17 +21,5 @@
             android:id="@+id/menuLogger"
             android:name="net.dimterex.sync_client.ui.folder.sync.EventsFragment"
             android:label="LoggerFragment" />
-
-    <fragment
-        android:id="@+id/reposDetailsFragment"
-        android:name="net.dimterex.sync_client.ui.repodetails.EventDetailsFragment"
-        android:label="ReposDetailsFragment" >
-        <argument
-            android:name="@string/key_repo_id"
-            app:argType="long"
-            android:defaultValue="0L" />
-
-
-    </fragment>
 
 </navigation>

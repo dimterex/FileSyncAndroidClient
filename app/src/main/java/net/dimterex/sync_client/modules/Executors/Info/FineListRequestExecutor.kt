@@ -8,7 +8,7 @@ import net.dimterex.sync_client.modules.EventLoggerManager
 class FineListRequestExecutor(private val _eventLoggerManager: EventLoggerManager) : IExecute<FileListRequest> {
     override fun Execute(param: FileListRequest) {
         println(param)
-        _eventLoggerManager.save_event(param.toString())
+//        _eventLoggerManager.save_event(param.toString())
     }
 }
 

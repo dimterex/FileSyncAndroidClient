@@ -1,38 +1,41 @@
 package net.dimterex.sync_client.modules
 
-import net.dimterex.sync_client.entity.ConnectionSettings
-import net.dimterex.sync_client.modules.Executors.Transport.TcpClient
+import net.dimterex.sync_client.data.entries.ConnectionsLocalModel
+import net.dimterex.sync_client.entity.EventDto
+import net.dimterex.sync_client.modules.Executors.Transport.IAttachmentRestApi
 import net.dimterex.sync_client.modules.Executors.Transport.WsClient
-import java.net.InetSocketAddress
+import net.dimterex.sync_client.modules.Executors.Transport.rest.RestClientBuilder
+import okhttp3.ResponseBody
+import retrofit2.Response
 import java.net.URI
+import kotlin.reflect.KFunction0
 import kotlin.reflect.KFunction1
 
 interface ConnectionManager {
 
-    fun addListener(function: KFunction1<String, Unit>)
-    fun start()
+    fun addListener(messageReceived: KFunction1<String, Unit>, onConnected: KFunction0<Unit>)
     fun send(raw_string: String)
-    fun add_event_listener(function: KFunction1<String, Unit>)
+    fun add_event_listener(function: KFunction1<EventDto, Unit>)
 
-    class Impl(private val settingsManager:SettingsManager) : ConnectionManager, Thread() {
+    suspend fun download(name: String): Response<ResponseBody>
+
+    class Impl(private val settingsManager:SettingsManager,
+               private val _restClientBuilder: RestClientBuilder
+    ) : ConnectionManager {
 
         private var _messageReceavedFunc: KFunction1<String, Unit>? = null
-        private var _event_listener: KFunction1<String, Unit>? = null
+        private var _event_listener: KFunction1<EventDto, Unit>? = null
+        private var _onConnected: KFunction0<Unit>? = null
 
-        private var _client : TcpClient? = null
-//        private var _client : WsClient? = null
+        private var _client : WsClient? = null
+        private var _downloadService: IAttachmentRestApi? = null
 
-        private var _connectionSettings: ConnectionSettings = settingsManager.get_settings().connectionSettings
 
         init {
             settingsManager.add_listener(this::restart_connection)
         }
 
-        override fun run() {
-            connect()
-        }
-
-        override fun interrupt() {
+        private fun interrupt() {
             _client?.close()
         }
 
@@ -40,27 +43,33 @@ interface ConnectionManager {
             write(raw_string)
         }
 
-        override fun add_event_listener(function: KFunction1<String, Unit>) {
+        override fun add_event_listener(function: KFunction1<EventDto, Unit>) {
             _event_listener = function
         }
 
-        override fun addListener(function: KFunction1<String, Unit>) {
-            _messageReceavedFunc = function
+        override suspend fun download(name: String): Response<ResponseBody> {
+            return _downloadService!!.download(name)
+        }
+
+        override fun addListener(messageReceived: KFunction1<String, Unit>, onConnected: KFunction0<Unit>) {
+            _messageReceavedFunc = messageReceived
+            _onConnected = onConnected
         }
 
         private fun connect()
         {
             try {
                 interrupt()
+                var connectionsLocalModel = settingsManager.get_connection_settings()
 
-                var addr  = InetSocketAddress(_connectionSettings.ip_address, _connectionSettings.port)
+                _downloadService = _restClientBuilder.createService("${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}", false)
 
-                _client = TcpClient(addr, _messageReceavedFunc)
-//                _client = WsClient(URI("ws://${_connectionSettings.ip_address}:${_connectionSettings.port}"), _messageReceavedFunc)
-//                _client?.connect()
+                _client = WsClient(URI("ws://${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}"), _messageReceavedFunc, _onConnected)
+                _client?.connect()
 
             } catch (e: Exception) {
-                _event_listener?.invoke(e.toString())
+                println(e.toString())
+//                _event_listener?.invoke()
                 interrupt()
             }
         }

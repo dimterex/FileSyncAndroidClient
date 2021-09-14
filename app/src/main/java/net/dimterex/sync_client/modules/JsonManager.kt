@@ -9,6 +9,7 @@ import java.lang.reflect.Type
 import java.util.HashMap
 import kotlin.reflect.KFunction1
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import net.dimterex.sync_client.api.Message.Connection.ConnectionRequest
 import kotlin.concurrent.thread
 
 
@@ -20,7 +21,8 @@ interface JsonManager {
 
     fun sendMessage(iMessage: IMessage)
 
-    class Impl(private val _connection: ConnectionManager) : JsonManager {
+    class Impl(private val _connection: ConnectionManager,
+               private val _settingsManager: SettingsManager) : JsonManager {
         private val _gson : Gson = Gson()
         private val _messageEnc : HashMap<Type, String> = HashMap()
         private val _messageDec : HashMap<String, Type> = HashMap()
@@ -28,7 +30,7 @@ interface JsonManager {
         private var _messageReceavedFunc: KFunction1<IMessage, Unit>? = null
 
         init {
-            _connection.addListener(this::messageReceavedListener)
+            _connection.addListener(this::messageReceavedListener, this::onOpenFunc)
         }
 
         override fun addListener(function: KFunction1<IMessage, Unit>) {
@@ -37,10 +39,13 @@ interface JsonManager {
 
         private fun messageReceavedListener(raw_string: String)
         {
-            var message = _gson.fromJson(raw_string, MessageContainer::class.java)
-            var result = deserialize(message)
-            if (result != null)
-                _messageReceavedFunc?.invoke(result)
+            var messages = _gson.fromJson(raw_string, Array<MessageContainer>::class.java)
+            for (message in messages)
+            {
+                var result = deserialize(message)
+                if (result != null)
+                    _messageReceavedFunc?.invoke(result)
+            }
         }
 
         override fun <T: Any> initApiMessage(classType: Class<T>) {
@@ -80,6 +85,14 @@ interface JsonManager {
             var typeClass = _messageDec[container.identifier]?: return null
 
             return _gson.fromJson<IMessage>(container.content, typeClass)
+        }
+
+        private fun onOpenFunc() {
+
+            var connectionRequest = ConnectionRequest()
+            connectionRequest.login = _settingsManager.get_connection_settings().login
+            connectionRequest.password = _settingsManager.get_connection_settings().password
+            sendMessage(connectionRequest)
         }
 
     }

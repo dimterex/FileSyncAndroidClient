@@ -12,31 +12,23 @@ import org.kodein.di.erased.instance
 class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
 
     private val _executerManager by instance<ExecuteManager>()
-    private val _event_log_manager by instance<EventLoggerManager>()
 
     override fun onCreate(arguments: Bundle?) {
         super.onCreate(arguments)
-        _event_log_manager.add_event_listener(this::add_event_listener)
     }
 
     fun sync_execute() {
+
+//        coroutineScope.launch {
+//            _file_executor.download()
+//        }
+
         _executerManager.execute(SyncFilesRequest())
+//        runBlocking {
+//            _file_executor.download()
+//        }
     }
-
-    fun onRepoPressed(id: Long) {
-        view.navigateRepoDetails(id)
-    }
-
-    fun add_event_listener(string: String) {
-        view.event_change(string)
-    }
-
 }
 
 interface SyncView : BaseView {
-    var repos: List<EventDto>
-
-    fun navigateRepoDetails(id: Long)
-
-    fun event_change(string: String)
 }

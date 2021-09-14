@@ -7,12 +7,6 @@ import net.dimterex.sync_client.api.Message.Common.BaseFileInfo
 @MessageAttr(name = "FileAddResponce")
 open class AddFileResponce() : BaseFileInfo() {
 
-    @SerializedName("stream")
-    val stream : String = String()
-
-    @SerializedName("count")
-    val count : Long = 0
-
-    @SerializedName("current")
-    val current : Long = 0
+    @SerializedName("size")
+    val size : Long = 0
 }

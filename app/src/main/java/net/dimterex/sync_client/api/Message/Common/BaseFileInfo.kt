@@ -7,7 +7,4 @@ open class BaseFileInfo : IMessage {
 
     @SerializedName("file_name")
     var file_name : String = ""
-
-    @SerializedName("file_path")
-    var file_path : List<String> = ArrayList<String>()
 }

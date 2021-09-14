@@ -24,6 +24,10 @@ class EventsFragment : BaseFragment<EventsPresenter>(), EventsView {
         adapter.update(logs)
     }
 
+    override fun update_position(position: Int) {
+        adapter.notifyItemChanged(position)
+    }
+
     override fun initPresenter(): EventsPresenter = EventsPresenter(this)
 
     override fun layoutId(): Int = R.layout.fragment_logs
@@ -36,7 +40,7 @@ class EventsFragment : BaseFragment<EventsPresenter>(), EventsView {
         logs_list.adapter = adapter
     }
 
-    override fun add_new_event(message: String){
+    override fun add_new_event(message: EventDto){
         activity?.runOnUiThread {
             adapter.add(message)
             logs_list.scrollToPosition(adapter.itemCount - 1)

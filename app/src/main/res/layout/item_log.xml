@@ -19,4 +19,16 @@
         android:paddingEnd="@dimen/margin_default"
         tools:text="Address"/>
 
+
+    <TextView
+            android:id="@+id/item_log_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:paddingEnd="@dimen/margin_default"
+            android:textSize="@dimen/text_default"
+            tools:text="Details"/>
+
 </LinearLayout>

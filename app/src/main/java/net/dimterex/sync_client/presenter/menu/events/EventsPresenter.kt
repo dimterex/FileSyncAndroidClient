@@ -6,6 +6,7 @@ import net.dimterex.sync_client.modules.EventLoggerManager
 import net.dimterex.sync_client.presenter.base.BasePresenter
 import net.dimterex.sync_client.presenter.base.BaseView
 import org.kodein.di.erased.instance
+import java.text.FieldPosition
 
 class EventsPresenter(private val view: EventsView) : BasePresenter(view) {
 
@@ -15,15 +16,19 @@ class EventsPresenter(private val view: EventsView) : BasePresenter(view) {
         super.onCreate(arguments)
 
         view.update(_event_log_manager.logs)
-        _event_log_manager.add_event_listener(this::add_event_listener)
+        _event_log_manager.add_event_listener(this::add_event_listener, this::update_item)
     }
 
-    private fun add_event_listener(message: String){
+    private fun add_event_listener(message: EventDto){
         view.add_new_event(message)
     }
 
+    private fun update_item(position: Int) {
+        view.update_position(position)
+    }
+
 //
-    fun onRepoPressed(id: Long) {
+    fun onRepoPressed(id: String) {
 //        view.navigateRepoDetails(id)
     }
 //
@@ -35,6 +40,7 @@ class EventsPresenter(private val view: EventsView) : BasePresenter(view) {
 
 interface EventsView : BaseView {
 
-    fun add_new_event(message: String)
+    fun add_new_event(message: EventDto)
     fun update(logs: ArrayList<EventDto>)
+    fun update_position(position: Int)
 }

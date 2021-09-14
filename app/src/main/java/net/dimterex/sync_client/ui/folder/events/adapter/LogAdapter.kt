@@ -10,7 +10,7 @@ import net.dimterex.sync_client.entity.EventDto
 import net.dimterex.sync_client.ui.adapter.BaseListAdapter
 import net.dimterex.sync_client.ui.adapter.BaseViewHolder
 
-class LogAdapter(private val repoPressedListener: (id: Long) -> Unit) : BaseListAdapter<LogViewHolder, EventDto>() {
+class LogAdapter(private val repoPressedListener: (id: String) -> Unit) : BaseListAdapter<LogViewHolder, EventDto>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogViewHolder =
         LogViewHolder(
@@ -22,17 +22,18 @@ class LogAdapter(private val repoPressedListener: (id: Long) -> Unit) : BaseList
         update(repos, LogHousesCallback(items, repos))
     }
 
-    fun add(message: String){
+    override fun add(newItem: EventDto) {
 
-        var tmp = EventDto(0, message, message, message)
-        add(tmp)
+        items.add(newItem)
+        notifyDataSetChanged()
     }
 }
 
-class LogViewHolder(view: View, private val listener: (id: Long) -> Unit) : BaseViewHolder<EventDto>(view) {
+class LogViewHolder(view: View, private val listener: (id: String) -> Unit) : BaseViewHolder<EventDto>(view) {
     override fun bind(items: List<EventDto>, position: Int) {
         val repo = items[position]
-        itemView.item_log_name.text = repo.repoName
+        itemView.item_log_name.text = repo.id
+        itemView.item_log_details.text = repo.details
         itemView.setOnClickListener { listener(repo.id) }
     }
 }
@@ -48,5 +49,5 @@ class LogHousesCallback(private val oldList: List<EventDto>, private val newList
         oldList[oldItemPosition].id == newList[newItemPosition].id
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldList[oldItemPosition].repoName == newList[newItemPosition].repoName
+        oldList[oldItemPosition].details == newList[newItemPosition].details
 }

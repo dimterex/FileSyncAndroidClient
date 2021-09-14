@@ -96,6 +96,13 @@ dependencies {
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
 
     // REST Client
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+//    implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
+//    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+//    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+//    implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
+//    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+
 
 //    implementation 'javax.websocket:javax.websocket-client-api:1.1'
 //    implementation 'com.github.nkzawa:socket.io-client:0.6.0'

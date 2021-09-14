@@ -7,7 +7,7 @@ import com.obsez.android.lib.filechooser.ChooserDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import net.dimterex.sync_client.R
-import net.dimterex.sync_client.entity.Settings
+import net.dimterex.sync_client.data.entries.ConnectionsLocalModel
 import net.dimterex.sync_client.presenter.menu.settings.SettingsPresenter
 import net.dimterex.sync_client.presenter.menu.settings.SettingsView
 import net.dimterex.sync_client.ui.base.BaseFragment
@@ -22,17 +22,17 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
 //    private var _port : Int = 0
 
 
-    override var profile: Settings? = null
+    override var profile: ConnectionsLocalModel? = null
     set(value) {
 
         if (value != null) {
-            _sync_folder = File(value.defaultFolder)
+//            _sync_folder = File(value.defaultFolder)
+//
+//            set_path(value.defaultFolder)
+            btnChoose.setOnClickListener(openFolderChooser(""))
 
-            set_path(value.defaultFolder)
-            btnChoose.setOnClickListener(openFolderChooser(value.defaultFolder))
-
-            _ip_address?.setText(value.connectionSettings.ip_address,  TextView.BufferType.EDITABLE)
-            _port?.setText(value.connectionSettings.port.toString())
+            _ip_address?.setText(value.ip_address,  TextView.BufferType.EDITABLE)
+            _port?.setText(value.ip_port.toString())
         }
 
         field = value

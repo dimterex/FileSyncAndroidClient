@@ -1,6 +1,11 @@
 package net.dimterex.sync_client.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.view.View
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,5 +30,17 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
 
     override fun showMenu() {
         main_bottom_navigation.visibility = View.VISIBLE
+        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE )
     }
+
+    private fun checkPermission(permission: String, requestCode: Int) {
+        if (ContextCompat.checkSelfPermission(this@MainActivity, permission) == PackageManager.PERMISSION_DENIED) {
+            // Requesting the permission
+            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(permission), requestCode)
+        } else {
+            Toast.makeText(this@MainActivity, "Permission already granted", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private val STORAGE_PERMISSION_CODE = 101
 }

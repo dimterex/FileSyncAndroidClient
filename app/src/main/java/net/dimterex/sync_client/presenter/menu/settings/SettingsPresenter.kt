@@ -1,7 +1,11 @@
 package net.dimterex.sync_client.presenter.menu.settings
 
 import android.os.Bundle
-import net.dimterex.sync_client.entity.Settings
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import net.dimterex.sync_client.data.entries.ConnectionsLocalModel
 import net.dimterex.sync_client.modules.FileManager
 import net.dimterex.sync_client.modules.SettingsManager
 import net.dimterex.sync_client.presenter.base.BasePresenter
@@ -14,10 +18,12 @@ class SettingsPresenter(private val view: SettingsView) : BasePresenter(view) {
     private val _settingsManager by instance<SettingsManager>()
     private val _fileManager by instance<FileManager>()
 
+
+
     override fun onCreate(arguments: Bundle?) {
         super.onCreate(arguments)
 
-        view.profile = _settingsManager.get_settings()
+        view.profile = _settingsManager.get_connection_settings()
     }
 
     override fun onDestroy() {
@@ -25,12 +31,13 @@ class SettingsPresenter(private val view: SettingsView) : BasePresenter(view) {
 
         _fileManager.set_sync_folder(new_sync_folder)
 
-        _settingsManager.set_default_folder(new_sync_folder.absolutePath)
+        _settingsManager.set_default_folder(new_sync_folder.absolutePath, String())
 
         _settingsManager.set_ip_address( view.get_ip_address())
         _settingsManager.set_ip_port( view.get_ip_port())
 
         _settingsManager.save_settings()
+
         super.onDestroy()
     }
 
@@ -42,7 +49,7 @@ class SettingsPresenter(private val view: SettingsView) : BasePresenter(view) {
 
 interface SettingsView : BaseView {
 
-    var profile: Settings?
+    var profile: ConnectionsLocalModel?
 
     fun get_ip_address(): String
     fun get_ip_port(): Int
