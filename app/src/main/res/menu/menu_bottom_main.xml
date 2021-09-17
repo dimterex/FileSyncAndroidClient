@@ -4,7 +4,7 @@
     <item
         android:icon="@android:drawable/ic_dialog_dialer"
         android:id="@+id/menuRepos"
-        android:title="@string/repos_title" />
+        android:title="@string/sync_title" />
 
     <item
         android:icon="@drawable/ic_profile"

@@ -7,7 +7,7 @@ import java.net.URI
 import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction0
 
-class WsClient(url: URI, val messageReceavedFunc: KFunction1<String, Unit>?, val onOpenFunc: KFunction0<Unit>?)
+class WsClient(url: URI, val messageReceavedFunc: KFunction1<String, Unit>?, val connectedStateChangeFunc: KFunction1<Boolean, Unit>?)
     : WebSocketClient(url, Draft_6455()) {
 
     init {
@@ -16,14 +16,16 @@ class WsClient(url: URI, val messageReceavedFunc: KFunction1<String, Unit>?, val
 
     override fun onOpen(handshakedata: ServerHandshake) {
         println("new connection opened")
-        onOpenFunc?.invoke()
+        connectedStateChangeFunc?.invoke(true)
     }
 
     override fun onClose(code: Int, reason: String, remote: Boolean) {
         println("closed with exit code $code additional info: $reason")
+        connectedStateChangeFunc?.invoke(false)
     }
 
     override fun onMessage(message: String) {
+        println(message)
         messageReceavedFunc?.invoke(message)
 //        println("received message: $message")
     }

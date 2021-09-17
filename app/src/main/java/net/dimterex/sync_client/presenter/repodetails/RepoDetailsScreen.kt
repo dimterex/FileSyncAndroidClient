@@ -3,7 +3,7 @@ package net.dimterex.sync_client.presenter.repodetails
 import android.content.res.Resources
 import android.os.Bundle
 import net.dimterex.sync_client.R
-import net.dimterex.sync_client.entity.EventDto
+import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.entity.WrongDataError
 import net.dimterex.sync_client.presenter.base.BasePresenter
 import net.dimterex.sync_client.presenter.base.BaseView
@@ -37,7 +37,7 @@ class EventDetailsPresenter(private val view: EventDetailsView, private val reso
 
 interface EventDetailsView : BaseView, HiddenMenuScreen {
 
-    var repo: EventDto?
+    var repo: FileSyncState?
 
     fun back()
 }

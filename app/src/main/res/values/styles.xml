@@ -33,4 +33,8 @@
         <item name="android:fontFamily">@font/roboto</item>
     </style>
 
+    <style name="ShapeAppearanceOverlay.App.CornerSize10Percent" parent="">
+        <item name="cornerSize">10%</item>
+    </style>
+
 </resources>

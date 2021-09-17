@@ -1,6 +1,6 @@
 package net.dimterex.sync_client.entity
 
-data class EventDto(
+data class FileSyncState (
     val id: String,
-    var details: String
+    var details: Int = 0
 )

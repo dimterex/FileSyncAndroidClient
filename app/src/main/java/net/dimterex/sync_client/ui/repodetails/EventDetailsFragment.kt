@@ -6,7 +6,7 @@ import androidx.navigation.Navigation
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_repo_details.*
 import net.dimterex.sync_client.R
-import net.dimterex.sync_client.entity.EventDto
+import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.presenter.base.HiddenMenuScreen
 import net.dimterex.sync_client.presenter.repodetails.EventDetailsPresenter
 import net.dimterex.sync_client.presenter.repodetails.EventDetailsView
@@ -20,7 +20,7 @@ class EventDetailsFragment :
 
     private lateinit var controller: NavController
 
-    override var repo: EventDto? = null
+    override var repo: FileSyncState? = null
         set(value) {
 //            repo_details_repo_name.text = value?.repoName ?: ""
 //            repo_details_description.text = value?.description ?: ""

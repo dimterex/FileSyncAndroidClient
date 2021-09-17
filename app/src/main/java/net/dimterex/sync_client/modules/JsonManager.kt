@@ -87,7 +87,10 @@ interface JsonManager {
             return _gson.fromJson<IMessage>(container.content, typeClass)
         }
 
-        private fun onOpenFunc() {
+        private fun onOpenFunc(isConnected: Boolean) {
+
+            if (!isConnected)
+                return
 
             var connectionRequest = ConnectionRequest()
             connectionRequest.login = _settingsManager.get_connection_settings().login

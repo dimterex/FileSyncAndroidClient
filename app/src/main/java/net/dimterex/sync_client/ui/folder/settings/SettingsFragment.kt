@@ -3,18 +3,27 @@ package net.dimterex.sync_client.ui.folder.settings
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.obsez.android.lib.filechooser.ChooserDialog
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_logs.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.fragment_repos.*
+import kotlinx.android.synthetic.main.fragment_repos.logs_list
 import net.dimterex.sync_client.R
 import net.dimterex.sync_client.data.entries.ConnectionsLocalModel
+import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
+import net.dimterex.sync_client.entity.FolderSelectModel
 import net.dimterex.sync_client.presenter.menu.settings.SettingsPresenter
 import net.dimterex.sync_client.presenter.menu.settings.SettingsView
 import net.dimterex.sync_client.ui.base.BaseFragment
+import net.dimterex.sync_client.ui.folder.sync.adapter.FolderSelectionAdapter
+import net.dimterex.sync_client.ui.folder.sync.adapter.SyncEventsAdapter
 import java.io.File
 
 class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
-    private var _sync_folder : File = File(String())
+
+    private lateinit var adapter: FolderSelectionAdapter
 
     private var _port: EditText? = null
     private var _ip_address: EditText? = null
@@ -26,11 +35,6 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
     set(value) {
 
         if (value != null) {
-//            _sync_folder = File(value.defaultFolder)
-//
-//            set_path(value.defaultFolder)
-            btnChoose.setOnClickListener(openFolderChooser(""))
-
             _ip_address?.setText(value.ip_address,  TextView.BufferType.EDITABLE)
             _port?.setText(value.ip_port.toString())
         }
@@ -45,6 +49,19 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
     override fun initView() {
         _ip_address = ip_address
         _port = port
+
+        val data = arrayOf("one", "two", "three", "four", "five")
+        adapter = FolderSelectionAdapter(data)
+        folders_list.layoutManager = LinearLayoutManager(folders_list.context)
+        folders_list.adapter = adapter
+
+        presenter.getFolders().forEach{ x ->
+            adapter.add(FolderSelectModel(x, data))
+        }
+
+        saveSettings.setOnClickListener {view ->
+            presenter.save()
+        }
     }
 
     override fun showMenu() {
@@ -55,28 +72,11 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
         return _port?.text.toString().toInt()
     }
 
-    override fun get_sync_folder(): File {
-       return _sync_folder
+    override fun get_sync_folders(): Array<FolderSelectModel> {
+        return adapter.items.toTypedArray()
     }
 
     override fun get_ip_address(): String  {
         return _ip_address?.text.toString()
-    }
-
-    private fun openFolderChooser(sync_folder: String): View.OnClickListener? {
-        return View.OnClickListener {  ChooserDialog(this@SettingsFragment.requireActivity())
-            .withFilter(true, false)
-            .withStartFile(sync_folder)
-            .withChosenListener { path, pathFile ->
-                _sync_folder = pathFile
-                set_path(path)
-            }
-            .build()
-            .show()
-        }
-    }
-
-    private fun set_path(path: String){
-        textDirectory.text = "FOLDER: $path"
     }
 }

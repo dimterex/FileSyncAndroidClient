@@ -1,18 +1,21 @@
 <resources>
     <string name="app_name">Sync Client</string>
 
-    <!--Repos-->
-    <string name="repos_title">Main</string>
-    <string name="owner_title">Owner</string>
+    <!--Sync-->
+    <string name="sync_title">Main</string>
     <string name="btn_sync">Sync</string>
     <string name="btn_send_file">Send files</string>
+    <string name="waiting">Waiting</string>
+    <string name="done">Done</string>
+    <string name="in_processing_template">%1$s %</string>
 
-    <!--Profile-->
+    <!--Settings-->
     <string name="settings_title">Settings</string>
     <string name="settings_content_desc_avatar">The avatar image of my  github profile</string>
     <string name="directory_selected_label">Directory selected:</string>
     <string name="none">none</string>
     <string name="btn_choose">Choose in Dialog</string>
+    <string name="outside_directory">Outside directory</string>
 
     <!--Data Keys-->
     <string name="key_repo_id">RepoID</string>
@@ -25,6 +28,8 @@
 
     <!--Logger-->
     <string name="logger_title">Logger</string>
+
+
 
 
 

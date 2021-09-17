@@ -12,9 +12,6 @@ interface FolderMappingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(folderMappingLocalModel: FolderMappingLocalModel)
 
-    @Update
-    fun update(folderMappingLocalModel: FolderMappingLocalModel)
-
     @Delete
     fun delete(folderMappingLocalModel: FolderMappingLocalModel)
 }

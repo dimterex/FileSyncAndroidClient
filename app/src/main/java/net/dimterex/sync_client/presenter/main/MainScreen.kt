@@ -14,9 +14,7 @@ import org.kodein.di.erased.instance
 
 class MainPresenter(private val view: MainView) : BasePresenter(view)
 {
-    private val _apiModules by instance<ApiModules>()
     private val _settings by instance<SettingsManager>()
-
 
     override fun onCreate(arguments: Bundle?) {
         super.onCreate(arguments)

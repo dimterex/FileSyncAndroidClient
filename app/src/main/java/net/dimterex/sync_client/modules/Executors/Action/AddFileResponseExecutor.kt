@@ -7,21 +7,18 @@ import kotlinx.coroutines.channels.Channel
 import net.dimterex.sync_client.api.Message.Action.AddFileResponce
 import net.dimterex.sync_client.api.Modules.Common.IExecute
 import net.dimterex.sync_client.data.FileInfo
-import net.dimterex.sync_client.data.entries.ConnectionsLocalModel
-import net.dimterex.sync_client.entity.EventDto
+import net.dimterex.sync_client.data.ScopeFactory
+import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.modules.ConnectionManager
-import net.dimterex.sync_client.modules.EventLoggerManager
-import net.dimterex.sync_client.modules.Executors.Transport.IAttachmentRestApi
-import net.dimterex.sync_client.modules.Executors.Transport.rest.RestClientBuilder
+import net.dimterex.sync_client.modules.FileStateEventManager
 import net.dimterex.sync_client.modules.FileManager
-import net.dimterex.sync_client.modules.SettingsManager
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
 
 class AddFileResponseExecutor(val fileManager: FileManager,
-                              private val _eventLoggerManager: EventLoggerManager,
-                              private val _connectionManager: ConnectionManager
+                              private val _FileState_eventManager: FileStateEventManager,
+                              private val _connectionManager: ConnectionManager,
+                              private val _scopeFactory: ScopeFactory
 ) : IExecute<AddFileResponce> {
 
 
@@ -30,7 +27,7 @@ class AddFileResponseExecutor(val fileManager: FileManager,
     private val downloadQueue = Channel<FileInfo>()
     private var mainJob: Job? = null
 
-    private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + Job())
+    private val scope: CoroutineScope = _scopeFactory.getScope()
 
     init {
         startProcessing()
@@ -41,8 +38,8 @@ class AddFileResponseExecutor(val fileManager: FileManager,
         scope.launch {
 
             val fileInfo = FileInfo(param.file_name, sizeBytes = param.size)
-            val eventDto = EventDto(param.file_name, "In queue")
-            _eventLoggerManager.save_event(eventDto)
+            val fileSyncState = FileSyncState(param.file_name)
+            _FileState_eventManager.save_event(fileSyncState)
 
             downloadQueue.send(fileInfo)
         }
@@ -52,8 +49,6 @@ class AddFileResponseExecutor(val fileManager: FileManager,
     @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun writeResponseStreamToDisk(fileInfo: FileInfo, uri: Uri, outputStream: OutputStream, inputStream: InputStream) {
         var fileSizeDownloaded = 0L
-
-        println("Size: " + fileInfo.sizeBytes)
 
         try {
             val fileReader = ByteArray(10240)
@@ -68,17 +63,14 @@ class AddFileResponseExecutor(val fileManager: FileManager,
                 outputStream.write(fileReader, 0, read)
                 fileSizeDownloaded += read.toLong()
 
-//                println("Size Downloaded: " + fileSizeDownloaded)
                 val progress = (fileSizeDownloaded.toFloat() / fileInfo.sizeBytes * 100).toInt()
-//                println("Process: " + progress)
 
                 //ignore spam
                 if (lastProgress != progress) {
                     lastProgress = progress
                     withContext(Dispatchers.Main) {
-                        val eventDto = EventDto(fileInfo.name, progress.toString())
-//                        fileInfo.name + " was saved "+ progress + "%"
-                        _eventLoggerManager.save_event(eventDto)
+                        val fileSyncState = FileSyncState(fileInfo.name, progress)
+                        _FileState_eventManager.save_event(fileSyncState)
                     }
                 }
             }
