@@ -13,6 +13,6 @@ class FileStatusFormatter(private val _resources: Resources) {
             return _resources.getString(R.string.done)
 
 
-        return _resources.getString(R.string.in_processing_template).format(process)
+        return "$process %"
     }
 }

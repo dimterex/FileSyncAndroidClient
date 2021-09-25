@@ -15,6 +15,7 @@ import net.dimterex.sync_client.ui.MainActivity
 import net.dimterex.sync_client.ui.base.BaseFragment
 import net.dimterex.sync_client.ui.folder.sync.adapter.SyncEventsAdapter
 import net.dimterex.sync_client.ui.formatter.ConnectionIconFormatted
+import java.lang.Exception
 
 class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
 
@@ -43,7 +44,6 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
     override fun showMenu() {
         activity?.main_bottom_navigation?.visibility = View.VISIBLE
     }
-
 
     override fun update(logs: ArrayList<FileSyncState>) {
         adapter.update(logs)

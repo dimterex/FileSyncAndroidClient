@@ -24,13 +24,13 @@ interface SettingsManager {
 
     fun add_listener(restart: KFunction0<Unit>)
     fun add_folder(folFolderMappingLocalModel: FolderMappingLocalModel)
+    fun remove_all_folders()
 
     class Impl(private val _repoDao: RoomAppDatabase,
                private val _scopeFactory: ScopeFactory
     ) : SettingsManager {
 
         private var _settingsReadedAction: ArrayList<KFunction0<Unit>> = ArrayList()
-        private var _isNeedToReconnect = false
 
         private var _connectionSettings: ConnectionsLocalModel? = null
         private var _folderMapping: List<FolderMappingLocalModel>? = null
@@ -43,20 +43,25 @@ interface SettingsManager {
         }
 
         override fun add_folder(folFolderMappingLocalModel: FolderMappingLocalModel) {
-//            scope.launch {
-//                _repoDao.folderMappingDao().insert(folFolderMappingLocalModel)
-//            }
+            scope.launch {
+                _repoDao.folderMappingDao().insert(folFolderMappingLocalModel)
+            }
+        }
+
+        override fun remove_all_folders() {
+            scope.launch {
+                _repoDao.folderMappingDao().deleteAll()
+            }
         }
 
         override fun initialize() {
 
             scope.launch {
-                var connection_model = ConnectionsLocalModel(0, "192.168.0.235", 1234, "mobile", "mobile")
-                _repoDao.connectionSettingsDao().insert(connection_model)
+//                var connection_model = ConnectionsLocalModel(0, "192.168.0.235", 1234, "mobile", "mobile")
+//                _repoDao.connectionSettingsDao().insert(connection_model)
 
-                var folder_mappong = FolderMappingLocalModel(0, "/storage/emulated/0/Download", "D:\\SyncTest")
-
-                _repoDao.folderMappingDao().insert(folder_mappong)
+//                var folder_mappong = FolderMappingLocalModel(0, "/storage/emulated/0/Download", "D:\\SyncTest")
+//                _repoDao.folderMappingDao().insert(folder_mappong)
 
                 _connectionSettings = _repoDao.connectionSettingsDao().selectById(0)
                 _folderMapping = _repoDao.folderMappingDao().getAll()
@@ -78,27 +83,23 @@ interface SettingsManager {
             scope.launch {
                 _repoDao.connectionSettingsDao().update(_connectionSettings!!)
 
-                _folderMapping!!.forEach { x ->
-                    _repoDao.folderMappingDao().insert(x)
-                }
+//                _folderMapping!!.forEach { x ->
+//                    _repoDao.folderMappingDao().insert(x)
+//                }
+//
+//                _settingsReadedAction.forEach { x ->
+//                    x.invoke()
+//                }
 
-                if (_isNeedToReconnect) {
-                    thread (true) {
-                        _settingsReadedAction.forEach { x ->
-                            x.invoke()
-                        }
-                    }
-                }
+                initialize()
             }
         }
 
         override fun set_ip_address(new_ip_address: String) {
-            _isNeedToReconnect = _connectionSettings!!.ip_address != new_ip_address
             _connectionSettings!!.ip_address = new_ip_address
         }
 
         override fun set_ip_port(new_ip_port: Int) {
-            _isNeedToReconnect = _connectionSettings!!.ip_port != new_ip_port
             _connectionSettings!!.ip_port = new_ip_port
         }
     }

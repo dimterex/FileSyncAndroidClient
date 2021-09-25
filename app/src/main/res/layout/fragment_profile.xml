@@ -1,43 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         tools:context=".ui.MainActivity"
         android:gravity="top">
 
-    <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/saveSettings"
-            android:layout_width="71dp"
-            android:layout_height="45dp"
-            android:layout_row="0"
-            android:layout_column="0"
-            android:layout_margin="3dp"
-            android:padding="3dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
-            app:srcCompat="@android:drawable/ic_menu_save"
-            app:strokeColor="@android:color/darker_gray"
-            app:strokeWidth="3dp"/>
-
-    <EditText
-            android:id="@+id/ip_address"
+    <RelativeLayout
+            android:id="@+id/settingsButtonsPanel"
+            android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content">
 
-    <EditText
-            android:id="@+id/port"
+        <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/addFolderButton"
+                android:layout_width="71dp"
+                android:layout_height="45dp"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
+                app:srcCompat="@android:drawable/ic_menu_add"
+                app:strokeColor="@android:color/darker_gray"
+                android:layout_alignParentLeft="true"
+                app:strokeWidth="3dp"
+                android:layout_alignParentStart="true" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/checkConnectionButton"
+                android:layout_width="71dp"
+                android:layout_height="45dp"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
+                app:srcCompat="@android:drawable/ic_popup_sync"
+                app:strokeColor="@android:color/darker_gray"
+                android:layout_toRightOf="@id/addFolderButton"
+                app:strokeWidth="3dp"
+                android:layout_toEndOf="@id/addFolderButton"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/saveSettingsButton"
+                android:layout_width="71dp"
+                android:layout_height="45dp"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:layout_alignParentRight="true"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
+                app:srcCompat="@android:drawable/ic_menu_save"
+                app:strokeColor="@android:color/darker_gray"
+                app:strokeWidth="3dp"
+                android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/settingsConnectionPanel"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/folders_list"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            android:layout_below="@+id/settingsButtonsPanel"
+            android:orientation="horizontal">
 
-</LinearLayout>
+        <LinearLayout
+                android:id="@+id/connectionParametersPanel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/ip_address_textbox"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/ip_address"
+                    android:layout_width="0dp"
+                    android:layout_weight=".70">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/port_textbox"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/ip_port"
+                    android:layout_width="0dp"
+                    android:layout_weight=".30">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/connectionParametersPanel"
+                android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/login_textbox"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/login"
+                    android:layout_width="0dp"
+                    android:layout_weight=".50">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/password_textbox"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    android:layout_width="0dp"
+                    android:layout_weight=".50">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/foldersMapPanel"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/settingsConnectionPanel"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/folders_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    </RelativeLayout>
+</RelativeLayout>

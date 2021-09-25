@@ -1,78 +1,53 @@
 package net.dimterex.sync_client.modules
 
 import android.net.Uri
-import net.dimterex.sync_client.api.Message.Common.BaseFileInfo
-import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
+import net.dimterex.sync_client.data.FileInfo
+import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
+import java.io.*
 
 interface FileManager {
-    fun setDefaultDirectory(pathFile: File)
 
-    fun getFullPath(file_path: String, use_mkdir: Boolean) : File?
+    fun getFullPath(file_path: String) : File?
 
-    fun getFileList(): List<BaseFileInfo>
-
-    fun set_sync_folder(newSyncFolder: File)
+    fun getFileList(): List<String>
 
     fun getFileOutputStreamAndURI(filename: String): Pair<OutputStream?, Uri>
+    fun getFileInfoForUpload(fileName: String): Pair<FileInfo, String>
 
     class Impl(private val _settingsManager: SettingsManager): FileManager{
 
-        private val _folders: Map<String, File> = HashMap()
+        private val _folders: HashMap<FolderMappingLocalModel, File> = HashMap()
 
         init {
-            _settingsManager.add_listener(this::onSettingsReaded)
+            _settingsManager.add_listener(this::onSettingsRead)
         }
 
-        override fun setDefaultDirectory(pathFile: File) {
-//            defaultPath = pathFile
-        }
-
-        override fun getFullPath(file_path: String ,use_mkdir: Boolean) : File? {
-
-            var filePath: File?
+        override fun getFullPath(file_path: String) : File? {
 
             _settingsManager.get_folder_mapping().forEach{ x ->
 
                 if (file_path.startsWith(x.outside_folder)) {
-
-                    val new_file_path = getAdaptFileName(file_path, x.inside_folder, x.outside_folder)
-
-                    filePath = File(new_file_path)
-
-                    if (use_mkdir && !filePath!!.exists())
-                        filePath!!.mkdir()
-
-                    return filePath
-
+                    val new_file_path = getAdaptFileNameIncoming(file_path, x.inside_folder, x.outside_folder)
+                    return File(new_file_path)
                 }
             }
 
-            return null;
+            return null
         }
 
-        override fun getFileList(): List<BaseFileInfo> {
-            var fileList = ArrayList<BaseFileInfo>()
+        override fun getFileList(): List<String> {
+            val fileList = ArrayList<String>()
             _folders.forEach { x ->
-                x.value.walk().forEach {
-                    if (it.isFile) {
-                        var baseFileInfo = BaseFileInfo()
-                        baseFileInfo.file_name = it.name
-
-                        var folders = it.parent.replace(x.key, String())
-//                        baseFileInfo.file_path = folders.split(File.separatorChar)
-
-                        fileList.add(baseFileInfo)
+                x.value.walk().forEach { file ->
+                    if (file.isFile) {
+                        var file_name = getAdaptFileNameOutgoing(file.path, x.key.inside_folder, x.key.outside_folder)
+                        fileList.add(file_name)
                     }
                 }
             }
             return fileList
         }
 
-        override fun set_sync_folder(newSyncFolder: File) {
-//            defaultPath = newSyncFolder
-        }
 
         override fun getFileOutputStreamAndURI(
             filename: String
@@ -80,7 +55,7 @@ interface FileManager {
             _settingsManager.get_folder_mapping().forEach{ x ->
 
                 if (filename.startsWith(x.outside_folder)) {
-                    val file = File(getAdaptFileName(filename, x.inside_folder, x.outside_folder))
+                    val file = File(getAdaptFileNameIncoming(filename, x.inside_folder, x.outside_folder))
                     return FileOutputStream(file) to Uri.fromFile(file)
                 }
             }
@@ -88,14 +63,36 @@ interface FileManager {
             return Pair<OutputStream?, Uri>(null, Uri.EMPTY)
         }
 
-        private fun getAdaptFileName(full_path: String, inside_path: String, outside: String ) : String {
+        override fun getFileInfoForUpload(fileName: String): Pair<FileInfo, String> {
 
+            _settingsManager.get_folder_mapping().forEach{ x ->
+
+                if (fileName.startsWith(x.outside_folder)) {
+                    val new_file_path = getAdaptFileNameForUpload(fileName, x.inside_folder, x.outside_folder)
+                    val file = File(new_file_path)
+                    return FileInfo(new_file_path, file.length()) to fileName
+                }
+            }
+
+            return FileInfo(fileName) to fileName
+
+        }
+
+        private fun getAdaptFileNameIncoming(full_path: String, inside_path: String, outside: String ) : String {
             return full_path.replace(outside, inside_path).replace("\\", "/");
         }
 
-        private fun onSettingsReaded() {
+        private fun getAdaptFileNameOutgoing(full_path: String, inside_path: String, outside: String ) : String {
+            return full_path.replace(inside_path, outside).replace("/", "\\");
+        }
+
+        private fun getAdaptFileNameForUpload(full_path: String, inside_path: String, outside: String ) : String {
+            return full_path.replace(outside, inside_path).replace("\\", "/");
+        }
+
+        private fun onSettingsRead() {
             _settingsManager.get_folder_mapping().forEach { folder ->
-                _folders.plus(Pair(folder.inside_folder, File(folder.inside_folder)))
+                _folders[folder] = File(folder.inside_folder)
             }
         }
     }

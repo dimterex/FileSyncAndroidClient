@@ -12,15 +12,14 @@ interface IAttachmentRestApi {
     @POST("/api/attachment/0/upload")
     suspend fun upload(
         @Query("token") token: String,
-        @Query("file_id") fileId: String?,
         @Query("file_name") fileName: String,
-        @Query("message_id") messageId: Long,
         @Body fileRequestBody: RequestBody
     ): Response<ResponseBody>
 
     @Streaming
     @GET("/api/attachment/0/download")
     suspend fun download(
+        @Query("token") token: String,
         @Query("file_id") fileId: String?
     ): Response<ResponseBody>
 }

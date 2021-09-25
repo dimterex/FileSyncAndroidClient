@@ -12,7 +12,6 @@ class SyncFilesRequestExecutor(
 ) : IExecute<SyncFilesRequest> {
     override fun Execute(param: SyncFilesRequest) {
         param.files = _fileManager.getFileList()
-//        _eventLoggerManager.save_event(EventDto("test name", "test description"))
-//        _executor.sendMessage(param)
+        _executor.sendMessage(param)
     }
 }

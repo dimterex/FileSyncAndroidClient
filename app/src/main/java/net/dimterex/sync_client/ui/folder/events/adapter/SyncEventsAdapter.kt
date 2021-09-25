@@ -11,6 +11,7 @@ import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.ui.adapter.BaseListAdapter
 import net.dimterex.sync_client.ui.adapter.BaseViewHolder
 import net.dimterex.sync_client.ui.formatter.FileStatusFormatter
+import java.lang.Exception
 
 class SyncEventsAdapter(private val repoPressedListener: (id: String) -> Unit, private val _resources: Resources) : BaseListAdapter<LogViewHolder, FileSyncState>() {
 

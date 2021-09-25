@@ -10,8 +10,6 @@ class InfoApi(_executeManager: ExecuteManager,
               _syncFilesRequestExecutor: SyncFilesRequestExecutor) {
 
     init {
-//        executeManager.initApiMessage(FileListRequest::class.java, FineListRequestExecutor(_FileState_eventManager) as IExecute<IMessage>)
-//        executeManager.initApiMessage(FileListResponce::class.java, FileListResponceExecutor(_fileManager, _FileState_eventManager) as IExecute<IMessage>)
         _executeManager.initApiMessage(SyncFilesRequest::class.java, _syncFilesRequestExecutor as IExecute<IMessage>)
     }
 }

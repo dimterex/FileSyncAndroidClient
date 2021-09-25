@@ -7,7 +7,6 @@
     <string name="btn_send_file">Send files</string>
     <string name="waiting">Waiting</string>
     <string name="done">Done</string>
-    <string name="in_processing_template">%1$s %</string>
 
     <!--Settings-->
     <string name="settings_title">Settings</string>
@@ -16,6 +15,13 @@
     <string name="none">none</string>
     <string name="btn_choose">Choose in Dialog</string>
     <string name="outside_directory">Outside directory</string>
+    <string name="edit">Edit</string>
+    <string name="remove">Remove</string>
+    <string name="remove_it">Remove it?</string>
+    <string name="ip_address">IP</string>
+    <string name="ip_port">Port</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
 
     <!--Data Keys-->
     <string name="key_repo_id">RepoID</string>
@@ -28,9 +34,6 @@
 
     <!--Logger-->
     <string name="logger_title">Logger</string>
-
-
-
 
 
 

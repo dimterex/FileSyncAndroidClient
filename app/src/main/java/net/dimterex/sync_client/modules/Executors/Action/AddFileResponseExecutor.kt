@@ -40,8 +40,7 @@ class AddFileResponseExecutor(val fileManager: FileManager,
             val fileInfo = FileInfo(param.file_name, sizeBytes = param.size)
             val fileSyncState = FileSyncState(param.file_name)
             _FileState_eventManager.save_event(fileSyncState)
-
-            downloadQueue.send(fileInfo)
+             downloadQueue.send(fileInfo)
         }
     }
 
@@ -96,10 +95,6 @@ class AddFileResponseExecutor(val fileManager: FileManager,
                 while(true) {
                     val item = downloadQueue.receive()
                     val job = launch {
-//                        val currentJob = coroutineContext.job
-//                        withContext(Dispatchers.Main) {
-//                            fileInfoStorage.update(item, PROGRESS(0), null, currentJob)
-//                        }
 
                         try {
                             val response = _connectionManager.download(item.name)
@@ -114,7 +109,6 @@ class AddFileResponseExecutor(val fileManager: FileManager,
                                 if (streamAndUri.first != null) {
                                     writeResponseStreamToDisk(item, streamAndUri.second, streamAndUri.first!!, stream)
                                 }
-
                             }
 
                         } catch (e: Throwable) {

@@ -21,13 +21,10 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
 
         view.update(_event_log_manager.logs)
         _event_log_manager.add_event_listener(this::add_event_listener, this::update_item)
-        _connectionManager.addListener(this::temp, this::connectedStateChange)
-        view.update_connected(false)
-
+        _connectionManager.addConnectionStateListener(this::connectedStateChange)
+        connectedStateChange(_connectionManager.isConnected)
     }
 
-    fun temp(string: String) {
-    }
 
     fun connectedStateChange(isConnected: Boolean) {
         view.update_connected(isConnected)

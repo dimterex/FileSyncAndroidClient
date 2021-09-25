@@ -29,8 +29,6 @@ abstract class BasePresenter(private val view: BaseView) : KodeinAware {
         view.showError(error)
         error.printStackTrace()
     }
-
-
 }
 
 interface BaseView: LifecycleOwner {

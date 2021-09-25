@@ -25,6 +25,7 @@ val repoModule = Kodein.Module("repo") {
 //    bind<ApiModules>() with eagerSingleton  { ApiModules.Impl(instance(), instance(), instance(),  instance(), instance()) }
 
     bind<FileStateEventManager>() with singleton { FileStateEventManager.Impl(instance()) }
+    bind<AvailableFoldersManager>() with singleton { AvailableFoldersManager.Impl(instance()) }
 
-    bind<RestClientBuilder>() with singleton { RestClientBuilder()  }
+    bind<RestClientBuilder>() with singleton { RestClientBuilder() }
 }

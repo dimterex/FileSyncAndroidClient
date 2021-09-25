@@ -3,82 +3,71 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="71dp"
-            android:columnCount="3"
-            android:orientation="horizontal">
+    <Spinner
+            android:id="@+id/row_folder_spinner"
 
-        <Spinner
-                android:id="@+id/row_folder_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_columnWeight=".30"
-                android:layout_gravity="left"
-                android:textSize="@dimen/text_default" tools:ignore="RtlHardcoded"/>
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
 
-        <!--    <com.google.android.material.textfield.TextInputLayout-->
-        <!--            android:id="@+id/folders_combobox"-->
-        <!--            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="center"-->
-        <!--            android:layout_weight="1"-->
-        <!--            android:hint="@string/outside_directory">-->
+            android:layout_gravity="left"
+            android:textSize="@dimen/text_default" />
 
-        <!--        <AutoCompleteTextView-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:inputType="none"-->
-        <!--        />-->
+    <!--    <com.google.android.material.textfield.TextInputLayout-->
+    <!--            android:id="@+id/folders_combobox"-->
+    <!--            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="center"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:hint="@string/outside_directory">-->
 
-        <!--    </com.google.android.material.textfield.TextInputLayout>-->
+    <!--        <AutoCompleteTextView-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:inputType="none"-->
+    <!--        />-->
+
+    <!--    </com.google.android.material.textfield.TextInputLayout>-->
 
 
-        <!--    <TextView-->
-        <!--            android:id="@+id/item_log_details1"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="center"-->
-        <!--            android:layout_weight="1"-->
-        <!--            android:gravity="right|center_vertical"-->
-        <!--            android:paddingEnd="@dimen/margin_default"-->
-        <!--            android:textSize="@dimen/text_default"-->
-        <!--            tools:text="Details"/>-->
+    <!--    <TextView-->
+    <!--            android:id="@+id/item_log_details1"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="center"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:gravity="right|center_vertical"-->
+    <!--            android:paddingEnd="@dimen/margin_default"-->
+    <!--            android:textSize="@dimen/text_default"-->
+    <!--            tools:text="Details"/>-->
 
 
-        <TextView
-                android:id="@+id/inside_folder"
-                android:layout_width="182dp"
-                android:layout_height="match_parent"
-                android:layout_row="0"
-                android:layout_column="1"
-                android:layout_columnWeight=".30"
-                android:layout_gravity="left"
-                android:fontFamily="monospace"
-                tools:ignore="RtlHardcoded,UnusedAttribute"/>
+    <TextView
+            android:id="@+id/inside_folder"
+            android:layout_gravity="left"
 
-        <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/changeFolderButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_column="2"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
 
-                android:layout_columnWeight=".30"
-                android:layout_gravity="left"
+            android:fontFamily="monospace"
+            tools:ignore="RtlHardcoded,UnusedAttribute"/>
 
 
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
-                app:srcCompat="@android:drawable/ic_menu_manage"
-                app:strokeColor="@android:color/darker_gray" app:strokeWidth="3dp" tools:ignore="RtlHardcoded"/>
-
-    </GridLayout>
-
-
+    <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/changeFolderButton"
+            android:layout_weight=".25"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
+            app:srcCompat="@android:drawable/ic_menu_edit"
+            app:strokeColor="@android:color/darker_gray"
+            app:strokeWidth="3dp" />
 
 </LinearLayout>

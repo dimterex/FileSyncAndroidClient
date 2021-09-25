@@ -8,9 +8,7 @@ import net.dimterex.sync_client.api.Message.MessageContainer
 import java.lang.reflect.Type
 import java.util.HashMap
 import kotlin.reflect.KFunction1
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import net.dimterex.sync_client.api.Message.Connection.ConnectionRequest
-import kotlin.concurrent.thread
 
 
 interface JsonManager {
@@ -27,47 +25,48 @@ interface JsonManager {
         private val _messageEnc : HashMap<Type, String> = HashMap()
         private val _messageDec : HashMap<String, Type> = HashMap()
 
-        private var _messageReceavedFunc: KFunction1<IMessage, Unit>? = null
+        private var _messageReceivedFunc: KFunction1<IMessage, Unit>? = null
 
         init {
-            _connection.addListener(this::messageReceavedListener, this::onOpenFunc)
+            _connection.addMessageReceivedListener(this::messageReceivedListener)
+            _connection.addConnectionStateListener(this::onOpenFunc)
         }
 
         override fun addListener(function: KFunction1<IMessage, Unit>) {
-            _messageReceavedFunc = function
+            _messageReceivedFunc = function
         }
 
-        private fun messageReceavedListener(raw_string: String)
+        private fun messageReceivedListener(raw_string: String)
         {
             var messages = _gson.fromJson(raw_string, Array<MessageContainer>::class.java)
             for (message in messages)
             {
                 var result = deserialize(message)
                 if (result != null)
-                    _messageReceavedFunc?.invoke(result)
+                    _messageReceivedFunc?.invoke(result)
             }
         }
 
         override fun <T: Any> initApiMessage(classType: Class<T>) {
             val messageAttr = classType.getAnnotation(MessageAttr::class.java) ?: return
-            var id = messageAttr.name
+            val id = messageAttr.name
 
             _messageDec[id]= classType
             _messageEnc[classType] = id
         }
 
         override fun sendMessage(iMessage: IMessage) {
-            var msgArr = ArrayList<MessageContainer>()
-            var msg: MessageContainer = serialize(iMessage) ?: return
+            val msgArr = ArrayList<MessageContainer>()
+            val msg: MessageContainer = serialize(iMessage) ?: return
             msgArr.add(msg)
-            var result = _gson.toJson(msgArr)
+            val result = _gson.toJson(msgArr)
             _connection.send(result)
         }
 
         private fun serialize(message: IMessage): MessageContainer? {
             val type = message::class.java
-            var realType = _messageEnc[type]?: return null
-            var msg = MessageContainer()
+            val realType = _messageEnc[type]?: return null
+            val msg = MessageContainer()
             msg.identifier = realType
             msg.content = JsonParser().parse(_gson.toJson(message)).asJsonObject
             println(msg)
@@ -82,7 +81,7 @@ interface JsonManager {
             if (!_messageDec.containsKey(container.identifier))
                 return null
 
-            var typeClass = _messageDec[container.identifier]?: return null
+            val typeClass = _messageDec[container.identifier]?: return null
 
             return _gson.fromJson<IMessage>(container.content, typeClass)
         }
@@ -92,7 +91,7 @@ interface JsonManager {
             if (!isConnected)
                 return
 
-            var connectionRequest = ConnectionRequest()
+            val connectionRequest = ConnectionRequest()
             connectionRequest.login = _settingsManager.get_connection_settings().login
             connectionRequest.password = _settingsManager.get_connection_settings().password
             sendMessage(connectionRequest)

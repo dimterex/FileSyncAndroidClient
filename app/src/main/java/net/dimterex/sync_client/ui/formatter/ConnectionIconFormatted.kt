@@ -9,7 +9,6 @@ class ConnectionIconFormatted(private val _resources: Resources) {
     fun format (isConnected: Boolean) : Int {
         if (isConnected)
             return R.drawable.ic_connected
-//        return _resources.getDrawable(R.drawable.ic_not_connected)
         return R.drawable.ic_not_connected
     }
 

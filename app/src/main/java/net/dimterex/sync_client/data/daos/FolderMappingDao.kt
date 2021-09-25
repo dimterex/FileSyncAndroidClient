@@ -14,4 +14,7 @@ interface FolderMappingDao {
 
     @Delete
     fun delete(folderMappingLocalModel: FolderMappingLocalModel)
+
+    @Query("DELETE FROM folder_mapping")
+    fun deleteAll()
 }

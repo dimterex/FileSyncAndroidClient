@@ -24,7 +24,6 @@ interface FileStateEventManager {
         }
 
         init {
-            _connection.add_event_listener(this::save_event)
         }
 
         override fun save_event(fileSyncState: FileSyncState) {
