@@ -18,6 +18,7 @@ import net.dimterex.sync_client.ui.folder.sync.adapter.FolderSelectionAdapter
 class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
 
     private lateinit var adapter: FolderSelectionAdapter
+    private val _outside_folders = ArrayList<String>()
 
     override var profile: ConnectionsLocalModel? = null
     set(value) {
@@ -33,8 +34,10 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
     }
 
     override fun add_new_event(message: String) {
+        _outside_folders.add(message)
         adapter.items.forEach { x ->
-            x.folders.add(message)
+            x.folders.clear()
+            x.folders.addAll(_outside_folders)
         }
     }
 
@@ -43,9 +46,9 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
     override fun layoutId(): Int = R.layout.fragment_profile
 
     override fun initView() {
-        val data = ArrayList<String>()
+
         presenter.getAvailableFolders().forEach { x ->
-            data.add(x)
+            _outside_folders.add(x)
         }
 
         adapter = FolderSelectionAdapter()
@@ -53,7 +56,7 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
         folders_list.adapter = adapter
 
         presenter.getMappingFolders().forEach{ x ->
-            adapter.add(FolderSelectModel(x, data))
+            adapter.add(FolderSelectModel(x, _outside_folders))
         }
 
         saveSettingsButton.setOnClickListener { view ->
@@ -61,7 +64,7 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
         }
 
         addFolderButton.setOnClickListener { view ->
-            adapter.add(FolderSelectModel(createFolderMappingLocalModel(), data))
+            adapter.add(FolderSelectModel(createFolderMappingLocalModel(), _outside_folders))
         }
 
         checkConnectionButton.setOnClickListener { view ->
