@@ -1,5 +1,6 @@
 package net.dimterex.sync_client.di
 
+import android.content.Context
 import net.dimterex.sync_client.api.Message.Action.AddFileResponce
 import net.dimterex.sync_client.api.Message.Action.RemoveFileResponce
 import net.dimterex.sync_client.api.Message.Action.SyncFilesRequest
@@ -23,11 +24,11 @@ import org.kodein.di.erased.eagerSingleton
 import org.kodein.di.erased.instance
 import org.kodein.di.erased.singleton
 
-val executorsModule = Kodein.Module("executors") {
+fun executorsModule(appContext: Context) = Kodein.Module("executors") {
 
     bind<AddFileResponseExecutor>() with singleton { AddFileResponseExecutor(instance(), instance(), instance(), instance()) }
     bind<FileUploadRequestExecutor>() with singleton { FileUploadRequestExecutor(instance(), instance(), instance(), instance()) }
-    bind<RemoveFileResponseExecutor>() with singleton { RemoveFileResponseExecutor(instance(), instance(), instance()) }
+    bind<RemoveFileResponseExecutor>() with singleton { RemoveFileResponseExecutor(instance(), instance(), instance(), appContext) }
     bind<ActionApi>() with eagerSingleton  { ActionApi(instance(), instance(), instance(), instance()) }
 
 

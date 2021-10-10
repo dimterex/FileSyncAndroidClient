@@ -10,6 +10,7 @@ import net.dimterex.sync_client.api.Modules.Common.IExecute
 import net.dimterex.sync_client.data.FileInfo
 import net.dimterex.sync_client.data.ScopeFactory
 import net.dimterex.sync_client.entity.FileSyncState
+import net.dimterex.sync_client.entity.FileSyncType
 import net.dimterex.sync_client.modules.ConnectionManager
 import net.dimterex.sync_client.modules.FileStateEventManager
 import net.dimterex.sync_client.modules.FileManager
@@ -40,7 +41,8 @@ class FileUploadRequestExecutor(val fileManager: FileManager,
 
         scope.launch {
             val fileInfo = fileManager.getFileInfoForUpload(param.file_name)
-            val fileSyncState = FileSyncState(fileInfo.second)
+            val fileSyncState = FileSyncState(fileInfo.second, FileSyncType.UPLOAD)
+
             _FileState_eventManager.save_event(fileSyncState)
             uploadQueue.send(fileInfo)
         }
@@ -79,10 +81,10 @@ class FileUploadRequestExecutor(val fileManager: FileManager,
                                 contentLength = item.first.sizeBytes,
                                 progressCallback = { progress ->
 
-                                    launch(Dispatchers.Main) {
+//                                    launch(Dispatchers.Main) {
 //                                        fileInfoStorage.update(item, PROGRESS(progress), item.uri)
-                                        _FileState_eventManager.save_event(FileSyncState(item.second, progress))
-                                    }
+                                        _FileState_eventManager.save_event(FileSyncState(item.second, FileSyncType.UPLOAD, progress))
+//                                    }
                                 },
                                 errorCallback = { e ->
 //                                    launch(Dispatchers.Main) {

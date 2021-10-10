@@ -22,6 +22,6 @@ fun appModule(appContext: Context) = Kodein.Module(name = "app") {
 
     bind<ScopeFactory>() with singleton { ScopeFactory.Impl() }
 
-    import(executorsModule)
+    import(executorsModule(appContext))
     import(repoModule)
 }

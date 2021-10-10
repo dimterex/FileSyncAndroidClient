@@ -49,6 +49,7 @@ interface FileManager {
         }
 
 
+        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         override fun getFileOutputStreamAndURI(
             filename: String
         ): Pair<OutputStream?, Uri> {
@@ -56,6 +57,9 @@ interface FileManager {
 
                 if (filename.startsWith(x.outside_folder)) {
                     val file = File(getAdaptFileNameIncoming(filename, x.inside_folder, x.outside_folder))
+                    val test = file.parentFile.mkdirs()
+                    file.createNewFile()
+
                     return FileOutputStream(file) to Uri.fromFile(file)
                 }
             }

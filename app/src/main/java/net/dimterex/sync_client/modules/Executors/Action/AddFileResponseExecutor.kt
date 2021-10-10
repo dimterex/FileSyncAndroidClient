@@ -9,6 +9,7 @@ import net.dimterex.sync_client.api.Modules.Common.IExecute
 import net.dimterex.sync_client.data.FileInfo
 import net.dimterex.sync_client.data.ScopeFactory
 import net.dimterex.sync_client.entity.FileSyncState
+import net.dimterex.sync_client.entity.FileSyncType
 import net.dimterex.sync_client.modules.ConnectionManager
 import net.dimterex.sync_client.modules.FileStateEventManager
 import net.dimterex.sync_client.modules.FileManager
@@ -34,12 +35,8 @@ class AddFileResponseExecutor(val fileManager: FileManager,
     }
 
     override fun Execute(param: AddFileResponce) {
-
         scope.launch {
-
             val fileInfo = FileInfo(param.file_name, sizeBytes = param.size)
-            val fileSyncState = FileSyncState(param.file_name)
-            _FileState_eventManager.save_event(fileSyncState)
              downloadQueue.send(fileInfo)
         }
     }
@@ -53,6 +50,7 @@ class AddFileResponseExecutor(val fileManager: FileManager,
             val fileReader = ByteArray(10240)
             var lastProgress = -1
 
+            println("start download $fileInfo.name")
 
             while (true) {
                 val read = inputStream.read(fileReader)
@@ -67,10 +65,8 @@ class AddFileResponseExecutor(val fileManager: FileManager,
                 //ignore spam
                 if (lastProgress != progress) {
                     lastProgress = progress
-                    withContext(Dispatchers.Main) {
-                        val fileSyncState = FileSyncState(fileInfo.name, progress)
-                        _FileState_eventManager.save_event(fileSyncState)
-                    }
+                    val fileSyncState = FileSyncState(fileInfo.name, FileSyncType.DOWNLOAD, progress)
+                    _FileState_eventManager.save_event(fileSyncState)
                 }
             }
             outputStream.flush()
@@ -98,6 +94,9 @@ class AddFileResponseExecutor(val fileManager: FileManager,
 
                         try {
                             val response = _connectionManager.download(item.name)
+
+                            val fileSyncState = FileSyncState(item.name, FileSyncType.DOWNLOAD)
+                            _FileState_eventManager.save_event(fileSyncState)
 
                             if (!response.isSuccessful)
                                 throw Exception("Attachment not found!")

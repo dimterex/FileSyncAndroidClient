@@ -11,6 +11,7 @@ import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.ui.adapter.BaseListAdapter
 import net.dimterex.sync_client.ui.adapter.BaseViewHolder
 import net.dimterex.sync_client.ui.formatter.FileStatusFormatter
+import net.dimterex.sync_client.ui.formatter.FileSyncTypeFormatter
 import java.lang.Exception
 
 class SyncEventsAdapter(private val repoPressedListener: (id: String) -> Unit, private val _resources: Resources) : BaseListAdapter<LogViewHolder, FileSyncState>() {
@@ -19,6 +20,7 @@ class SyncEventsAdapter(private val repoPressedListener: (id: String) -> Unit, p
         LogViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_log, parent, false),
             FileStatusFormatter(_resources),
+            FileSyncTypeFormatter(_resources),
             repoPressedListener
         )
 
@@ -33,9 +35,13 @@ class SyncEventsAdapter(private val repoPressedListener: (id: String) -> Unit, p
     }
 }
 
-class LogViewHolder(view: View, val fileStatusFormatter: FileStatusFormatter, private val listener: (id: String) -> Unit) : BaseViewHolder<FileSyncState>(view) {
+class LogViewHolder(view: View,
+                    val fileStatusFormatter: FileStatusFormatter,
+                    val fileSyncTypeFormatter: FileSyncTypeFormatter,
+                    private val listener: (id: String) -> Unit) : BaseViewHolder<FileSyncState>(view) {
     override fun bind(items: List<FileSyncState>, position: Int) {
         val repo = items[position]
+        itemView.item_log_state.text = fileSyncTypeFormatter.format(repo.state)
         itemView.item_log_name.text = repo.id
         itemView.item_log_details.text = fileStatusFormatter.format(repo.details)
         itemView.setOnClickListener { listener(repo.id) }

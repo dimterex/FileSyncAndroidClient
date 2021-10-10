@@ -4,12 +4,15 @@
         package="net.dimterex.sync_client">
 
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"  />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
+    <uses-permission android:name="android.permission.MANAGE_MEDIA" />
 
     <application
         android:largeHeap="true"
@@ -20,6 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
+        android:hasFragileUserData="true"
         android:theme="@style/AppTheme"
         >
         <activity android:name=".ui.MainActivity">

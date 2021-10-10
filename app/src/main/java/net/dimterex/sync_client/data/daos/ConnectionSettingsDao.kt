@@ -11,7 +11,4 @@ interface ConnectionSettingsDao {
 
     @Query("SELECT * FROM connection_settings WHERE id = :id")
     fun selectById(id: Int): ConnectionsLocalModel
-
-    @Update
-    fun update(settingsLocalModel: ConnectionsLocalModel)
 }

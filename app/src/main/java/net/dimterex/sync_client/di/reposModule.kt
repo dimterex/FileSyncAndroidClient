@@ -1,5 +1,6 @@
 package net.dimterex.sync_client.di
 
+import android.content.Context
 import net.dimterex.sync_client.api.Modules.ActionApi
 import net.dimterex.sync_client.modules.*
 import net.dimterex.sync_client.modules.Executors.Transport.rest.RestClientBuilder

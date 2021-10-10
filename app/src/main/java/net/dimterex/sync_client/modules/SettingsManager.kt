@@ -64,6 +64,10 @@ interface SettingsManager {
 //                _repoDao.folderMappingDao().insert(folder_mappong)
 
                 _connectionSettings = _repoDao.connectionSettingsDao().selectById(0)
+
+                if (_connectionSettings == null)
+                    _connectionSettings = ConnectionsLocalModel(0, String(), 8080, String(), String())
+
                 _folderMapping = _repoDao.folderMappingDao().getAll()
                 _settingsReadedAction.forEach { x ->
                     x.invoke()
@@ -81,7 +85,7 @@ interface SettingsManager {
 
         override fun save_settings() {
             scope.launch {
-                _repoDao.connectionSettingsDao().update(_connectionSettings!!)
+                _repoDao.connectionSettingsDao().insert(_connectionSettings!!)
 
 //                _folderMapping!!.forEach { x ->
 //                    _repoDao.folderMappingDao().insert(x)

@@ -1,7 +1,9 @@
 package net.dimterex.sync_client.ui
 
 import android.Manifest
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -30,7 +32,7 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
 
     override fun showMenu() {
         main_bottom_navigation.visibility = View.VISIBLE
-        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE )
+        checkPermission(WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)
     }
 
     private fun checkPermission(permission: String, requestCode: Int) {
@@ -43,4 +45,6 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
     }
 
     private val STORAGE_PERMISSION_CODE = 101
+
+
 }

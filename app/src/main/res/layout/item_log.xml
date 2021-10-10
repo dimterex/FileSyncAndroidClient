@@ -5,8 +5,18 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_large"
+    android:layout_margin="@dimen/margin_default"
     >
+
+    <TextView
+            android:id="@+id/item_log_state"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:gravity="left|center_vertical"
+            android:textSize="@dimen/text_default"
+            tools:text="Path" />
 
     <TextView
         android:id="@+id/item_log_name"
@@ -16,8 +26,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textSize="@dimen/text_default"
-        android:paddingEnd="@dimen/margin_default"
-        tools:text="Address"/>
+        tools:text="Path" />
 
 
     <TextView
@@ -27,8 +36,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="right|center_vertical"
-            android:paddingEnd="@dimen/margin_default"
             android:textSize="@dimen/text_default"
-            tools:text="Details"/>
+            tools:text="Details" />
 
 </LinearLayout>
