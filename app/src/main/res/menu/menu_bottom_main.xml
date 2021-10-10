@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:icon="@android:drawable/ic_dialog_dialer"
-        android:id="@+id/menuRepos"
-        android:title="@string/sync_title" />
+            android:icon="@android:drawable/ic_dialog_dialer"
+            android:id="@+id/menuSync"
+            android:title="@string/sync_title" />
 
     <item
-        android:icon="@android:drawable/ic_menu_manage"
-        android:id="@+id/menuProfile"
-        android:title="@string/settings_title" />
+            android:icon="@android:drawable/ic_menu_manage"
+            android:id="@+id/menuSettings"
+            android:title="@string/settings_title" />
 
 </menu>

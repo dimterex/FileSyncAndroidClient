@@ -65,7 +65,6 @@
             android:layout_weight=".25"
             android:layout_width="0dp"
             android:layout_height="36dp"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
             app:srcCompat="@android:drawable/ic_menu_edit"
             app:strokeColor="@android:color/darker_gray"
             app:strokeWidth="3dp" />

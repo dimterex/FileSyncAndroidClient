@@ -70,10 +70,6 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
         }
     }
 
-    override fun showMenu() {
-        activity?.main_bottom_navigation?.visibility = View.VISIBLE
-    }
-
     override fun get_ip_port(): Int {
         return port_textbox?.editText?.text.toString().toInt()
     }

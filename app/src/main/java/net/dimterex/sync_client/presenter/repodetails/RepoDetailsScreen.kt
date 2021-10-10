@@ -7,7 +7,6 @@ import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.entity.WrongDataError
 import net.dimterex.sync_client.presenter.base.BasePresenter
 import net.dimterex.sync_client.presenter.base.BaseView
-import net.dimterex.sync_client.presenter.base.HiddenMenuScreen
 
 class EventDetailsPresenter(private val view: EventDetailsView, private val resources: Resources) : BasePresenter(view) {
 
@@ -35,7 +34,7 @@ class EventDetailsPresenter(private val view: EventDetailsView, private val reso
     }
 }
 
-interface EventDetailsView : BaseView, HiddenMenuScreen {
+interface EventDetailsView : BaseView {
 
     var repo: FileSyncState?
 

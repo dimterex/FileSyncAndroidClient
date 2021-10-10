@@ -1,6 +1,5 @@
 package net.dimterex.sync_client.ui.folder.sync
 
-import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,10 +36,9 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
         sync_button.setOnClickListener {view ->
             presenter.sync_execute()
         }
-    }
-
-    override fun showMenu() {
-        activity?.main_bottom_navigation?.visibility = View.VISIBLE
+        menu_button.setOnClickListener { view ->
+//            main_container?.openDrawer(Gravity.START)
+        }
     }
 
     override fun update(logs: ArrayList<FileSyncState>) {

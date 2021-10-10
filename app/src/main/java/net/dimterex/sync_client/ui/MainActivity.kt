@@ -25,13 +25,9 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
     override fun showError(error: Throwable) {}
 
     override fun initView() {
-
         val navController = Navigation.findNavController(this, R.id.main_nav_host)
         main_bottom_navigation.setupWithNavController(navController)
-    }
-
-    override fun showMenu() {
-        main_bottom_navigation.visibility = View.VISIBLE
+        val STORAGE_PERMISSION_CODE = 101
         checkPermission(WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)
     }
 
@@ -43,8 +39,4 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
             Toast.makeText(this@MainActivity, "Permission already granted", Toast.LENGTH_SHORT).show()
         }
     }
-
-    private val STORAGE_PERMISSION_CODE = 101
-
-
 }

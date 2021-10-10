@@ -15,11 +15,6 @@ abstract class BasePresenter(private val view: BaseView) : KodeinAware {
 
     open fun onCreate(arguments: Bundle? = null) {
         view.initView()
-        if (view is HiddenMenuScreen) {
-            view.hideMenu()
-        } else {
-            view.showMenu()
-        }
     }
 
     open fun onDestroy() {
@@ -32,8 +27,6 @@ abstract class BasePresenter(private val view: BaseView) : KodeinAware {
 }
 
 interface BaseView: LifecycleOwner {
-
-    fun showMenu()
 
     fun initView()
 

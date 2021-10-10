@@ -16,11 +16,18 @@
             android:layout_height="wrap_content">
 
         <Button
-                android:id="@+id/sync_button"
-                app:icon="@android:drawable/ic_popup_sync"
+                android:id="@+id/menu_button"
+                app:icon="@android:drawable/ic_menu_sort_by_size"
                 style="@style/Widget.App.Button.OutlinedButton.IconOnly"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
+
+        <Button
+                android:id="@+id/sync_button"
+                app:icon="@android:drawable/ic_popup_sync"
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:layout_toRightOf="@id/menu_button"
+                android:layout_toEndOf="@id/menu_button" />
 
 
         <TextView

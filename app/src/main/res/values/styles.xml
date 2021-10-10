@@ -1,14 +1,10 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- ... -->
     </style>
 
-
-    <style name="ShapeAppearanceOverlay.App.CornerSize10Percent" parent="">
-        <item name="cornerSize">10%</item>
-    </style>
 
     <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="iconPadding">@dimen/button_padding</item>

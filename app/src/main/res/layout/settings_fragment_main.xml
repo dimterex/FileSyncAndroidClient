@@ -17,11 +17,19 @@
             android:layout_height="wrap_content">
 
         <Button
-                android:id="@+id/addFolderButton"
-                app:icon="@android:drawable/ic_menu_add"
+                android:id="@+id/menu_button"
+                app:icon="@android:drawable/ic_menu_sort_by_size"
                 style="@style/Widget.App.Button.OutlinedButton.IconOnly"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
+
+        <Button
+                android:id="@+id/addFolderButton"
+                app:icon="@android:drawable/ic_menu_add"
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:layout_toRightOf="@id/menu_button"
+                android:layout_toEndOf="@id/menu_button"
+                />
 
         <Button
                 android:id="@+id/checkConnectionButton"

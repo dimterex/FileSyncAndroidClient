@@ -3,23 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph_bottom"
-    app:startDestination="@id/menuRepos"
+    app:startDestination="@id/menuSync"
     >
 
     <fragment
-        android:id="@+id/menuRepos"
+        android:id="@+id/menuSync"
         android:name="net.dimterex.sync_client.ui.folder.sync.SyncFragment"
-        android:label="ReposFragment"/>
+        android:label="SyncFragment"/>
 
     <fragment
-        android:id="@+id/menuProfile"
+        android:id="@+id/menuSettings"
         android:name="net.dimterex.sync_client.ui.folder.settings.SettingsFragment"
-        android:label="ProfileFragment"
+        android:label="SettingsFragment"
         />
-
-    <fragment
-            android:id="@+id/menuLogger"
-            android:name="net.dimterex.sync_client.ui.folder.sync.EventsFragment"
-            android:label="LoggerFragment" />
 
 </navigation>
