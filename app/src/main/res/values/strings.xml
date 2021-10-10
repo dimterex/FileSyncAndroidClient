@@ -9,6 +9,8 @@
     <string name="done">Done</string>
     <string name="upload">Upload</string>
     <string name="download">Download</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
 
     <!--Settings-->
     <string name="settings_title">Settings</string>
@@ -20,7 +22,7 @@
     <string name="edit">Edit</string>
     <string name="remove">Remove</string>
     <string name="remove_it">Remove it?</string>
-    <string name="ip_address">IP</string>
+    <string name="ip_address">Address</string>
     <string name="ip_port">Port</string>
     <string name="login">Login</string>
     <string name="password">Password</string>

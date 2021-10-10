@@ -16,43 +16,25 @@
             android:layout_alignParentTop="true"
             android:layout_height="wrap_content">
 
-        <com.google.android.material.imageview.ShapeableImageView
+        <Button
                 android:id="@+id/addFolderButton"
-                android:layout_width="71dp"
-                android:layout_height="45dp"
-                android:layout_margin="3dp"
-                android:padding="3dp"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
-                app:srcCompat="@android:drawable/ic_menu_add"
-                app:strokeColor="@android:color/darker_gray"
+                app:icon="@android:drawable/ic_menu_add"
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
                 android:layout_alignParentLeft="true"
-                app:strokeWidth="3dp"
                 android:layout_alignParentStart="true" />
 
-        <com.google.android.material.imageview.ShapeableImageView
+        <Button
                 android:id="@+id/checkConnectionButton"
-                android:layout_width="71dp"
-                android:layout_height="45dp"
-                android:layout_margin="3dp"
-                android:padding="3dp"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
-                app:srcCompat="@android:drawable/ic_popup_sync"
-                app:strokeColor="@android:color/darker_gray"
+                app:icon="@android:drawable/ic_popup_sync"
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
                 android:layout_toRightOf="@id/addFolderButton"
-                app:strokeWidth="3dp"
-                android:layout_toEndOf="@id/addFolderButton"/>
+                android:layout_toEndOf="@id/addFolderButton" />
 
-        <com.google.android.material.imageview.ShapeableImageView
+        <Button
                 android:id="@+id/saveSettingsButton"
-                android:layout_width="71dp"
-                android:layout_height="45dp"
-                android:layout_margin="3dp"
-                android:padding="3dp"
+                app:icon="@android:drawable/ic_menu_save"
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
                 android:layout_alignParentRight="true"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
-                app:srcCompat="@android:drawable/ic_menu_save"
-                app:strokeColor="@android:color/darker_gray"
-                app:strokeWidth="3dp"
                 android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
@@ -76,6 +58,7 @@
                     android:id="@+id/ip_address_textbox"
                     android:layout_height="wrap_content"
                     android:hint="@string/ip_address"
+                    style="@style/CustomTextBox"
                     android:layout_width="0dp"
                     android:layout_weight=".70">
 
@@ -89,11 +72,14 @@
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/port_textbox"
                     android:layout_height="wrap_content"
+                    style="@style/CustomTextBox"
                     android:hint="@string/ip_port"
                     android:layout_width="0dp"
                     android:layout_weight=".30">
 
                 <com.google.android.material.textfield.TextInputEditText
+                        android:maxLength="5"
+                        android:inputType="number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
@@ -111,6 +97,7 @@
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/login_textbox"
                     android:layout_height="wrap_content"
+                    style="@style/CustomTextBox"
                     android:hint="@string/login"
                     android:layout_width="0dp"
                     android:layout_weight=".50">
@@ -125,7 +112,9 @@
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/password_textbox"
                     android:layout_height="wrap_content"
+                    style="@style/CustomTextBox"
                     android:hint="@string/password"
+
                     android:layout_width="0dp"
                     android:layout_weight=".50">
 
@@ -137,9 +126,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
-
-
-
 
     </RelativeLayout>
 

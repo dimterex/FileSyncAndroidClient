@@ -5,8 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_repos.*
-import kotlinx.android.synthetic.main.fragment_repos.logs_list
+import kotlinx.android.synthetic.main.sync_fragment_main.*
 import net.dimterex.sync_client.R
 import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.presenter.menu.sync.SyncPresenter
@@ -15,7 +14,6 @@ import net.dimterex.sync_client.ui.MainActivity
 import net.dimterex.sync_client.ui.base.BaseFragment
 import net.dimterex.sync_client.ui.folder.sync.adapter.SyncEventsAdapter
 import net.dimterex.sync_client.ui.formatter.ConnectionIconFormatted
-import java.lang.Exception
 
 class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
 
@@ -25,7 +23,7 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
 
     override fun initPresenter(): SyncPresenter = SyncPresenter(this)
 
-    override fun layoutId(): Int = R.layout.fragment_repos
+    override fun layoutId(): Int = R.layout.sync_fragment_main
 
     override fun initView() {
         controller =  Navigation.findNavController(activity as MainActivity, R.id.main_nav_host)
@@ -54,7 +52,7 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
     }
 
     override fun update_connected(isConnected: Boolean) {
-        connectionStatusImageView.setImageResource(_connectionIconFormatted!!.format(isConnected))
+        connectionStatusTextView.text  =_connectionIconFormatted!!.format(isConnected)
     }
 
     override fun add_new_event(message: FileSyncState){

@@ -1,11 +1,9 @@
 package net.dimterex.sync_client.ui.folder.settings
 
 import android.view.View
-import android.widget.EditText
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.settings_fragment_main.*
 import net.dimterex.sync_client.R
 import net.dimterex.sync_client.data.entries.ConnectionsLocalModel
 import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
@@ -24,10 +22,10 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
     set(value) {
 
         if (value != null) {
-            ip_address_textbox?.editText?.setText(value.ip_address)
-            port_textbox?.editText?.setText(value.ip_port.toString())
-            login_textbox?.editText?.setText(value.login)
-            password_textbox?.editText?.setText(value.password)
+            ip_address_textbox?.editText?.setText("value.ip_address")
+            port_textbox?.editText?.setText("value.ip_port.toString()")
+            login_textbox?.editText?.setText("value.login")
+            password_textbox?.editText?.setText("value.password")
         }
 
         field = value
@@ -43,7 +41,7 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
 
     override fun initPresenter(): SettingsPresenter = SettingsPresenter(this)
 
-    override fun layoutId(): Int = R.layout.fragment_profile
+    override fun layoutId(): Int = R.layout.settings_fragment_main
 
     override fun initView() {
 
