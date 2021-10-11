@@ -5,20 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import kotlinx.android.synthetic.main.item_log.view.*
+import kotlinx.android.synthetic.main.sync_filestate_item.view.*
 import net.dimterex.sync_client.R
 import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.ui.adapter.BaseListAdapter
 import net.dimterex.sync_client.ui.adapter.BaseViewHolder
 import net.dimterex.sync_client.ui.formatter.FileStatusFormatter
 import net.dimterex.sync_client.ui.formatter.FileSyncTypeFormatter
-import java.lang.Exception
 
 class SyncEventsAdapter(private val repoPressedListener: (id: String) -> Unit, private val _resources: Resources) : BaseListAdapter<LogViewHolder, FileSyncState>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogViewHolder =
         LogViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_log, parent, false),
+            LayoutInflater.from(parent.context).inflate(R.layout.sync_filestate_item, parent, false),
             FileStatusFormatter(_resources),
             FileSyncTypeFormatter(_resources),
             repoPressedListener

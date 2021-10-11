@@ -43,7 +43,7 @@
                 app:icon="@android:drawable/ic_menu_save"
                 style="@style/Widget.App.Button.OutlinedButton.IconOnly"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 
@@ -137,19 +137,12 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-            android:id="@+id/foldersMapPanel"
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/folders_list"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/settingsConnectionPanel"
             android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/folders_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-    </RelativeLayout>
 </RelativeLayout>

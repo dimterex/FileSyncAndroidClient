@@ -5,38 +5,33 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_default"
+    android:layout_margin="@dimen/button_margin"
     >
 
     <TextView
             android:id="@+id/item_log_state"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:gravity="left|center_vertical"
-            android:textSize="@dimen/text_default"
-            tools:text="Path" />
+            android:singleLine="true"
+            android:layout_margin="@dimen/button_margin"
+            tools:text="Download" />
 
     <TextView
         android:id="@+id/item_log_name"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:gravity="center"
-        android:textSize="@dimen/text_default"
-        tools:text="Path" />
+        android:layout_margin="@dimen/button_margin"
+        tools:text="PathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPath" />
 
 
     <TextView
             android:id="@+id/item_log_details"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="right|center_vertical"
-            android:textSize="@dimen/text_default"
+            android:singleLine="true"
+            android:layout_margin="@dimen/button_margin"
             tools:text="Details" />
 
 </LinearLayout>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        tools:context=".ui.MainActivity"
+        android:gravity="top"
+        android:layout_margin="@dimen/button_margin"
+>
+
+    <RelativeLayout
+            android:id="@+id/settingsConnectionPanel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <RelativeLayout
+                android:id="@+id/connectionParametersPanel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/row_folder_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:hint="@string/outside_directory">
+
+                <AutoCompleteTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/connectionParametersPanel"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/inside_folder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/changeFolderButton"
+                    android:layout_toLeftOf="@+id/changeFolderButton" />
+
+            <Button
+                    android:id="@+id/changeFolderButton"
+                    app:icon="@android:drawable/ic_menu_edit"
+                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    android:layout_toStartOf="@+id/deleteFolderButton"
+                    android:layout_toLeftOf="@+id/deleteFolderButton" />
+
+
+            <Button
+                    android:id="@+id/deleteFolderButton"
+                    app:icon="@android:drawable/ic_menu_delete"
+                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

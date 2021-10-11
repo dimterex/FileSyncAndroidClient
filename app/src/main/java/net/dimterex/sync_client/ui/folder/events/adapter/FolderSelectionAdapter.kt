@@ -1,12 +1,12 @@
 package net.dimterex.sync_client.ui.folder.sync.adapter
 
 import android.R
-import android.app.AlertDialog
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import com.obsez.android.lib.filechooser.ChooserDialog
-import kotlinx.android.synthetic.main.folder_select_item_log.view.*
+import kotlinx.android.synthetic.main.settings_folder_config_item.view.*
 import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
 import net.dimterex.sync_client.entity.FolderSelectModel
 import net.dimterex.sync_client.ui.adapter.BaseListAdapter
@@ -19,7 +19,7 @@ class FolderSelectionAdapter() : BaseListAdapter<FolderSelectionViewHolder, Fold
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderSelectionViewHolder {
         _folderSelectionViewHolder = FolderSelectionViewHolder(
-            LayoutInflater.from(parent.context).inflate(net.dimterex.sync_client.R.layout.folder_select_item_log, parent, false),
+            LayoutInflater.from(parent.context).inflate(net.dimterex.sync_client.R.layout.settings_folder_config_item, parent, false),
             this::remove)
 
         return _folderSelectionViewHolder!!
@@ -44,28 +44,25 @@ class FolderSelectionViewHolder(val view: View, val removeFunc: (oldItem: Folder
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(itemView.context, R.layout.simple_spinner_item, repo.folders)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        itemView.row_folder_spinner.adapter = adapter
+        (itemView.row_folder_spinner.editText as? AutoCompleteTextView)?.setAdapter(adapter)
         itemView.inside_folder.text = repo.folFolderMappingLocalModel.inside_folder
 
-        val selectedIndex = repo.folders.indexOf(repo.folFolderMappingLocalModel.inside_folder)
+        var selectedIndex = 0;
+        if (repo.folders.contains(repo.folFolderMappingLocalModel.inside_folder))
+        {
+            selectedIndex = repo.folders.indexOf(repo.folFolderMappingLocalModel.inside_folder)
+        }
 
         // выделяем элемент
-        itemView.row_folder_spinner.setSelection(selectedIndex)
+        (itemView.row_folder_spinner.editText as? AutoCompleteTextView)?.setSelection(selectedIndex)
 
         // устанавливаем обработчик нажатия
-        itemView.row_folder_spinner.setOnItemSelectedListener(FolderSelectionCallback(repo))
+        (itemView.row_folder_spinner.editText as? AutoCompleteTextView)?.setOnItemSelectedListener(FolderSelectionCallback(repo))
 
         itemView.changeFolderButton.setOnClickListener(openFolderChooser(repo.folFolderMappingLocalModel, itemView))
 
-        itemView.inside_folder.setOnLongClickListener { view ->
-            AlertDialog.Builder(view.context)
-                .setMessage(net.dimterex.sync_client.R.string.remove_it)
-                .setPositiveButton(R.string.ok) { _,_ -> removeFunc.invoke(repo) }
-                .setNegativeButton(R.string.cancel) {_,_ ->}
-                .create()
-                .show()
-
-            true
+        itemView.deleteFolderButton.setOnClickListener { view ->
+            removeFunc.invoke(repo)
         }
     }
 
@@ -74,7 +71,6 @@ class FolderSelectionViewHolder(val view: View, val removeFunc: (oldItem: Folder
             .withFilter(true, false)
             .withStartFile(folderMappingLocalModel.inside_folder)
             .withChosenListener { path, pathFile ->
-
                 folderMappingLocalModel.inside_folder = path
                 context.inside_folder.text = path
             }

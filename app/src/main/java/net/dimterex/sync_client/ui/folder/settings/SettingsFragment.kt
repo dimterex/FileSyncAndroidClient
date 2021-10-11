@@ -22,10 +22,10 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
     set(value) {
 
         if (value != null) {
-            ip_address_textbox?.editText?.setText("value.ip_address")
-            port_textbox?.editText?.setText("value.ip_port.toString()")
-            login_textbox?.editText?.setText("value.login")
-            password_textbox?.editText?.setText("value.password")
+            ip_address_textbox?.editText?.setText(value.ip_address)
+            port_textbox?.editText?.setText(value.ip_port.toString())
+            login_textbox?.editText?.setText(value.login)
+            password_textbox?.editText?.setText(value.password)
         }
 
         field = value
