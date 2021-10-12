@@ -42,6 +42,7 @@ interface ConnectionManager {
         private fun interrupt() {
             setToken(String())
             _client?.close()
+            _client = null
         }
 
         override fun send(raw_string: String){
@@ -69,7 +70,7 @@ interface ConnectionManager {
                 _downloadService = _restClientBuilder.createService("${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}", false)
 
                 _client = WsClient(URI("ws://${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}"), _messageReceivedFunc, this::connectStateChange)
-                _client?.connect()
+                _client!!.connect()
 
             } catch (e: Exception) {
                 println(e.toString())
@@ -78,7 +79,8 @@ interface ConnectionManager {
         }
 
         private fun write(message: String) {
-            _client?.send(message)
+            if (isConnected)
+                _client!!.send(message)
         }
 
         override fun addMessageReceivedListener(messageReceived: KFunction1<String, Unit>) {

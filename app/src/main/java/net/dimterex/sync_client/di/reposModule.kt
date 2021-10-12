@@ -20,7 +20,7 @@ val repoModule = Kodein.Module("repo") {
 
     bind<FileManager>() with singleton { FileManager.Impl(instance()) }
 
-    bind<ExecuteManager>() with singleton { ExecuteManager.Impl(instance()) }
+    bind<ExecuteManager>() with singleton { ExecuteManager.Impl(instance(), instance()) }
 
 
 //    bind<ApiModules>() with eagerSingleton  { ApiModules.Impl(instance(), instance(), instance(),  instance(), instance()) }
