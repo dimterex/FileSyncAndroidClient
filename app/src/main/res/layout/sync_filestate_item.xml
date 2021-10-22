@@ -8,6 +8,15 @@
     android:layout_margin="@dimen/button_margin"
     >
 
+
+    <TextView
+            android:id="@+id/item_log_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_margin="@dimen/button_margin"
+            tools:text="1/100" />
+
     <TextView
             android:id="@+id/item_log_state"
             android:layout_width="wrap_content"

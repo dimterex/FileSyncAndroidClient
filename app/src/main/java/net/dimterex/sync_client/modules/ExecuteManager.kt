@@ -6,7 +6,6 @@ import net.dimterex.sync_client.api.Modules.Common.IExecute
 import net.dimterex.sync_client.data.ScopeFactory
 import java.lang.reflect.Type
 import java.util.HashMap
-import kotlin.concurrent.thread
 
 interface ExecuteManager {
 
@@ -21,7 +20,6 @@ interface ExecuteManager {
     ) : ExecuteManager {
 
         private val _typesAction: HashMap<Type, IExecute<IMessage>> = HashMap()
-        private val _scope = _scopeFactory.getScope()
 
         init {
             _jsonManager.addListener(this::execute)
@@ -33,19 +31,16 @@ interface ExecuteManager {
         }
 
         override fun execute(iMessage: IMessage) {
-            _scope.launch {
-                if (!_typesAction.containsKey(iMessage.javaClass))
-                    return@launch
 
-                val executeMethod: IExecute<IMessage> = _typesAction[iMessage.javaClass] ?: return@launch
-                executeMethod.Execute(iMessage)
-            }
+            if (!_typesAction.containsKey(iMessage.javaClass))
+                return
+
+            val executeMethod: IExecute<IMessage> = _typesAction[iMessage.javaClass] ?: return
+            executeMethod.Execute(iMessage)
         }
 
         override fun sendMessage(param: IMessage) {
-            _scope.launch {
-                _jsonManager.sendMessage(param)
-            }
+            _jsonManager.sendMessage(param)
         }
     }
 }

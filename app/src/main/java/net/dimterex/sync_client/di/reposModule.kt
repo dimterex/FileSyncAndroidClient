@@ -1,7 +1,5 @@
 package net.dimterex.sync_client.di
 
-import android.content.Context
-import net.dimterex.sync_client.api.Modules.ActionApi
 import net.dimterex.sync_client.modules.*
 import net.dimterex.sync_client.modules.Executors.Transport.rest.RestClientBuilder
 import org.kodein.di.Kodein
@@ -22,11 +20,8 @@ val repoModule = Kodein.Module("repo") {
 
     bind<ExecuteManager>() with singleton { ExecuteManager.Impl(instance(), instance()) }
 
-
-//    bind<ApiModules>() with eagerSingleton  { ApiModules.Impl(instance(), instance(), instance(),  instance(), instance()) }
-
     bind<FileStateEventManager>() with singleton { FileStateEventManager.Impl(instance()) }
-    bind<AvailableFoldersManager>() with singleton { AvailableFoldersManager.Impl(instance()) }
+    bind<AvailableFoldersManager>() with eagerSingleton { AvailableFoldersManager.Impl(instance()) }
 
     bind<RestClientBuilder>() with singleton { RestClientBuilder() }
 }

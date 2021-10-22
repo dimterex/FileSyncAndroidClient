@@ -1,5 +1,6 @@
 package net.dimterex.sync_client.modules
 
+import android.util.Log
 import net.dimterex.sync_client.modules.Executors.Transport.IAttachmentRestApi
 import net.dimterex.sync_client.modules.Executors.Transport.WsClient
 import net.dimterex.sync_client.modules.Executors.Transport.rest.RestClientBuilder
@@ -20,10 +21,14 @@ interface ConnectionManager {
     fun setToken(token: String)
     suspend fun upload(fileName: String, fileRequestBody: RequestBody): Response<ResponseBody>
 
+    suspend fun sync(request: Array<String>): Response<ResponseBody>
+
 
     class Impl(private val settingsManager:SettingsManager,
                private val _restClientBuilder: RestClientBuilder
     ) : ConnectionManager {
+
+        private val TAG = this::class.java.name
 
         private var _messageReceivedFunc: KFunction1<String, Unit>? = null
         private val _connectedStateChangeFuncs: ArrayList<KFunction1<Boolean, Unit>>
@@ -61,12 +66,17 @@ interface ConnectionManager {
             return _downloadService!!.upload(_token, fileName, fileRequestBody)
         }
 
+        override suspend fun sync(request: Array<String>): Response<ResponseBody> {
+            return _downloadService!!.sync(_token,  request.joinToString(";"))
+        }
+
         private fun connect()
         {
             try {
                 interrupt()
                 val connectionsLocalModel = settingsManager.get_connection_settings()
 
+                Log.i(TAG, "${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}")
                 _downloadService = _restClientBuilder.createService("${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}", false)
 
                 _client = WsClient(URI("ws://${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}"), _messageReceivedFunc, this::connectStateChange)

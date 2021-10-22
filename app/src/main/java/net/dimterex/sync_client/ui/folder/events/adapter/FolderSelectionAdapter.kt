@@ -44,20 +44,25 @@ class FolderSelectionViewHolder(val view: View, val removeFunc: (oldItem: Folder
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(itemView.context, R.layout.simple_spinner_item, repo.folders)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        (itemView.row_folder_spinner.editText as? AutoCompleteTextView)?.setAdapter(adapter)
+
         itemView.inside_folder.text = repo.folFolderMappingLocalModel.inside_folder
 
+        val combobox = itemView.row_folder_spinner.editText as? AutoCompleteTextView;
+
+        combobox?.setAdapter(adapter)
+
         var selectedIndex = 0;
-        if (repo.folders.contains(repo.folFolderMappingLocalModel.inside_folder))
+        if (repo.folders.contains(repo.folFolderMappingLocalModel.outside_folder))
         {
-            selectedIndex = repo.folders.indexOf(repo.folFolderMappingLocalModel.inside_folder)
+            selectedIndex = repo.folders.indexOf(repo.folFolderMappingLocalModel.outside_folder)
+            // выделяем элемент
+            combobox?.setText(repo.folFolderMappingLocalModel.outside_folder)
+
+//            combobox?.setSelection(selectedIndex)
         }
 
-        // выделяем элемент
-        (itemView.row_folder_spinner.editText as? AutoCompleteTextView)?.setSelection(selectedIndex)
-
         // устанавливаем обработчик нажатия
-        (itemView.row_folder_spinner.editText as? AutoCompleteTextView)?.setOnItemSelectedListener(FolderSelectionCallback(repo))
+        combobox?.onItemClickListener  = FolderSelectionCallback(repo)
 
         itemView.changeFolderButton.setOnClickListener(openFolderChooser(repo.folFolderMappingLocalModel, itemView))
 
@@ -81,13 +86,10 @@ class FolderSelectionViewHolder(val view: View, val removeFunc: (oldItem: Folder
 }
 
 class FolderSelectionCallback(val selectedItemChange: FolderSelectModel) :
-    AdapterView.OnItemSelectedListener {
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        selectedItemChange.folFolderMappingLocalModel.outside_folder = selectedItemChange.folders[p2]
-    }
+    AdapterView.OnItemClickListener {
 
-    override fun onNothingSelected(p0: AdapterView<*>?) {
-        TODO("Not yet implemented")
+    override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+        selectedItemChange.folFolderMappingLocalModel.outside_folder = selectedItemChange.folders[p2]
     }
 }
 

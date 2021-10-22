@@ -40,7 +40,7 @@
 
     <RelativeLayout
             android:id="@+id/fileStatesPanel"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/mainButtonsPanel"
             android:layout_alignParentBottom="true"
@@ -49,8 +49,8 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/logs_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </RelativeLayout>
 

@@ -36,7 +36,10 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
         adapter.items.forEach { x ->
             x.folders.clear()
             x.folders.addAll(_outside_folders)
+//
+//            adapter.notifyItemChanged(adapter.items.indexOf(x))
         }
+
     }
 
     override fun initPresenter(): SettingsPresenter = SettingsPresenter(this)

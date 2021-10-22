@@ -12,11 +12,6 @@ fun appModule(appContext: Context) = Kodein.Module(name = "app") {
 
     import(dataModule(appContext))
 
-    bind<CoroutineScope>() with singleton {
-        CoroutineScope(Dispatchers.Main + SupervisorJob())
-    }
-
-
     bind<ScopeFactory>() with singleton { ScopeFactory.Impl() }
 
     import(executorsModule(appContext))

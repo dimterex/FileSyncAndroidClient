@@ -1,5 +1,6 @@
 package net.dimterex.sync_client.ui.folder.sync
 
+import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import net.dimterex.sync_client.ui.formatter.ConnectionIconFormatted
 
 class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
 
+    private val TAG = this::class.java.name
     private lateinit var controller: NavController
     private lateinit var adapter: SyncEventsAdapter
     private var _connectionIconFormatted: ConnectionIconFormatted? = null
@@ -30,7 +32,7 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
         adapter = SyncEventsAdapter(presenter::onRepoPressed, resources)
         _connectionIconFormatted = ConnectionIconFormatted(resources)
 
-        logs_list.layoutManager = LinearLayoutManager(logs_list.context)
+        logs_list.layoutManager = LinearLayoutManager(logs_list.context, LinearLayoutManager.VERTICAL, false)
         logs_list.adapter = adapter
 
         sync_button.setOnClickListener {view ->
@@ -43,10 +45,16 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
 
     override fun update(logs: ArrayList<FileSyncState>) {
         adapter.update(logs)
+        Log.d(TAG, "Old events update: $logs")
     }
 
     override fun update_position(position: Int) {
-        adapter.notifyItemChanged(position)
+        activity?.runOnUiThread {
+            adapter.notifyItemChanged(position)
+            logs_list.scrollToPosition(position)
+        }
+
+        Log.d(TAG, "Old event update by position: $position")
     }
 
     override fun update_connected(isConnected: Boolean) {
@@ -56,7 +64,8 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
     override fun add_new_event(message: FileSyncState){
         activity?.runOnUiThread {
             adapter.add(message)
-            logs_list.scrollToPosition(adapter.itemCount - 1)
         }
+
+        Log.d(TAG, "New event added: $message")
     }
 }

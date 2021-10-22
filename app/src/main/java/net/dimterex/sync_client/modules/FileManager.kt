@@ -3,6 +3,7 @@ package net.dimterex.sync_client.modules
 import android.net.Uri
 import net.dimterex.sync_client.data.FileInfo
 import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
+import net.dimterex.sync_client.entity.FileSyncType
 import java.io.*
 
 interface FileManager {
@@ -57,7 +58,7 @@ interface FileManager {
 
                 if (filename.startsWith(x.outside_folder)) {
                     val file = File(getAdaptFileNameIncoming(filename, x.inside_folder, x.outside_folder))
-                    val test = file.parentFile.mkdirs()
+                    file.parentFile.mkdirs()
                     file.createNewFile()
 
                     return FileOutputStream(file) to Uri.fromFile(file)
@@ -74,11 +75,11 @@ interface FileManager {
                 if (fileName.startsWith(x.outside_folder)) {
                     val new_file_path = getAdaptFileNameForUpload(fileName, x.inside_folder, x.outside_folder)
                     val file = File(new_file_path)
-                    return FileInfo(new_file_path, file.length()) to fileName
+                    return FileInfo(new_file_path, FileSyncType.UPLOAD, file.length()) to fileName
                 }
             }
 
-            return FileInfo(fileName) to fileName
+            return FileInfo(fileName, FileSyncType.UPLOAD) to fileName
 
         }
 

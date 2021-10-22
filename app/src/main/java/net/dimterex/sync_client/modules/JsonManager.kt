@@ -2,6 +2,8 @@ package net.dimterex.sync_client.modules
 
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import net.dimterex.sync_client.api.Message.Action.SyncFilesRequest
+import net.dimterex.sync_client.api.Message.Action.SyncFilesResponse
 import net.dimterex.sync_client.api.interfaces.IMessage
 import net.dimterex.sync_client.api.MessageAttr
 import net.dimterex.sync_client.api.Message.MessageContainer
@@ -9,6 +11,8 @@ import java.lang.reflect.Type
 import java.util.HashMap
 import kotlin.reflect.KFunction1
 import net.dimterex.sync_client.api.Message.Connection.ConnectionRequest
+import okhttp3.ResponseBody
+import retrofit2.Response
 
 
 interface JsonManager {
@@ -18,6 +22,7 @@ interface JsonManager {
     fun <T: Any> initApiMessage(classType: Class<T>)
 
     fun sendMessage(iMessage: IMessage)
+    fun restResponse(inputStream: String, type: Type)
 
     class Impl(private val _connection: ConnectionManager,
                private val _settingsManager: SettingsManager) : JsonManager {
@@ -61,6 +66,11 @@ interface JsonManager {
             msgArr.add(msg)
             val result = _gson.toJson(msgArr)
             _connection.send(result)
+        }
+
+        override fun restResponse(inputStream: String, type: Type) {
+            val result = _gson.fromJson<IMessage>(inputStream, type)
+            _messageReceivedFunc?.invoke(result)
         }
 
         private fun serialize(message: IMessage): MessageContainer? {

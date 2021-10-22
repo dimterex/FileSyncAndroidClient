@@ -22,4 +22,11 @@ interface IAttachmentRestApi {
         @Query("token") token: String,
         @Query("file_id") fileId: String?
     ): Response<ResponseBody>
+
+    @Streaming
+    @GET("/api/sync/0/sync")
+    suspend fun sync(
+        @Query("token") token: String,
+        @Query("files") files: String
+    ): Response<ResponseBody>
 }

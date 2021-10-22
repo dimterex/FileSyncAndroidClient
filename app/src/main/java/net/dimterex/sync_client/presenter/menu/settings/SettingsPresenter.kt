@@ -3,11 +3,9 @@ package net.dimterex.sync_client.presenter.menu.settings
 import android.os.Bundle
 import net.dimterex.sync_client.data.entries.ConnectionsLocalModel
 import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
-import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.entity.FolderSelectModel
 import net.dimterex.sync_client.modules.AvailableFoldersManager
 import net.dimterex.sync_client.modules.ConnectionManager
-import net.dimterex.sync_client.modules.FileStateEventManager
 import net.dimterex.sync_client.modules.SettingsManager
 import net.dimterex.sync_client.presenter.base.BasePresenter
 import net.dimterex.sync_client.presenter.base.BaseView
