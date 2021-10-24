@@ -2,15 +2,12 @@ package net.dimterex.sync_client.modules
 
 import com.google.gson.Gson
 import com.google.gson.JsonParser
-import net.dimterex.sync_client.api.Message.Action.SyncFilesRequest
-import net.dimterex.sync_client.api.Message.Action.SyncFilesResponse
 import net.dimterex.sync_client.api.interfaces.IMessage
 import net.dimterex.sync_client.api.MessageAttr
 import net.dimterex.sync_client.api.Message.MessageContainer
 import java.lang.reflect.Type
 import java.util.HashMap
 import kotlin.reflect.KFunction1
-import net.dimterex.sync_client.api.Message.Connection.ConnectionRequest
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -22,7 +19,6 @@ interface JsonManager {
 
     fun <T: Any> initApiMessage(classType: Class<T>)
 
-    fun sendMessage(iMessage: IMessage)
     fun restResponse(inputStream: String, type: Type)
 
     suspend fun getPostMessage(iMessage: IMessage): Response<ResponseBody>
@@ -37,7 +33,6 @@ interface JsonManager {
 
         init {
             _connection.addMessageReceivedListener(this::messageReceivedListener)
-            _connection.addConnectionStateListener(this::onOpenFunc)
         }
 
         override fun addListener(function: KFunction1<IMessage, Unit>) {
@@ -46,10 +41,10 @@ interface JsonManager {
 
         private fun messageReceivedListener(raw_string: String)
         {
-            var messages = _gson.fromJson(raw_string, Array<MessageContainer>::class.java)
+            val messages = _gson.fromJson(raw_string, Array<MessageContainer>::class.java)
             for (message in messages)
             {
-                var result = deserialize(message)
+                val result = deserialize(message)
                 if (result != null)
                     _messageReceivedFunc?.invoke(result)
             }
@@ -63,13 +58,6 @@ interface JsonManager {
             _messageEnc[classType] = id
         }
 
-        override fun sendMessage(iMessage: IMessage) {
-            val msgArr = ArrayList<MessageContainer>()
-            val msg: MessageContainer = serialize(iMessage) ?: return
-            msgArr.add(msg)
-            val result = _gson.toJson(msgArr)
-            _connection.send(result)
-        }
 
         override fun restResponse(inputStream: String, type: Type) {
             val result = _gson.fromJson<IMessage>(inputStream, type)
@@ -77,13 +65,20 @@ interface JsonManager {
         }
 
         override suspend fun getPostMessage(iMessage: IMessage): Response<ResponseBody> {
-            return _connection.sync(createJsonRequestBody(iMessage))
+            return _connection.send_request(createJsonRequestBody(iMessage))
         }
 
-        private fun createJsonRequestBody(iMessage: IMessage) =
-            RequestBody.create(
-                okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                _gson.toJson(iMessage))
+        private fun createJsonRequestBody(iMessage: IMessage) : RequestBody
+        {
+            val msgArr = ArrayList<MessageContainer>()
+            val msg: MessageContainer = serialize(iMessage)!!
+            msgArr.add(msg)
+            val result = _gson.toJson(msgArr)
+
+            return RequestBody.create(
+                    okhttp3.MediaType.parse("application/json; charset=utf-8"),
+                    result)
+        }
 
         private fun serialize(message: IMessage): MessageContainer? {
             val type = message::class.java
@@ -106,17 +101,6 @@ interface JsonManager {
             val typeClass = _messageDec[container.identifier]?: return null
 
             return _gson.fromJson<IMessage>(container.content, typeClass)
-        }
-
-        private fun onOpenFunc(isConnected: Boolean) {
-
-            if (!isConnected)
-                return
-
-            val connectionRequest = ConnectionRequest()
-            connectionRequest.login = _settingsManager.get_connection_settings().login
-            connectionRequest.password = _settingsManager.get_connection_settings().password
-            sendMessage(connectionRequest)
         }
 
     }

@@ -13,7 +13,6 @@ class ConnectionApi(_executeManager: ExecuteManager,
                     _connectionRequestExecutor: ConnectionRequestExecutor,
                     _connectionResponseExecutor: ConnectionResponseExecutor)
 {
-
     init {
         _executeManager.initApiMessage(ConnectionRequest::class.java, _connectionRequestExecutor as IExecute<IMessage>)
         _executeManager.initApiMessage(ConnectionResponse::class.java, _connectionResponseExecutor as IExecute<IMessage>)

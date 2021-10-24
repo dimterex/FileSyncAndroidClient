@@ -39,7 +39,7 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
             presenter.sync_execute()
         }
         menu_button.setOnClickListener { view ->
-//            main_container?.openDrawer(Gravity.START)
+
         }
 
         Log.d(TAG, "Initialized view in thread: ${Thread.currentThread().getName()}")

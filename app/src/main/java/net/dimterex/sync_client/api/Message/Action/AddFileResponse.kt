@@ -4,9 +4,12 @@ import net.dimterex.sync_client.api.MessageAttr
 import com.google.gson.annotations.SerializedName
 import net.dimterex.sync_client.api.interfaces.IMessage
 
-@MessageAttr(name = "SyncFilesRequest")
-class SyncFilesRequest : IMessage {
+@MessageAttr(name = "FileAddResponse")
+class AddFileResponse : IMessage {
 
-    @SerializedName("files")
-    var files : List<String> = ArrayList()
+    @SerializedName("size")
+    val size : Long = 0
+
+    @SerializedName("file_name")
+    var file_name : String = String()
 }

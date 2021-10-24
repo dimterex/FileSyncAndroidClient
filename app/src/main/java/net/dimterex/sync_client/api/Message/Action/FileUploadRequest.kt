@@ -5,7 +5,7 @@ import net.dimterex.sync_client.api.MessageAttr
 import net.dimterex.sync_client.api.interfaces.IMessage
 
 @MessageAttr(name = "FileUploadRequest")
-class FileUploadRequest() : IMessage {
+class FileUploadRequest : IMessage {
 
     @SerializedName("file_name")
     var file_name : String = ""

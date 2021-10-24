@@ -8,8 +8,8 @@ import net.dimterex.sync_client.api.interfaces.IMessage
 class ConnectionRequest : IMessage {
 
     @SerializedName("login")
-    var login: String = ""
+    var login: String = String()
 
     @SerializedName("password")
-    var password: String = ""
+    var password: String = String()
 }

@@ -3,7 +3,6 @@ package net.dimterex.sync_client.presenter.menu.sync
 import android.os.Bundle
 import net.dimterex.sync_client.api.Message.Action.SyncFilesRequest
 import net.dimterex.sync_client.entity.FileSyncState
-import net.dimterex.sync_client.entity.FileSyncType
 import net.dimterex.sync_client.modules.ConnectionManager
 import net.dimterex.sync_client.modules.FileStateEventManager
 import net.dimterex.sync_client.modules.ExecuteManager
@@ -46,10 +45,6 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
 
     private fun update_item(position: Int) {
         view.update_position(position)
-    }
-
-    fun onScrolledToBottom() {
-        println("onScrolledToBottom")
     }
 }
 

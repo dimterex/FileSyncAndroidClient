@@ -9,8 +9,6 @@ import java.util.HashMap
 
 interface ExecuteManager {
 
-    fun sendMessage(param: IMessage)
-
     fun initApiMessage(classType: Class<*>, kFunction2: IExecute<IMessage>)
 
     fun execute(iMessage: IMessage)
@@ -37,10 +35,6 @@ interface ExecuteManager {
 
             val executeMethod: IExecute<IMessage> = _typesAction[iMessage.javaClass] ?: return
             executeMethod.Execute(iMessage)
-        }
-
-        override fun sendMessage(param: IMessage) {
-            _jsonManager.sendMessage(param)
         }
     }
 }

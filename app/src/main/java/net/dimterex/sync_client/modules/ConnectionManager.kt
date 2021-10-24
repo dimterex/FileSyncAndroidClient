@@ -2,29 +2,29 @@ package net.dimterex.sync_client.modules
 
 import android.util.Log
 import net.dimterex.sync_client.modules.Executors.Transport.IRestApi
-import net.dimterex.sync_client.modules.Executors.Transport.WsClient
 import net.dimterex.sync_client.modules.Executors.Transport.rest.RestClientBuilder
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import java.net.URI
 import kotlin.reflect.KFunction1
 
 interface ConnectionManager {
 
-    var isConnected: Boolean;
+    var isConnected: Boolean
+    fun raiseConnection()
     fun addMessageReceivedListener(messageReceived: KFunction1<String, Unit>)
     fun addConnectionStateListener(connectedStateChangeFunc: KFunction1<Boolean, Unit>)
     fun restart_connection()
-    fun send(raw_string: String)
-    suspend fun download(name: String): Response<ResponseBody>
+
     fun setToken(token: String)
+
+
+    suspend fun download(name: String): Response<ResponseBody>
     suspend fun upload(fileName: String, fileRequestBody: RequestBody): Response<ResponseBody>
+    suspend fun send_request(request: RequestBody): Response<ResponseBody>
 
-    suspend fun sync(request: RequestBody): Response<ResponseBody>
 
-
-    class Impl(private val settingsManager:SettingsManager,
+    class Impl(private val settingsManager: SettingsManager,
                private val _restClientBuilder: RestClientBuilder
     ) : ConnectionManager {
 
@@ -33,10 +33,9 @@ interface ConnectionManager {
         private var _messageReceivedFunc: KFunction1<String, Unit>? = null
         private val _connectedStateChangeFuncs: ArrayList<KFunction1<Boolean, Unit>>
 
-        private var _client : WsClient? = null
         private var _downloadService: IRestApi? = null
-        override var isConnected: Boolean = false
         private var _token: String = String()
+        override var isConnected: Boolean = false
 
 
         init {
@@ -46,13 +45,8 @@ interface ConnectionManager {
 
         private fun interrupt() {
             setToken(String())
-            _client?.close()
-            _client = null
         }
 
-        override fun send(raw_string: String){
-            write(raw_string)
-        }
 
         override suspend fun download(name: String): Response<ResponseBody> {
             return _downloadService!!.download(_token, name)
@@ -66,7 +60,7 @@ interface ConnectionManager {
             return _downloadService!!.upload(_token, fileName, fileRequestBody)
         }
 
-        override suspend fun sync(request: RequestBody): Response<ResponseBody> {
+        override suspend fun send_request(request: RequestBody): Response<ResponseBody> {
             return _downloadService!!.sync(_token,  request)
         }
 
@@ -79,19 +73,12 @@ interface ConnectionManager {
                 Log.i(TAG, "${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}")
                 _downloadService = _restClientBuilder.createService("${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}", false)
 
-                _client = WsClient(URI("ws://${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}"), _messageReceivedFunc, this::connectStateChange)
-                _client!!.connect()
-
             } catch (e: Exception) {
                 println(e.toString())
                 interrupt()
             }
         }
 
-        private fun write(message: String) {
-            if (isConnected)
-                _client!!.send(message)
-        }
 
         override fun addMessageReceivedListener(messageReceived: KFunction1<String, Unit>) {
             _messageReceivedFunc = messageReceived
@@ -105,10 +92,10 @@ interface ConnectionManager {
             connect()
         }
 
-        private fun connectStateChange(isConnect: Boolean) {
-            isConnected = isConnect
+        override fun raiseConnection() {
+            isConnected = true
             _connectedStateChangeFuncs.forEach{ x ->
-                x.invoke(isConnected)
+                x.invoke(true)
             }
         }
     }

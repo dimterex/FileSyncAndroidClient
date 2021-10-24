@@ -37,13 +37,12 @@ class SettingsPresenter(private val view: SettingsView) : BasePresenter(view) {
     }
 
     fun save() {
-        var new_sync_folder = view.get_sync_folders()
+        val new_sync_folder = view.get_sync_folders()
 
 
         _settingsManager.remove_all_folders()
 
         new_sync_folder.forEach {
-//            println(it.folFolderMappingLocalModel.inside_folder)
             _settingsManager.add_folder(it.folFolderMappingLocalModel)
         }
 

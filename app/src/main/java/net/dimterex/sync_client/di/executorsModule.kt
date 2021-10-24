@@ -19,7 +19,7 @@ fun executorsModule(appContext: Context) = Kodein.Module("executors") {
     bind<InfoApi>() with eagerSingleton  { InfoApi(instance(), instance(), instance()) }
 
 
-    bind<ConnectionRequestExecutor>() with singleton  { ConnectionRequestExecutor() }
+    bind<ConnectionRequestExecutor>() with singleton  { ConnectionRequestExecutor(instance(), instance(), instance(),instance()) }
     bind<ConnectionResponseExecutor>() with singleton  { ConnectionResponseExecutor(instance(), instance()) }
     bind<ConnectionApi>() with eagerSingleton  { ConnectionApi(instance(), instance(), instance()) }
 }

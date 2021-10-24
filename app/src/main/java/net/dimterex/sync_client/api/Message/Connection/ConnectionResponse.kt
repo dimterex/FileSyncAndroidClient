@@ -8,7 +8,7 @@ import net.dimterex.sync_client.api.interfaces.IMessage
 class ConnectionResponse : IMessage {
 
     @SerializedName("token")
-    var token: String = ""
+    var token: String = String()
 
     @SerializedName("shared_folders")
     var shared_folders: ArrayList<String> = ArrayList()

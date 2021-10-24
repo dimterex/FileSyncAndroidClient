@@ -5,6 +5,4 @@ import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
 class FolderSelectModel(
     val folFolderMappingLocalModel: FolderMappingLocalModel,
     var folders: ArrayList<String>
-) {
-
-}
+)
