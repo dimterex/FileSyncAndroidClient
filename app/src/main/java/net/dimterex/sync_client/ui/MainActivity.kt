@@ -4,6 +4,7 @@ import android.Manifest
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -18,17 +19,17 @@ import net.dimterex.sync_client.ui.base.BaseActivity
 
 class MainActivity : BaseActivity<MainPresenter>(), MainView {
 
+    private val TAG = this::class.java.name
     override fun initPresenter(): MainPresenter = MainPresenter(this)
 
     override fun layoutId(): Int = R.layout.activity_main
-
-    override fun showError(error: Throwable) {}
 
     override fun initView() {
         val navController = Navigation.findNavController(this, R.id.main_nav_host)
         main_bottom_navigation.setupWithNavController(navController)
         val STORAGE_PERMISSION_CODE = 101
         checkPermission(WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)
+        Log.d(TAG, "Initialized view in thread: ${Thread.currentThread().getName()}")
     }
 
     private fun checkPermission(permission: String, requestCode: Int) {

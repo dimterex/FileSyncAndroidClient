@@ -1,6 +1,6 @@
 package net.dimterex.sync_client.modules.Executors.Transport.rest
 
-import net.dimterex.sync_client.modules.Executors.Transport.IAttachmentRestApi
+import net.dimterex.sync_client.modules.Executors.Transport.IRestApi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import java.security.SecureRandom
@@ -14,7 +14,7 @@ import javax.net.ssl.X509TrustManager
 
 class RestClientBuilder {
 
-    fun createService(baseUrl: String, useSsl: Boolean): IAttachmentRestApi {
+    fun createService(baseUrl: String, useSsl: Boolean): IRestApi {
         val client = getUnsafeOkHttpClient() //TODO REMOVE ME!!!
 
         return Retrofit.Builder().apply {
@@ -25,7 +25,7 @@ class RestClientBuilder {
         }
             .client(client)
             .build()
-            .create(IAttachmentRestApi::class.java)
+            .create(IRestApi::class.java)
     }
 
     fun getUnsafeOkHttpClient(): OkHttpClient {

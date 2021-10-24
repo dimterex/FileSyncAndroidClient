@@ -25,7 +25,6 @@ class EventDetailsPresenter(private val view: EventDetailsView, private val reso
 //                })
 //            }
         } else {
-            view.showError(WrongDataError(resources.getString(R.string.error_wrong_data)))
         }
     }
 

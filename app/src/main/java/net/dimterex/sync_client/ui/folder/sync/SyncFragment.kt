@@ -32,7 +32,7 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
         adapter = SyncEventsAdapter(presenter::onRepoPressed, resources)
         _connectionIconFormatted = ConnectionIconFormatted(resources)
 
-        logs_list.layoutManager = LinearLayoutManager(logs_list.context, LinearLayoutManager.VERTICAL, false)
+        logs_list.layoutManager = LinearLayoutManager(this.context)
         logs_list.adapter = adapter
 
         sync_button.setOnClickListener {view ->
@@ -41,20 +41,19 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
         menu_button.setOnClickListener { view ->
 //            main_container?.openDrawer(Gravity.START)
         }
+
+        Log.d(TAG, "Initialized view in thread: ${Thread.currentThread().getName()}")
     }
 
     override fun update(logs: ArrayList<FileSyncState>) {
         adapter.update(logs)
-        Log.d(TAG, "Old events update: $logs")
+        Log.d(TAG, "Old events update in thread: ${Thread.currentThread().getName()} event: $logs")
     }
 
     override fun update_position(position: Int) {
-        activity?.runOnUiThread {
-            adapter.notifyItemChanged(position)
-            logs_list.scrollToPosition(position)
-        }
-
-        Log.d(TAG, "Old event update by position: $position")
+        adapter.notifyItemChanged(position)
+        logs_list.scrollToPosition(position)
+        Log.d(TAG, "Old event update by position in thread: ${Thread.currentThread().getName()} event: $position")
     }
 
     override fun update_connected(isConnected: Boolean) {
@@ -62,10 +61,7 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
     }
 
     override fun add_new_event(message: FileSyncState){
-        activity?.runOnUiThread {
-            adapter.add(message)
-        }
-
-        Log.d(TAG, "New event added: $message")
+        adapter.add(message)
+        Log.d(TAG, "New event added in thread: ${Thread.currentThread().getName()} event: $message")
     }
 }

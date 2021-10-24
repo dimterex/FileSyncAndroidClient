@@ -1,7 +1,7 @@
 package net.dimterex.sync_client.modules
 
 import android.util.Log
-import net.dimterex.sync_client.modules.Executors.Transport.IAttachmentRestApi
+import net.dimterex.sync_client.modules.Executors.Transport.IRestApi
 import net.dimterex.sync_client.modules.Executors.Transport.WsClient
 import net.dimterex.sync_client.modules.Executors.Transport.rest.RestClientBuilder
 import okhttp3.RequestBody
@@ -21,7 +21,7 @@ interface ConnectionManager {
     fun setToken(token: String)
     suspend fun upload(fileName: String, fileRequestBody: RequestBody): Response<ResponseBody>
 
-    suspend fun sync(request: Array<String>): Response<ResponseBody>
+    suspend fun sync(request: RequestBody): Response<ResponseBody>
 
 
     class Impl(private val settingsManager:SettingsManager,
@@ -34,7 +34,7 @@ interface ConnectionManager {
         private val _connectedStateChangeFuncs: ArrayList<KFunction1<Boolean, Unit>>
 
         private var _client : WsClient? = null
-        private var _downloadService: IAttachmentRestApi? = null
+        private var _downloadService: IRestApi? = null
         override var isConnected: Boolean = false
         private var _token: String = String()
 
@@ -66,8 +66,8 @@ interface ConnectionManager {
             return _downloadService!!.upload(_token, fileName, fileRequestBody)
         }
 
-        override suspend fun sync(request: Array<String>): Response<ResponseBody> {
-            return _downloadService!!.sync(_token,  request.joinToString(";"))
+        override suspend fun sync(request: RequestBody): Response<ResponseBody> {
+            return _downloadService!!.sync(_token,  request)
         }
 
         private fun connect()

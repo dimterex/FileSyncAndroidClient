@@ -17,7 +17,7 @@ interface FileStateEventManager {
 
         private var _addEventFunc: KFunction1<FileSyncState, Unit>? = null
         private var _updEventFunc: KFunction1<Int, Unit>? = null
-
+        private val _scope = _scopeFactory.getMainScope()
 
         override val logs: ArrayList<FileSyncState> = ArrayList<FileSyncState>()
 
@@ -33,13 +33,16 @@ interface FileStateEventManager {
                 if (log.id == fileSyncState.id) {
                     val index = logs.indexOf(log)
                     log.details = fileSyncState.details
-                    _updEventFunc?.invoke(index)
+                    _scope.launch {
+                        _updEventFunc?.invoke(index)
+                    }
                     return
                 }
             }
-
             logs.add(fileSyncState)
-            _addEventFunc?.invoke(fileSyncState)
+            _scope.launch {
+                _addEventFunc?.invoke(fileSyncState)
+            }
         }
     }
 }

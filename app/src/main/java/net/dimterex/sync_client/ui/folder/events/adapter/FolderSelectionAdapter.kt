@@ -51,14 +51,9 @@ class FolderSelectionViewHolder(val view: View, val removeFunc: (oldItem: Folder
 
         combobox?.setAdapter(adapter)
 
-        var selectedIndex = 0;
         if (repo.folders.contains(repo.folFolderMappingLocalModel.outside_folder))
         {
-            selectedIndex = repo.folders.indexOf(repo.folFolderMappingLocalModel.outside_folder)
-            // выделяем элемент
             combobox?.setText(repo.folFolderMappingLocalModel.outside_folder)
-
-//            combobox?.setSelection(selectedIndex)
         }
 
         // устанавливаем обработчик нажатия

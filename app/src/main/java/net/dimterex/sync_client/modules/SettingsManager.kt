@@ -56,7 +56,7 @@ interface SettingsManager {
 
         override fun initialize() {
 
-            scope.launch {
+            val job = scope.launch {
 //                var connection_model = ConnectionsLocalModel(0, "192.168.0.235", 1234, "mobile", "mobile")
 //                _repoDao.connectionSettingsDao().insert(connection_model)
 
@@ -69,10 +69,14 @@ interface SettingsManager {
                     _connectionSettings = ConnectionsLocalModel(0, String(), 8080, String(), String())
 
                 _folderMapping = _repoDao.folderMappingDao().getAll()
+            }
+
+            job.invokeOnCompletion {
                 _settingsReadedAction.forEach { x ->
                     x.invoke()
                 }
             }
+
         }
 
         override fun get_connection_settings() : ConnectionsLocalModel {

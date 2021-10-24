@@ -11,6 +11,7 @@ import java.lang.reflect.Type
 import java.util.HashMap
 import kotlin.reflect.KFunction1
 import net.dimterex.sync_client.api.Message.Connection.ConnectionRequest
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 
@@ -23,6 +24,8 @@ interface JsonManager {
 
     fun sendMessage(iMessage: IMessage)
     fun restResponse(inputStream: String, type: Type)
+
+    suspend fun getPostMessage(iMessage: IMessage): Response<ResponseBody>
 
     class Impl(private val _connection: ConnectionManager,
                private val _settingsManager: SettingsManager) : JsonManager {
@@ -72,6 +75,15 @@ interface JsonManager {
             val result = _gson.fromJson<IMessage>(inputStream, type)
             _messageReceivedFunc?.invoke(result)
         }
+
+        override suspend fun getPostMessage(iMessage: IMessage): Response<ResponseBody> {
+            return _connection.sync(createJsonRequestBody(iMessage))
+        }
+
+        private fun createJsonRequestBody(iMessage: IMessage) =
+            RequestBody.create(
+                okhttp3.MediaType.parse("application/json; charset=utf-8"),
+                _gson.toJson(iMessage))
 
         private fun serialize(message: IMessage): MessageContainer? {
             val type = message::class.java

@@ -6,7 +6,7 @@ import retrofit2.Response
 import retrofit2.http.*
 
 
-interface IAttachmentRestApi {
+interface IRestApi {
 
     @Streaming
     @POST("/api/attachment/0/upload")
@@ -24,9 +24,9 @@ interface IAttachmentRestApi {
     ): Response<ResponseBody>
 
     @Streaming
-    @GET("/api/sync/0/sync")
+    @POST("/api/sync/0/request")
     suspend fun sync(
         @Query("token") token: String,
-        @Query("files") files: String
+        @Body filesRequestBody: RequestBody
     ): Response<ResponseBody>
 }

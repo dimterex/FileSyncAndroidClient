@@ -19,16 +19,8 @@ abstract class BasePresenter(private val view: BaseView) : KodeinAware {
 
     open fun onDestroy() {
     }
-
-    open fun onError(error: Throwable) {
-        view.showError(error)
-        error.printStackTrace()
-    }
 }
 
 interface BaseView: LifecycleOwner {
-
     fun initView()
-
-    fun showError(error: Throwable)
 }

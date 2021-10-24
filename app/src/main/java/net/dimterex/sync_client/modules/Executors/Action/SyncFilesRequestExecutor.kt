@@ -35,8 +35,7 @@ class SyncFilesRequestExecutor(
 
         scope.launch {
             try {
-                val response = _connectionManager.sync(param.files.toTypedArray())
-                println(response)
+                val response = _jsonManager.getPostMessage(param)
                 if (!response.isSuccessful)
                     throw Exception("Attachment not found!")
 
