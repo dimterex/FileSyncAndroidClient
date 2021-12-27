@@ -1,4 +1,4 @@
-package net.dimterex.sync_client.api.Message.Action
+package net.dimterex.sync_client.api.Message.Sync
 
 import net.dimterex.sync_client.api.MessageAttr
 import com.google.gson.annotations.SerializedName

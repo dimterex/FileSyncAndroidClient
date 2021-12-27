@@ -15,7 +15,7 @@ import javax.net.ssl.X509TrustManager
 class RestClientBuilder {
 
     fun createService(baseUrl: String, useSsl: Boolean): IRestApi {
-        val client = getUnsafeOkHttpClient() //TODO REMOVE ME!!!
+        val client = getUnsafeOkHttpClient()
 
         return Retrofit.Builder().apply {
             if (useSsl)

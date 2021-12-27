@@ -1,7 +1,7 @@
 package net.dimterex.sync_client.presenter.menu.sync
 
 import android.os.Bundle
-import net.dimterex.sync_client.api.Message.Action.SyncFilesRequest
+import net.dimterex.sync_client.api.Message.Sync.SyncFilesRequest
 import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.modules.ConnectionManager
 import net.dimterex.sync_client.modules.FileStateEventManager

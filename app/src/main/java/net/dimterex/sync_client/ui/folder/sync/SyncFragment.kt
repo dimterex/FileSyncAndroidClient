@@ -41,19 +41,15 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
         menu_button.setOnClickListener { view ->
 
         }
-
-        Log.d(TAG, "Initialized view in thread: ${Thread.currentThread().getName()}")
     }
 
     override fun update(logs: ArrayList<FileSyncState>) {
         adapter.update(logs)
-        Log.d(TAG, "Old events update in thread: ${Thread.currentThread().getName()} event: $logs")
     }
 
     override fun update_position(position: Int) {
         adapter.notifyItemChanged(position)
         logs_list.scrollToPosition(position)
-        Log.d(TAG, "Old event update by position in thread: ${Thread.currentThread().getName()} event: $position")
     }
 
     override fun update_connected(isConnected: Boolean) {
@@ -62,6 +58,5 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
 
     override fun add_new_event(message: FileSyncState){
         adapter.add(message)
-        Log.d(TAG, "New event added in thread: ${Thread.currentThread().getName()} event: $message")
     }
 }

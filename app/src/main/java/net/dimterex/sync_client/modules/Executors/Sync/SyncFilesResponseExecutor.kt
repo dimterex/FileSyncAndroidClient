@@ -1,14 +1,11 @@
-package net.dimterex.sync_client.modules.Executors.Action
+package net.dimterex.sync_client.modules.Executors.Sync
 
 import android.net.Uri
-import android.os.Environment
 import android.util.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.GlobalScope.coroutineContext
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.sendBlocking
-import net.dimterex.sync_client.R
-import net.dimterex.sync_client.api.Message.Action.SyncFilesResponse
+import net.dimterex.sync_client.api.Message.Sync.SyncFilesResponse
 import net.dimterex.sync_client.api.Modules.Common.IExecute
 import net.dimterex.sync_client.data.FileInfo
 import net.dimterex.sync_client.data.ScopeFactory
@@ -24,10 +21,6 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.sql.Time
-import java.text.DateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class SyncFilesResponseExecutor(private val fileManager: FileManager,
                                 private val _fileState_eventManager: FileStateEventManager,
@@ -40,7 +33,6 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
     private val actionsQueue = Channel<FileInfo>()
     private val scope: CoroutineScope = _scopeFactory.getScope()
 
-
     override fun Execute(param: SyncFilesResponse) {
 
             val count = param.added_files.count() + param.removed_files.count() + param.uploaded_files.count()
@@ -49,7 +41,6 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
             println(count)
             for (for_remove in param.removed_files)
             {
-//              println("REMOVE: " + for_remove.file_name)
                 val file = fileManager.getFullPath(for_remove.file_name) ?: continue
 
                 corrent_count++
@@ -63,11 +54,9 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
                 }
             }
 
-
             var itemCount = 0;
             for (for_download in param.added_files)
             {
-    //                println("DOWNLOAD: " + for_download.file_name)
                 val fileInfo = FileInfo(for_download.file_name,FileSyncType.DOWNLOAD, for_download.size)
                 corrent_count++
                 itemCount++
@@ -81,7 +70,6 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
 
             for (for_upload in param.uploaded_files)
             {
-//              println("UPLOAD: " + for_upload.file_name)
                 val fileInfo = fileManager.getFileInfoForUpload(for_upload.file_name)
 
                 corrent_count++
@@ -103,11 +91,8 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
 
             /**ALL**/
             launch(Dispatchers.IO) {
-                Log.i(TAG, "ALL starting ...")
                 while (true) {
                     val item = actionsQueue.receive()
-
-                    Log.i(TAG, "ALL starting for $item")
 
                     val job = launch {
                         if (item.type == FileSyncType.DOWNLOAD)
@@ -127,9 +112,7 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
 
     private suspend fun download_file(item: FileInfo)
     {
-
         try {
-            Log.i(TAG, "downloading starting for $item")
             val response = _connectionManager.download(item.name)
 
             if (!response.isSuccessful)
@@ -150,20 +133,18 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
         }
     }
 
-    private suspend fun remove_file(fileInfo: FileInfo)
+    private fun remove_file(fileInfo: FileInfo)
     {
         try {
-            Log.i(TAG, "removing starting for $fileInfo")
             val item = File(fileInfo.name)
             if (item.exists()) {
                 if (item.delete())
                 {
-                    Log.d(TAG, "file Deleted $item")
                     _fileState_eventManager.save_event(FileSyncState(item.path, FileSyncType.DELETE, String(),100))
                 }
                 else
                 {
-                    Log.d(TAG, "file not Deleted $item")
+                    // TODO: Log it
                 }
             }
 
@@ -178,9 +159,7 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
         try {
             val item = fileManager.getFileInfoForUpload(fileInfo.name)
 
-            Log.i(TAG, "uploading starting for $fileInfo")
             val mediaType = MediaType.parse("application/octet-stream")
-
 
             val inputStream = File(item.first.name).inputStream()
 
@@ -188,16 +167,11 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
                 contentType = mediaType,
                 contentLength = item.first.sizeBytes,
                 progressCallback = { progress ->
-
                     _fileState_eventManager.save_event(FileSyncState(item.second, FileSyncType.UPLOAD, String(), progress))
                 },
                 errorCallback = { e ->
-//                                    launch(Dispatchers.Main) {
-//                                        fileInfoStorage.update(item, FAIL(e))
-//                                    }
                     println(e)
                     coroutineContext.cancelChildren()
-//                                    job.cancel("error", e)
                 }
             )
 
@@ -206,22 +180,19 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-//                                        fileInfoStorage.update(item, READY_UPLOAD(), item.uri)
+                        // TODO: Log it
                     } else {
-                        val error = response.errorBody()?.charStream()?.readText()
-//                                        fileInfoStorage.update(item, FAIL(Throwable(error)), item.uri)
+                        // TODO: Log it
                     }
                 }
             }
-
         } catch (e: Throwable) {
             println(e)
             e.printStackTrace()
         }
     }
 
-    /** Returns a new request body that transmits the content of this. */
-    suspend fun InputStream.asRequestBodyWithProgress(
+    fun InputStream.asRequestBodyWithProgress(
         contentType: MediaType? = null,
         contentLength: Long,
         progressCallback: ((progress: Int) -> Unit)?,
@@ -232,7 +203,6 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
 
             override fun contentLength(): Long = try {
                 contentLength
-                //available().toLong()
             } catch (e: IOException) {
                 e.printStackTrace()
                 0
@@ -240,7 +210,6 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
 
             @Throws(IOException::class)
             override fun writeTo(sink: BufferedSink) {
-                Log.d(TAG, "writeTo called")
                 val fileLength = contentLength()
                 val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
                 val inputStream = this@asRequestBodyWithProgress
@@ -252,7 +221,6 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
                         uploaded += read
                         val progress = (uploaded / fileLength.toFloat() * 100).toInt()
 
-                        //ignore spam
                         if (lastProgress != progress) {
                             lastProgress = progress
                             progressCallback?.invoke(progress)
@@ -289,8 +257,6 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
             val fileReader = ByteArray(10240)
             var lastProgress = -1
 
-            Log.i(TAG, "downloading write for $fileInfo")
-
             while (true) {
                 val read = inputStream.read(fileReader)
                 if (read == -1) {
@@ -301,7 +267,6 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
 
                 val progress = (fileSizeDownloaded.toFloat() / fileInfo.sizeBytes * 100).toInt()
 
-                //ignore spam
                 if (lastProgress != progress) {
                     lastProgress = progress
                     val fileSyncState = FileSyncState(fileInfo.name, FileSyncType.DOWNLOAD, String(), progress)
@@ -311,7 +276,7 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
             outputStream.flush()
 
         } catch (ex: Exception) {
-            Log.e("Error", "${ex.message}\n${ex.stackTrace.joinToString("\n")}\n${ex.cause?.stackTrace?.joinToString("\n")}")
+            println(ex)
         } finally {
             inputStream.close()
             outputStream.close()

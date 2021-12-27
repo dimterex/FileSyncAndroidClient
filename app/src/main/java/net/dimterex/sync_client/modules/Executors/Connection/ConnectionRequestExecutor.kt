@@ -40,7 +40,7 @@ class ConnectionRequestExecutor(
             try {
                 val response = _jsonManager.getPostMessage(param)
                 if (!response.isSuccessful)
-                    throw Exception("Attachment not found!")
+                    throw Exception("File not found!")
 
                 val inputStream = response.body()?.string()
 

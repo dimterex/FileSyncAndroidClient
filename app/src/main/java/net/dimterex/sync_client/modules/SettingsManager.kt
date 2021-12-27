@@ -57,12 +57,6 @@ interface SettingsManager {
         override fun initialize() {
 
             val job = scope.launch {
-//                var connection_model = ConnectionsLocalModel(0, "192.168.0.235", 1234, "mobile", "mobile")
-//                _repoDao.connectionSettingsDao().insert(connection_model)
-
-//                var folder_mappong = FolderMappingLocalModel(0, "/storage/emulated/0/Download", "D:\\SyncTest")
-//                _repoDao.folderMappingDao().insert(folder_mappong)
-
                 _connectionSettings = _repoDao.connectionSettingsDao().selectById(0)
 
                 if (_connectionSettings == null)

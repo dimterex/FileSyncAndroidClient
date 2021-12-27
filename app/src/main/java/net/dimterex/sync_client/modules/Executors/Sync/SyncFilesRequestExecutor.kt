@@ -1,17 +1,11 @@
-package net.dimterex.sync_client.modules.Executors.Action
+package net.dimterex.sync_client.modules.Executors.Sync
 
-import android.util.Log
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import net.dimterex.sync_client.api.Message.Action.SyncFilesRequest
-import net.dimterex.sync_client.api.Message.Action.SyncFilesResponse
+import net.dimterex.sync_client.api.Message.Sync.SyncFilesRequest
+import net.dimterex.sync_client.api.Message.Sync.SyncFilesResponse
 import net.dimterex.sync_client.api.Modules.Common.IExecute
-import net.dimterex.sync_client.api.interfaces.IMessage
 import net.dimterex.sync_client.data.ScopeFactory
-import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.modules.*
 
 class SyncFilesRequestExecutor(

@@ -29,7 +29,6 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
         main_bottom_navigation.setupWithNavController(navController)
         val STORAGE_PERMISSION_CODE = 101
         checkPermission(WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)
-        Log.d(TAG, "Initialized view in thread: ${Thread.currentThread().getName()}")
     }
 
     private fun checkPermission(permission: String, requestCode: Int) {

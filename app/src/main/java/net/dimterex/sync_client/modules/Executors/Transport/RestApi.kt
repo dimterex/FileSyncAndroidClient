@@ -9,7 +9,7 @@ import retrofit2.http.*
 interface IRestApi {
 
     @Streaming
-    @POST("/api/attachment/0/upload")
+    @POST("/api/files/0/upload")
     suspend fun upload(
         @Query("token") token: String,
         @Query("file_name") fileName: String,
@@ -17,14 +17,14 @@ interface IRestApi {
     ): Response<ResponseBody>
 
     @Streaming
-    @GET("/api/attachment/0/download")
+    @GET("/api/files/0/download")
     suspend fun download(
         @Query("token") token: String,
         @Query("file_id") fileId: String?
     ): Response<ResponseBody>
 
     @Streaming
-    @POST("/api/sync/0/request")
+    @POST("/api/core/0/request")
     suspend fun sync(
         @Query("token") token: String,
         @Body filesRequestBody: RequestBody
