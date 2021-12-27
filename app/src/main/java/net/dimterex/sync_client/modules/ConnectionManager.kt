@@ -12,7 +12,6 @@ interface ConnectionManager {
 
     var isConnected: Boolean
     fun raiseConnection()
-    fun addMessageReceivedListener(messageReceived: KFunction1<String, Unit>)
     fun addConnectionStateListener(connectedStateChangeFunc: KFunction1<Boolean, Unit>)
     fun restart_connection()
 
@@ -30,7 +29,6 @@ interface ConnectionManager {
 
         private val TAG = this::class.java.name
 
-        private var _messageReceivedFunc: KFunction1<String, Unit>? = null
         private val _connectedStateChangeFuncs: ArrayList<KFunction1<Boolean, Unit>>
 
         private var _downloadService: IRestApi? = null
@@ -46,7 +44,6 @@ interface ConnectionManager {
         private fun interrupt() {
             setToken(String())
         }
-
 
         override suspend fun download(name: String): Response<ResponseBody> {
             return _downloadService!!.download(_token, name)
@@ -79,10 +76,6 @@ interface ConnectionManager {
             }
         }
 
-
-        override fun addMessageReceivedListener(messageReceived: KFunction1<String, Unit>) {
-            _messageReceivedFunc = messageReceived
-        }
 
         override fun addConnectionStateListener(connectedStateChangeFunc: KFunction1<Boolean, Unit>) {
             _connectedStateChangeFuncs.add(connectedStateChangeFunc)

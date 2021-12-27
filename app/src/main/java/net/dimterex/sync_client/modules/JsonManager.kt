@@ -31,10 +31,6 @@ interface JsonManager {
 
         private var _messageReceivedFunc: KFunction1<IMessage, Unit>? = null
 
-        init {
-            _connection.addMessageReceivedListener(this::messageReceivedListener)
-        }
-
         override fun addListener(function: KFunction1<IMessage, Unit>) {
             _messageReceivedFunc = function
         }
@@ -60,8 +56,7 @@ interface JsonManager {
 
 
         override fun restResponse(inputStream: String, type: Type) {
-            val result = _gson.fromJson<IMessage>(inputStream, type)
-            _messageReceivedFunc?.invoke(result)
+            messageReceivedListener(inputStream)
         }
 
         override suspend fun getPostMessage(iMessage: IMessage): Response<ResponseBody> {

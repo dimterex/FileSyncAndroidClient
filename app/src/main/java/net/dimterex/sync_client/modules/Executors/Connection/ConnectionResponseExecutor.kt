@@ -12,5 +12,7 @@ private val _connectionManager: ConnectionManager) : IExecute<ConnectionResponse
         param.shared_folders.forEach{ x ->
             _availableFoldersManager.save_event(x)
         }
+
+        _connectionManager.raiseConnection()
     }
 }
