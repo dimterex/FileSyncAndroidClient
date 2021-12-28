@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="button_height">45dp</dimen>
-    <dimen name="button_width">65dp</dimen>
-    <dimen name="button_margin">3dp</dimen>
-    <dimen name="button_padding">3dp</dimen>
-    <dimen name="button_strokeWidth">2dp</dimen>
+<!--    the dimensions must be 2, 4 or multiple of 8-->
+    <dimen name="size0">0dp</dimen>
+    <dimen name="size2">2dp</dimen>
+    <dimen name="size4">4dp</dimen>
+    <dimen name="size8">8dp</dimen>
+    <dimen name="size16">16dp</dimen>
+    <dimen name="size24">24dp</dimen>
+    <dimen name="size32">32dp</dimen>
+    <dimen name="size40">40dp</dimen>
+    <dimen name="size48">48dp</dimen>
+    <dimen name="size56">56dp</dimen>
+    <dimen name="size64">64dp</dimen>
+
+
+    <dimen name="button_height">@dimen/size48</dimen>
+    <dimen name="button_width">@dimen/size64</dimen>
+    <dimen name="button_margin">@dimen/size4</dimen>
+    <dimen name="button_padding">@dimen/size4</dimen>
+    <dimen name="button_strokeWidth">@dimen/size2</dimen>
 </resources>
