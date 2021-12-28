@@ -1,7 +1,10 @@
 package net.dimterex.sync_client.presenter.menu.sync
 
 import android.os.Bundle
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import net.dimterex.sync_client.api.Message.Sync.SyncFilesRequest
+import net.dimterex.sync_client.data.ScopeFactory
 import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.modules.ConnectionManager
 import net.dimterex.sync_client.modules.FileStateEventManager
@@ -15,6 +18,9 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
     private val _executerManager by instance<ExecuteManager>()
     private val _event_log_manager by instance<FileStateEventManager>()
     private val _connectionManager by instance<ConnectionManager>()
+    private val _scopeFactory by instance<ScopeFactory>()
+
+    private var _mainScope: CoroutineScope? = null
 
     override fun onCreate(arguments: Bundle?) {
         super.onCreate(arguments)
@@ -23,11 +29,14 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
         _event_log_manager.add_event_listener(this::add_event_listener, this::update_item)
         _connectionManager.addConnectionStateListener(this::connectedStateChange)
         connectedStateChange(_connectionManager.isConnected)
+        _mainScope = _scopeFactory.getMainScope()
     }
 
 
     fun connectedStateChange(isConnected: Boolean) {
-        view.update_connected(isConnected)
+        _mainScope?.launch {
+            view.update_connected(isConnected)
+        }
     }
 
     fun sync_execute() {

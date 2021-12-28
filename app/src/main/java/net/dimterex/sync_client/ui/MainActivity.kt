@@ -56,7 +56,6 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
     }
 
 
-
     companion object{
         private const val STORAGE_PERMISSION_CODE = 101
     }

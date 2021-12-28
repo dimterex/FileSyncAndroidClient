@@ -47,6 +47,9 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
     }
 
     override fun update_connected(isConnected: Boolean) {
+        if (connectionStatusTextView == null)
+            return
+
         connectionStatusTextView.text  =_connectionIconFormatted!!.format(isConnected)
     }
 

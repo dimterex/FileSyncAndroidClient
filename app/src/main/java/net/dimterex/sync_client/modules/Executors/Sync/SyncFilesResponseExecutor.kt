@@ -113,6 +113,8 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
     private suspend fun download_file(item: FileInfo)
     {
         try {
+            Log.i(TAG, "Waiting download ${item.name}")
+
             val response = _connectionManager.download(item.name)
 
             if (!response.isSuccessful)
@@ -163,11 +165,14 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
 
             val inputStream = File(item.first.name).inputStream()
 
+            Log.i(TAG, "Waiting upload ${fileInfo.name}")
+
             val requestBody = inputStream.asRequestBodyWithProgress(
                 contentType = mediaType,
                 contentLength = item.first.sizeBytes,
                 progressCallback = { progress ->
                     _fileState_eventManager.save_event(FileSyncState(item.second, FileSyncType.UPLOAD, String(), progress))
+                    Log.i(TAG, "Process ${progress} upload ${fileInfo.name}")
                 },
                 errorCallback = { e ->
                     println(e)
@@ -257,6 +262,7 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
             val fileReader = ByteArray(10240)
             var lastProgress = -1
 
+            Log.i(TAG, "Starting download ${fileInfo.name}")
             while (true) {
                 val read = inputStream.read(fileReader)
                 if (read == -1) {
@@ -271,9 +277,11 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
                     lastProgress = progress
                     val fileSyncState = FileSyncState(fileInfo.name, FileSyncType.DOWNLOAD, String(), progress)
                     _fileState_eventManager.save_event(fileSyncState)
+                    Log.i(TAG, "Process ${progress} download ${fileInfo.name}")
                 }
             }
             outputStream.flush()
+            Log.i(TAG, "Ending download ${fileInfo.name}")
 
         } catch (ex: Exception) {
             println(ex)
