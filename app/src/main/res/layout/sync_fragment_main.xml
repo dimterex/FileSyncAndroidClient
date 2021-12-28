@@ -6,37 +6,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <Button
-            android:id="@+id/sync_button"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="@dimen/button_width"
-            android:layout_height="@dimen/button_height"
-            app:icon="@android:drawable/ic_popup_sync"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/connectionStatusTextView"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    <TextView
-            android:id="@+id/connectionStatusTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            app:layout_constraintBottom_toBottomOf="@id/sync_button"
-            app:layout_constraintLeft_toRightOf="@id/sync_button"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Connection status" />
-
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/logs_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sync_button" />
+            app:layout_constraintRight_toRightOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

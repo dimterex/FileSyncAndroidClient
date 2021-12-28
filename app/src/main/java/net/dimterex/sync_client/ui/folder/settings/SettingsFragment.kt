@@ -1,6 +1,9 @@
 package net.dimterex.sync_client.ui.folder.settings
 
-import android.view.View
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.settings_fragment_main.*
@@ -15,6 +18,7 @@ import net.dimterex.sync_client.ui.folder.sync.adapter.FolderSelectionAdapter
 
 class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
 
+    private var _menu: Menu? = null
     private lateinit var adapter: FolderSelectionAdapter
     private val _outside_folders = ArrayList<String>()
 
@@ -36,10 +40,8 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
         adapter.items.forEach { x ->
             x.folders.clear()
             x.folders.addAll(_outside_folders)
-//
 //            adapter.notifyItemChanged(adapter.items.indexOf(x))
         }
-
     }
 
     override fun initPresenter(): SettingsPresenter = SettingsPresenter(this)
@@ -58,18 +60,6 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
 
         presenter.getMappingFolders().forEach{ x ->
             adapter.add(FolderSelectModel(x, _outside_folders))
-        }
-
-        saveSettingsButton.setOnClickListener { view ->
-            presenter.save()
-        }
-
-        addFolderButton.setOnClickListener { view ->
-            adapter.add(FolderSelectModel(createFolderMappingLocalModel(), _outside_folders))
-        }
-
-        checkConnectionButton.setOnClickListener { view ->
-            presenter.check_connection(get_ip_address(), get_ip_port(), get_login(), get_password())
         }
     }
 
@@ -91,6 +81,37 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
 
     override fun get_ip_address(): String  {
         return ip_address_textbox?.editText?.text.toString()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // TODO Add your menu entries here
+        inflater.inflate(R.menu.settings_fragment_menu, menu)
+        _menu = menu;
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.saveSettingsButton -> {
+                presenter.save()
+                true
+            }
+            R.id.addFolderButton -> {
+                adapter.add(FolderSelectModel(createFolderMappingLocalModel(), _outside_folders))
+                true
+            }
+            R.id.checkConnectionButton -> {
+                presenter.check_connection(get_ip_address(), get_ip_port(), get_login(), get_password())
+                true
+            }
+
+            else -> false
+        }
     }
 
     private fun createFolderMappingLocalModel(): FolderMappingLocalModel {

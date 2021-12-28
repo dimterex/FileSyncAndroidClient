@@ -28,8 +28,10 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
         view.update(_event_log_manager.logs)
         _event_log_manager.add_event_listener(this::add_event_listener, this::update_item)
         _connectionManager.addConnectionStateListener(this::connectedStateChange)
-        connectedStateChange(_connectionManager.isConnected)
+
         _mainScope = _scopeFactory.getMainScope()
+
+        connectedStateChange(_connectionManager.isConnected)
     }
 
 

@@ -5,7 +5,6 @@
         <!-- ... -->
     </style>
 
-
     <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="iconPadding">@dimen/button_padding</item>
         <item name="android:layout_width">@dimen/button_width</item>
