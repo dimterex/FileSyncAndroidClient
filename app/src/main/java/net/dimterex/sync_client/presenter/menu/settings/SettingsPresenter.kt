@@ -1,52 +1,82 @@
 package net.dimterex.sync_client.presenter.menu.settings
 
 import android.os.Bundle
-import net.dimterex.sync_client.entity.Settings
-import net.dimterex.sync_client.modules.FileManager
+import net.dimterex.sync_client.data.entries.ConnectionsLocalModel
+import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
+import net.dimterex.sync_client.entity.FolderSelectModel
+import net.dimterex.sync_client.modules.AvailableFoldersManager
+import net.dimterex.sync_client.modules.ConnectionManager
 import net.dimterex.sync_client.modules.SettingsManager
 import net.dimterex.sync_client.presenter.base.BasePresenter
 import net.dimterex.sync_client.presenter.base.BaseView
 import org.kodein.di.erased.instance
-import java.io.File
 
 class SettingsPresenter(private val view: SettingsView) : BasePresenter(view) {
 
     private val _settingsManager by instance<SettingsManager>()
-    private val _fileManager by instance<FileManager>()
+    private val _connectionManager by instance<ConnectionManager>()
+    private val _availableFoldersManager  by instance<AvailableFoldersManager>()
 
     override fun onCreate(arguments: Bundle?) {
         super.onCreate(arguments)
 
-        view.profile = _settingsManager.get_settings()
+        view.profile = _settingsManager.get_connection_settings()
+        _availableFoldersManager.add_event_listener(this::add_event_listener)
     }
 
-    override fun onDestroy() {
-        var new_sync_folder = view.get_sync_folder()
+    private fun add_event_listener(message: String){
+        view.add_new_event(message)
+    }
 
-        _fileManager.set_sync_folder(new_sync_folder)
+    fun getMappingFolders(): List<FolderMappingLocalModel> {
+        return _settingsManager.get_folder_mapping();
+    }
 
-        _settingsManager.set_default_folder(new_sync_folder.absolutePath)
+    fun getAvailableFolders(): List<String> {
+        return _availableFoldersManager.logs
+    }
 
-        _settingsManager.set_ip_address( view.get_ip_address())
-        _settingsManager.set_ip_port( view.get_ip_port())
+    fun save() {
+        val new_sync_folder = view.get_sync_folders()
+
+
+        _settingsManager.remove_all_folders()
+
+        new_sync_folder.forEach {
+            _settingsManager.add_folder(it.folFolderMappingLocalModel)
+        }
+
+        val connectionSettings = _settingsManager.get_connection_settings()
+        connectionSettings.ip_address = view.get_ip_address()
+        connectionSettings.ip_port = view.get_ip_port()
+        connectionSettings.login = view.get_login()
+        connectionSettings.password = view.get_password()
 
         _settingsManager.save_settings()
-        super.onDestroy()
     }
 
-//    fun onChoosePath(path: String, pathFile: File) {
-//        _settingsManager.set_default_folder(path)
-//        _fileManager.setDefaultDirectory(pathFile)
-//    }
+
+    fun check_connection(url: String, port: Int, login: String, password: String) {
+        val settings = _settingsManager.get_connection_settings()
+        settings.ip_address = url
+        settings.ip_port = port
+        settings.login = login
+        settings.password = password
+
+        _connectionManager.restart_connection()
+    }
 }
 
 interface SettingsView : BaseView {
 
-    var profile: Settings?
+    var profile: ConnectionsLocalModel?
 
+    fun add_new_event(message: String)
     fun get_ip_address(): String
     fun get_ip_port(): Int
-    fun get_sync_folder(): File
+    fun get_login(): String
+    fun get_password(): String
+    fun get_sync_folders(): Array<FolderSelectModel>
 }
 
 

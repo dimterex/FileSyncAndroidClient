@@ -1,76 +1,95 @@
 package net.dimterex.sync_client.modules
 
-import net.dimterex.sync_client.entity.ConnectionSettings
-import net.dimterex.sync_client.modules.Executors.Transport.TcpClient
-import net.dimterex.sync_client.modules.Executors.Transport.WsClient
-import java.net.InetSocketAddress
-import java.net.URI
+import android.util.Log
+import net.dimterex.sync_client.modules.Executors.Transport.IRestApi
+import net.dimterex.sync_client.modules.Executors.Transport.rest.RestClientBuilder
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Response
 import kotlin.reflect.KFunction1
 
 interface ConnectionManager {
 
-    fun addListener(function: KFunction1<String, Unit>)
-    fun start()
-    fun send(raw_string: String)
-    fun add_event_listener(function: KFunction1<String, Unit>)
+    var isConnected: Boolean
+    fun raiseConnection()
+    fun addConnectionStateListener(connectedStateChangeFunc: KFunction1<Boolean, Unit>)
+    fun restart_connection()
 
-    class Impl(private val settingsManager:SettingsManager) : ConnectionManager, Thread() {
+    fun setToken(token: String)
 
-        private var _messageReceavedFunc: KFunction1<String, Unit>? = null
-        private var _event_listener: KFunction1<String, Unit>? = null
 
-        private var _client : TcpClient? = null
-//        private var _client : WsClient? = null
+    suspend fun download(name: String): Response<ResponseBody>
+    suspend fun upload(fileName: String, fileRequestBody: RequestBody): Response<ResponseBody>
+    suspend fun send_request(request: RequestBody): Response<ResponseBody>
 
-        private var _connectionSettings: ConnectionSettings = settingsManager.get_settings().connectionSettings
+
+    class Impl(private val settingsManager: SettingsManager,
+               private val _restClientBuilder: RestClientBuilder
+    ) : ConnectionManager {
+
+        private val TAG = this::class.java.name
+
+        private val _connectedStateChangeFuncs: ArrayList<KFunction1<Boolean, Unit>>
+
+        private var _downloadService: IRestApi? = null
+        private var _token: String = String()
+        override var isConnected: Boolean = false
+
 
         init {
             settingsManager.add_listener(this::restart_connection)
+            _connectedStateChangeFuncs = ArrayList()
         }
 
-        override fun run() {
-            connect()
+        private fun interrupt() {
+            setToken(String())
         }
 
-        override fun interrupt() {
-            _client?.close()
+        override suspend fun download(name: String): Response<ResponseBody> {
+            return _downloadService!!.download(_token, name)
         }
 
-        override fun send(raw_string: String){
-            write(raw_string)
+        override fun setToken(token: String) {
+            _token = token
         }
 
-        override fun add_event_listener(function: KFunction1<String, Unit>) {
-            _event_listener = function
+        override suspend fun upload(fileName: String, fileRequestBody: RequestBody): Response<ResponseBody> {
+            return _downloadService!!.upload(_token, fileName, fileRequestBody)
         }
 
-        override fun addListener(function: KFunction1<String, Unit>) {
-            _messageReceavedFunc = function
+        override suspend fun send_request(request: RequestBody): Response<ResponseBody> {
+            return _downloadService!!.sync(_token,  request)
         }
 
         private fun connect()
         {
             try {
                 interrupt()
+                val connectionsLocalModel = settingsManager.get_connection_settings()
 
-                var addr  = InetSocketAddress(_connectionSettings.ip_address, _connectionSettings.port)
-
-                _client = TcpClient(addr, _messageReceavedFunc)
-//                _client = WsClient(URI("ws://${_connectionSettings.ip_address}:${_connectionSettings.port}"), _messageReceavedFunc)
-//                _client?.connect()
+                Log.i(TAG, "${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}")
+                _downloadService = _restClientBuilder.createService("${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}", false)
 
             } catch (e: Exception) {
-                _event_listener?.invoke(e.toString())
+                println(e.toString())
                 interrupt()
             }
         }
 
-        private fun write(message: String) {
-            _client?.send(message)
+
+        override fun addConnectionStateListener(connectedStateChangeFunc: KFunction1<Boolean, Unit>) {
+            _connectedStateChangeFuncs.add(connectedStateChangeFunc)
         }
 
-        private fun restart_connection() {
+        override fun restart_connection() {
             connect()
+        }
+
+        override fun raiseConnection() {
+            isConnected = true
+            _connectedStateChangeFuncs.forEach{ x ->
+                x.invoke(true)
+            }
         }
     }
 }

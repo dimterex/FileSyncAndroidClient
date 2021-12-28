@@ -36,8 +36,4 @@ abstract class BaseFragment<T: BasePresenter> : Fragment(), BaseView {
         super.onDestroy()
         presenter.onDestroy()
     }
-
-    override fun showError(error: Throwable) {
-        Toast.makeText(context!!, error.message, Toast.LENGTH_SHORT).show()
-    }
 }

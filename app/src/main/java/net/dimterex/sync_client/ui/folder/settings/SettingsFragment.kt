@@ -1,82 +1,113 @@
 package net.dimterex.sync_client.ui.folder.settings
 
 import android.view.View
-import android.widget.EditText
-import android.widget.TextView
-import com.obsez.android.lib.filechooser.ChooserDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.settings_fragment_main.*
 import net.dimterex.sync_client.R
-import net.dimterex.sync_client.entity.Settings
+import net.dimterex.sync_client.data.entries.ConnectionsLocalModel
+import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
+import net.dimterex.sync_client.entity.FolderSelectModel
 import net.dimterex.sync_client.presenter.menu.settings.SettingsPresenter
 import net.dimterex.sync_client.presenter.menu.settings.SettingsView
 import net.dimterex.sync_client.ui.base.BaseFragment
-import java.io.File
+import net.dimterex.sync_client.ui.folder.sync.adapter.FolderSelectionAdapter
 
 class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
-    private var _sync_folder : File = File(String())
 
-    private var _port: EditText? = null
-    private var _ip_address: EditText? = null
-//    private var _ip_address : String = String()
-//    private var _port : Int = 0
+    private lateinit var adapter: FolderSelectionAdapter
+    private val _outside_folders = ArrayList<String>()
 
-
-    override var profile: Settings? = null
+    override var profile: ConnectionsLocalModel? = null
     set(value) {
 
         if (value != null) {
-            _sync_folder = File(value.defaultFolder)
-
-            set_path(value.defaultFolder)
-            btnChoose.setOnClickListener(openFolderChooser(value.defaultFolder))
-
-            _ip_address?.setText(value.connectionSettings.ip_address,  TextView.BufferType.EDITABLE)
-            _port?.setText(value.connectionSettings.port.toString())
+            ip_address_textbox?.editText?.setText(value.ip_address)
+            port_textbox?.editText?.setText(value.ip_port.toString())
+            login_textbox?.editText?.setText(value.login)
+            password_textbox?.editText?.setText(value.password)
         }
 
         field = value
     }
 
+    override fun add_new_event(message: String) {
+        _outside_folders.add(message)
+        adapter.items.forEach { x ->
+            x.folders.clear()
+            x.folders.addAll(_outside_folders)
+//
+//            adapter.notifyItemChanged(adapter.items.indexOf(x))
+        }
+
+    }
+
     override fun initPresenter(): SettingsPresenter = SettingsPresenter(this)
 
-    override fun layoutId(): Int = R.layout.fragment_profile
+    override fun layoutId(): Int = R.layout.settings_fragment_main
 
     override fun initView() {
-        _ip_address = ip_address
-        _port = port
-    }
 
-    override fun showMenu() {
-        activity?.main_bottom_navigation?.visibility = View.VISIBLE
-    }
+        presenter.getAvailableFolders().forEach { x ->
+            _outside_folders.add(x)
+        }
 
-    override fun get_ip_port(): Int {
-        return _port?.text.toString().toInt()
-    }
+        adapter = FolderSelectionAdapter()
+        folders_list.layoutManager = LinearLayoutManager(folders_list.context)
+        folders_list.adapter = adapter
 
-    override fun get_sync_folder(): File {
-       return _sync_folder
-    }
+        presenter.getMappingFolders().forEach{ x ->
+            adapter.add(FolderSelectModel(x, _outside_folders))
+        }
 
-    override fun get_ip_address(): String  {
-        return _ip_address?.text.toString()
-    }
+        saveSettingsButton.setOnClickListener { view ->
+            presenter.save()
+        }
 
-    private fun openFolderChooser(sync_folder: String): View.OnClickListener? {
-        return View.OnClickListener {  ChooserDialog(this@SettingsFragment.requireActivity())
-            .withFilter(true, false)
-            .withStartFile(sync_folder)
-            .withChosenListener { path, pathFile ->
-                _sync_folder = pathFile
-                set_path(path)
-            }
-            .build()
-            .show()
+        addFolderButton.setOnClickListener { view ->
+            adapter.add(FolderSelectModel(createFolderMappingLocalModel(), _outside_folders))
+        }
+
+        checkConnectionButton.setOnClickListener { view ->
+            presenter.check_connection(get_ip_address(), get_ip_port(), get_login(), get_password())
         }
     }
 
-    private fun set_path(path: String){
-        textDirectory.text = "FOLDER: $path"
+    override fun get_ip_port(): Int {
+        return port_textbox?.editText?.text.toString().toInt()
+    }
+
+    override fun get_login(): String {
+        return login_textbox?.editText?.text.toString()
+    }
+
+    override fun get_password(): String {
+        return password_textbox?.editText?.text.toString()
+    }
+
+    override fun get_sync_folders(): Array<FolderSelectModel> {
+        return adapter.items.toTypedArray()
+    }
+
+    override fun get_ip_address(): String  {
+        return ip_address_textbox?.editText?.text.toString()
+    }
+
+    private fun createFolderMappingLocalModel(): FolderMappingLocalModel {
+        var i = 0
+
+        for (item in adapter.items)
+        {
+            if (i == item.folFolderMappingLocalModel.id)
+            {
+                i++
+            }
+            else
+            {
+                break
+            }
+        }
+
+        return FolderMappingLocalModel(i, String(), String())
     }
 }
