@@ -22,6 +22,10 @@ abstract class BaseListAdapter<VH: BaseViewHolder<T>, T: Any> : RecyclerView.Ada
         notifyDataSetChanged()
     }
 
+    override fun clear() {
+        items.clear()
+        notifyDataSetChanged()
+    }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.bind(items, position)

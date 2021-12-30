@@ -69,6 +69,10 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
         adapter.add(message)
     }
 
+    override fun clear_events() {
+        adapter.clear()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)

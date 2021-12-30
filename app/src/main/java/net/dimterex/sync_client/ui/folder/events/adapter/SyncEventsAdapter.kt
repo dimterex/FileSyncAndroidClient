@@ -39,10 +39,10 @@ class LogViewHolder(view: View,
 
         itemView.item_log_order.text = repo.number
         itemView.item_log_state.text = fileSyncTypeFormatter.format(repo.state)
-        itemView.item_log_name.text = repo.id
-        itemView.item_log_details.text = fileStatusFormatter.format(repo.details)
+        itemView.item_log_name.text = repo.inside_path
+        itemView.item_log_details.text = fileStatusFormatter.format(repo.process)
 
-        itemView.setOnClickListener { listener(repo.id) }
+        itemView.setOnClickListener { listener(repo.inside_path) }
     }
 }
 
@@ -54,8 +54,8 @@ class LogHousesCallback(private val oldList: List<FileSyncState>, private val ne
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldList[oldItemPosition].id == newList[newItemPosition].id
+        oldList[oldItemPosition].inside_path == newList[newItemPosition].inside_path
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldList[oldItemPosition].details == newList[newItemPosition].details
+        oldList[oldItemPosition].process == newList[newItemPosition].process
 }

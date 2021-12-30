@@ -28,7 +28,7 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
         super.onCreate(arguments)
 
         view.update(_event_log_manager.logs)
-        _event_log_manager.add_event_listener(this::add_event_listener, this::update_item)
+        _event_log_manager.add_event_listener(this::add_event_listener, this::update_item, this::clear_event)
         _connectionManager.addConnectionStateListener(this::connectedStateChange)
         _syncStateEventManager.add_event_listener(this::updateSyncState)
 
@@ -64,11 +64,16 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
     private fun updateSyncState(state: String) {
         view.updateSyncState(state)
     }
+
+    private fun clear_event(){
+        view.clear_events()
+    }
 }
 
 interface SyncView : BaseView {
 
     fun add_new_event(message: FileSyncState)
+    fun clear_events()
     fun update(logs: ArrayList<FileSyncState>)
     fun update_position(position: Int)
 

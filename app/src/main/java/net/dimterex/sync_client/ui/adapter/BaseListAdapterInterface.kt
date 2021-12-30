@@ -6,4 +6,6 @@ interface BaseListAdapterInterface<T: Any> {
     fun update(newList: List<T>, callBack: DiffUtil.Callback)
 
     fun add(newItem: T)
+
+    fun clear()
 }

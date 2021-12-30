@@ -11,6 +11,7 @@ import net.dimterex.sync_client.modules.*
 class SyncFilesRequestExecutor(
     private val _fileManager: FileManager,
     private val _jsonManager: JsonManager,
+    private val _fileState_eventManager: FileStateEventManager,
     private val _scopeFactory: ScopeFactory
 ) : IExecute<SyncFilesRequest> {
 
@@ -20,6 +21,7 @@ class SyncFilesRequestExecutor(
 
     override fun Execute(param: SyncFilesRequest) {
         param.files = _fileManager.getFileList()
+        _fileState_eventManager.clear_log()
         startProcessing(param)
     }
 

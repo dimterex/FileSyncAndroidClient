@@ -10,7 +10,7 @@ import java.io.*
 interface FileManager {
 
     fun joinToString(file_path: List<String>) : String
-    fun getFullPath(file_path: String) : File?
+    fun getInsideFilePath(file_path: String) : File?
 
     fun getFileList(): List<FileInfoItem>
 
@@ -29,7 +29,7 @@ interface FileManager {
             return file_path.joinToString(File.separator)
         }
 
-        override fun getFullPath(file_path: String) : File? {
+        override fun getInsideFilePath(file_path: String) : File? {
             _settingsManager.get_folder_mapping().forEach{ x ->
                 if (file_path.startsWith(x.outside_folder)) {
                     val new_file_path = getAdaptFileNameForUpload(file_path, x.inside_folder, x.outside_folder)

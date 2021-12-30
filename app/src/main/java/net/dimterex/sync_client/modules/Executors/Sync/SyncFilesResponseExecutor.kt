@@ -1,6 +1,5 @@
 package net.dimterex.sync_client.modules.Executors.Sync
 
-import android.net.Uri
 import android.util.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.GlobalScope.coroutineContext
@@ -39,37 +38,44 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
 
     override fun Execute(param: SyncFilesResponse) {
 
-        eventsCount = param.added_files.count() +
-                    param.removed_files.count() +
-                    param.uploaded_files.count() +
-                    param.updated_files.count()
+            eventsCount = param.added_files.count() +
+                        param.removed_files.count() +
+                        param.uploaded_files.count() +
+                        param.updated_files.count()
+
+            finishedCount = 0
+
+            if (eventsCount == 0) {
+                _syncStateEventManager.save_event("Done")
+                return
+            }
 
             var corrent_count = 0
 
             for (for_remove in param.removed_files)
             {
                 val path = fileManager.joinToString(for_remove.file_name)
-                val file = fileManager.getFullPath(path) ?: continue
+                val insideFilePath = fileManager.getInsideFilePath(path) ?: continue
 
                 corrent_count++
-                val fileSyncState = FileSyncState(file.path, FileSyncType.DELETE, "$corrent_count/$eventsCount")
+                val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DELETE, "$corrent_count/$eventsCount", 0)
                 _fileState_eventManager.save_event(fileSyncState)
 
-                val fileInfo = FileInfo(file.path, FileSyncType.DELETE)
+                val fileInfo = FileInfo(insideFilePath.path, FileSyncType.DELETE)
 
                 scope.launch {
                     actionsQueue.send(fileInfo)
                 }
             }
 
-            var itemCount = 0;
             for (for_download in param.added_files)
             {
                 val path = fileManager.joinToString(for_download.file_name)
-                val fileInfo = FileInfo(path,FileSyncType.DOWNLOAD, for_download.size)
+                val insideFilePath = fileManager.getInsideFilePath(path) ?: continue
+
+                val fileInfo = FileInfo(path, FileSyncType.DOWNLOAD, for_download.size)
                 corrent_count++
-                itemCount++
-                val fileSyncState = FileSyncState(path, FileSyncType.DOWNLOAD, "$corrent_count/$eventsCount")
+                val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DOWNLOAD, "$corrent_count/$eventsCount", 0)
                 _fileState_eventManager.save_event(fileSyncState)
 
                 scope.launch {
@@ -81,9 +87,10 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
             {
                 val path = fileManager.joinToString(for_upload.file_name)
                 val fileInfo = fileManager.getFileInfoForUpload(path)
+                val insideFilePath = fileManager.getInsideFilePath(path) ?: continue
 
                 corrent_count++
-                val fileSyncState = FileSyncState(fileInfo.second, FileSyncType.UPLOAD, "$corrent_count/$eventsCount")
+                val fileSyncState = FileSyncState(insideFilePath.path, fileInfo.second, FileSyncType.UPLOAD, "$corrent_count/$eventsCount", 0)
 
                 val fileInfo2 = FileInfo(path, FileSyncType.UPLOAD)
                 _fileState_eventManager.save_event(fileSyncState)
@@ -95,10 +102,12 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
             for (for_update in param.updated_files)
             {
                 val path = fileManager.joinToString(for_update.file_name)
+                val insideFilePath = fileManager.getInsideFilePath(path) ?: continue
+
                 corrent_count++
-                val fileSyncState = FileSyncState(path, FileSyncType.UPDATE, "$corrent_count/$eventsCount")
+                val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.UPDATE, "$corrent_count/$eventsCount", 0)
                 _fileState_eventManager.save_event(fileSyncState)
-                val fileInfo = FileInfo(path, FileSyncType.UPDATE)
+                val fileInfo = FileInfo(path, FileSyncType.UPDATE, for_update.size)
 
                 scope.launch {
                     actionsQueue.send(fileInfo)
@@ -163,7 +172,7 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
             inputStream?.let { stream ->
                 val streamAndUri = fileManager.getFileOutputStreamAndURI(item.name)
                 if (streamAndUri.first != null) {
-                    writeResponseStreamToDisk(item, streamAndUri.second, streamAndUri.first!!, stream)
+                    writeResponseStreamToDisk(item, item.name, streamAndUri.first!!, stream)
                 }
             }
 
@@ -180,7 +189,7 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
             if (item.exists()) {
                 if (item.delete())
                 {
-                    _fileState_eventManager.save_event(FileSyncState(item.path, FileSyncType.DELETE, String(),100))
+                    _fileState_eventManager.save_event(FileSyncState(item.path, item.path, FileSyncType.DELETE, String(),100))
                 }
                 else
                 {
@@ -197,14 +206,16 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
     private suspend fun update_file(baseFileInfo: FileInfo)
     {
         try {
-            val file = fileManager.getFullPath(baseFileInfo.name) ?: return
+            val file = fileManager.getInsideFilePath(baseFileInfo.name) ?: return
 
-            val removeFileInfo =  FileInfo(file.path, baseFileInfo.type, baseFileInfo.sizeBytes)
+            Log.i(TAG, "Waiting update ${baseFileInfo.name}")
+
+            val removeFileInfo = FileInfo(file.path, baseFileInfo.type, baseFileInfo.sizeBytes)
             val item = File(removeFileInfo.name)
             if (item.exists())
                 item.delete()
 
-            Log.i(TAG, "Waiting download ${baseFileInfo.name}")
+
 
             val response = _connectionManager.download(baseFileInfo.name)
 
@@ -216,7 +227,7 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
             inputStream?.let { stream ->
                 val streamAndUri = fileManager.getFileOutputStreamAndURI(baseFileInfo.name)
                 if (streamAndUri.first != null) {
-                    writeResponseStreamToDisk(baseFileInfo, streamAndUri.second, streamAndUri.first!!, stream)
+                    writeResponseStreamToDisk(baseFileInfo, file.path, streamAndUri.first!!, stream)
                 }
             }
         } catch (e: Throwable) {
@@ -240,7 +251,7 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
                 contentType = mediaType,
                 contentLength = item.first.sizeBytes,
                 progressCallback = { progress ->
-                    _fileState_eventManager.save_event(FileSyncState(item.second, FileSyncType.UPLOAD, String(), progress))
+                    _fileState_eventManager.save_event(FileSyncState(item.first.name, item.second, FileSyncType.UPLOAD, String(), progress))
                     Log.i(TAG, "Process ${progress} upload ${fileInfo.name}")
                 },
                 errorCallback = { e ->
@@ -324,7 +335,7 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    private suspend fun writeResponseStreamToDisk(fileInfo: FileInfo, uri: Uri, outputStream: OutputStream, inputStream: InputStream) {
+    private suspend fun writeResponseStreamToDisk(fileInfo: FileInfo, insideFilePath: String, outputStream: OutputStream, inputStream: InputStream) {
         var fileSizeDownloaded = 0L
 
         try {
@@ -344,7 +355,7 @@ class SyncFilesResponseExecutor(private val fileManager: FileManager,
 
                 if (lastProgress != progress) {
                     lastProgress = progress
-                    val fileSyncState = FileSyncState(fileInfo.name, FileSyncType.DOWNLOAD, String(), progress)
+                    val fileSyncState = FileSyncState(insideFilePath, fileInfo.name, FileSyncType.DOWNLOAD, String(), progress)
                     _fileState_eventManager.save_event(fileSyncState)
                     Log.i(TAG, "Process ${progress} download ${fileInfo.name}")
                 }
