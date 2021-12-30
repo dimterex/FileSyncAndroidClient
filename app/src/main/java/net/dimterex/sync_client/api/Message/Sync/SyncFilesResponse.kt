@@ -14,4 +14,7 @@ class SyncFilesResponse : IMessage {
 
     @SerializedName("uploaded_files")
     var uploaded_files : List<FileUploadRequest> = ArrayList()
+
+    @SerializedName("updated_files")
+    var updated_files : List<FileUpdatedResponse> = ArrayList()
 }

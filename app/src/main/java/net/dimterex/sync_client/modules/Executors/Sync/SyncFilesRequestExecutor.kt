@@ -11,7 +11,6 @@ import net.dimterex.sync_client.modules.*
 class SyncFilesRequestExecutor(
     private val _fileManager: FileManager,
     private val _jsonManager: JsonManager,
-    private val _connectionManager: ConnectionManager,
     private val _scopeFactory: ScopeFactory
 ) : IExecute<SyncFilesRequest> {
 

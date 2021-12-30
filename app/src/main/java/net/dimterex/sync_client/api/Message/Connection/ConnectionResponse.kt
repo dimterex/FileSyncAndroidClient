@@ -11,5 +11,5 @@ class ConnectionResponse : IMessage {
     var token: String = String()
 
     @SerializedName("shared_folders")
-    var shared_folders: ArrayList<String> = ArrayList()
+    var shared_folders: ArrayList<SharedFolder> = ArrayList()
 }

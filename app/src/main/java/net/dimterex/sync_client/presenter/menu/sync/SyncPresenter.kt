@@ -9,6 +9,7 @@ import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.modules.ConnectionManager
 import net.dimterex.sync_client.modules.FileStateEventManager
 import net.dimterex.sync_client.modules.ExecuteManager
+import net.dimterex.sync_client.modules.SyncStateEventManager
 import net.dimterex.sync_client.presenter.base.BasePresenter
 import net.dimterex.sync_client.presenter.base.BaseView
 import org.kodein.di.erased.instance
@@ -19,6 +20,7 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
     private val _event_log_manager by instance<FileStateEventManager>()
     private val _connectionManager by instance<ConnectionManager>()
     private val _scopeFactory by instance<ScopeFactory>()
+    private val _syncStateEventManager by instance<SyncStateEventManager>()
 
     private var _mainScope: CoroutineScope? = null
 
@@ -28,6 +30,7 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
         view.update(_event_log_manager.logs)
         _event_log_manager.add_event_listener(this::add_event_listener, this::update_item)
         _connectionManager.addConnectionStateListener(this::connectedStateChange)
+        _syncStateEventManager.add_event_listener(this::updateSyncState)
 
         _mainScope = _scopeFactory.getMainScope()
 
@@ -57,6 +60,10 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
     private fun update_item(position: Int) {
         view.update_position(position)
     }
+
+    private fun updateSyncState(state: String) {
+        view.updateSyncState(state)
+    }
 }
 
 interface SyncView : BaseView {
@@ -66,4 +73,5 @@ interface SyncView : BaseView {
     fun update_position(position: Int)
 
     fun update_connected(isConnected: Boolean)
+    fun updateSyncState(state: String)
 }

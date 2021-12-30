@@ -8,5 +8,5 @@ import net.dimterex.sync_client.api.interfaces.IMessage
 class SyncFilesRequest : IMessage {
 
     @SerializedName("files")
-    var files : List<String> = ArrayList()
+    var files : List<FileInfoItem> = ArrayList()
 }

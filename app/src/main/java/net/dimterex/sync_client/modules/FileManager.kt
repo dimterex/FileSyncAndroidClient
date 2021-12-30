@@ -1,6 +1,7 @@
 package net.dimterex.sync_client.modules
 
 import android.net.Uri
+import net.dimterex.sync_client.api.Message.Sync.FileInfoItem
 import net.dimterex.sync_client.data.FileInfo
 import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
 import net.dimterex.sync_client.entity.FileSyncType
@@ -8,9 +9,10 @@ import java.io.*
 
 interface FileManager {
 
+    fun joinToString(file_path: List<String>) : String
     fun getFullPath(file_path: String) : File?
 
-    fun getFileList(): List<String>
+    fun getFileList(): List<FileInfoItem>
 
     fun getFileOutputStreamAndURI(filename: String): Pair<OutputStream?, Uri>
     fun getFileInfoForUpload(fileName: String): Pair<FileInfo, String>
@@ -23,12 +25,14 @@ interface FileManager {
             _settingsManager.add_listener(this::onSettingsRead)
         }
 
+        override fun joinToString(file_path: List<String>): String {
+            return file_path.joinToString(File.separator)
+        }
+
         override fun getFullPath(file_path: String) : File? {
-
             _settingsManager.get_folder_mapping().forEach{ x ->
-
                 if (file_path.startsWith(x.outside_folder)) {
-                    val new_file_path = getAdaptFileNameIncoming(file_path, x.inside_folder, x.outside_folder)
+                    val new_file_path = getAdaptFileNameForUpload(file_path, x.inside_folder, x.outside_folder)
                     return File(new_file_path)
                 }
             }
@@ -36,13 +40,19 @@ interface FileManager {
             return null
         }
 
-        override fun getFileList(): List<String> {
-            val fileList = ArrayList<String>()
+        override fun getFileList(): List<FileInfoItem> {
+            val fileList = ArrayList<FileInfoItem>()
             _folders.forEach { x ->
                 x.value.walk().forEach { file ->
                     if (file.isFile) {
-                        var file_name = getAdaptFileNameOutgoing(file.path, x.key.inside_folder, x.key.outside_folder)
-                        fileList.add(file_name)
+                        val file_name = getAdaptFileNameOutgoing(file.path, x.key.inside_folder, x.key.outside_folder)
+
+                        val path = file_name.split(File.separator)
+                        val fileInfoItem = FileInfoItem()
+                        fileInfoItem.path = path
+                        fileInfoItem.size = file.length()
+
+                        fileList.add(fileInfoItem)
                     }
                 }
             }
@@ -57,7 +67,7 @@ interface FileManager {
             _settingsManager.get_folder_mapping().forEach{ x ->
 
                 if (filename.startsWith(x.outside_folder)) {
-                    val file = File(getAdaptFileNameIncoming(filename, x.inside_folder, x.outside_folder))
+                    val file = File(getAdaptFileNameForUpload(filename, x.inside_folder, x.outside_folder))
                     file.parentFile.mkdirs()
                     file.createNewFile()
 
@@ -69,7 +79,6 @@ interface FileManager {
         }
 
         override fun getFileInfoForUpload(fileName: String): Pair<FileInfo, String> {
-
             _settingsManager.get_folder_mapping().forEach{ x ->
 
                 if (fileName.startsWith(x.outside_folder)) {
@@ -83,16 +92,12 @@ interface FileManager {
 
         }
 
-        private fun getAdaptFileNameIncoming(full_path: String, inside_path: String, outside: String ) : String {
-            return full_path.replace(outside, inside_path).replace("\\", "/");
-        }
-
         private fun getAdaptFileNameOutgoing(full_path: String, inside_path: String, outside: String ) : String {
-            return full_path.replace(inside_path, outside).replace("/", "\\");
+            return full_path.replace(inside_path, outside)
         }
 
         private fun getAdaptFileNameForUpload(full_path: String, inside_path: String, outside: String ) : String {
-            return full_path.replace(outside, inside_path).replace("\\", "/");
+            return full_path.replace(outside, inside_path)
         }
 
         private fun onSettingsRead() {

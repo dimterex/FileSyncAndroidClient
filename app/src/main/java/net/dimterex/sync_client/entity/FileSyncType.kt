@@ -4,4 +4,5 @@ enum class FileSyncType {
    DOWNLOAD,
    UPLOAD,
    DELETE,
+   UPDATE,
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import net.dimterex.sync_client.R
 import kotlinx.android.synthetic.main.sync_fragment_main.*
 import net.dimterex.sync_client.entity.FileSyncState
+import net.dimterex.sync_client.entity.FileSyncType
 import net.dimterex.sync_client.presenter.menu.sync.SyncPresenter
 import net.dimterex.sync_client.presenter.menu.sync.SyncView
 import net.dimterex.sync_client.ui.base.BaseFragment
@@ -53,7 +54,15 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
             return
 
         val statusItem = _menu!!.findItem(R.id.connectionStatusTextView) ?: return
-        statusItem.title  =_connectionIconFormatted!!.format(isConnected)
+        statusItem.title =_connectionIconFormatted!!.format(isConnected)
+    }
+
+    override fun updateSyncState(state: String) {
+        if (_menu == null)
+            return
+
+        val statusItem = _menu!!.findItem(R.id.syncStatusTextView) ?: return
+        statusItem.title = state
     }
 
     override fun add_new_event(message: FileSyncState){

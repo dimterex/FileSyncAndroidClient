@@ -11,5 +11,5 @@ class AddFileResponse : IMessage {
     val size : Long = 0
 
     @SerializedName("file_name")
-    var file_name : String = String()
+    var file_name : List<String> = ArrayList()
 }
