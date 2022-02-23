@@ -7,7 +7,8 @@ interface AvailableFoldersManager {
     val logs: ArrayList<String>
 
     fun save_event(string: String)
-    fun add_event_listener(addEventFunc: KFunction1<String, Unit>)
+    fun subscribe_added_event(addEventFunc: KFunction1<String, Unit>)
+    fun unsubscribe_added_event()
 
     class Impl(private val _settingsManager: SettingsManager) : AvailableFoldersManager {
 
@@ -27,8 +28,12 @@ interface AvailableFoldersManager {
             _addEventFunc?.invoke(string)
         }
 
-        override fun add_event_listener(addEventFunc: KFunction1<String, Unit>) {
+        override fun subscribe_added_event(addEventFunc: KFunction1<String, Unit>) {
             _addEventFunc = addEventFunc
+        }
+
+        override fun unsubscribe_added_event() {
+            _addEventFunc = null
         }
 
         private fun settingsReaded(){

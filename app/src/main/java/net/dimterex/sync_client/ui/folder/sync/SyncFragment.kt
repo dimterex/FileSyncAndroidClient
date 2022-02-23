@@ -89,6 +89,7 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
         return when (item.itemId) {
             R.id.sync_button -> {
                 presenter.sync_execute()
+                SyncDialogFragment().show(this.childFragmentManager, "MyCustomFragment")
                 true
             }
             R.id.connectionStatusTextView -> {

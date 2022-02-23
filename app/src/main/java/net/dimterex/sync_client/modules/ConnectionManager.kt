@@ -12,7 +12,7 @@ interface ConnectionManager {
 
     var isConnected: Boolean
     fun raiseConnection()
-    fun addConnectionStateListener(connectedStateChangeFunc: KFunction1<Boolean, Unit>)
+    fun subscribe_connection_state_change_event(connectedStateChangeFunc: KFunction1<Boolean, Unit>)
     fun restart_connection()
 
     fun setToken(token: String)
@@ -21,6 +21,7 @@ interface ConnectionManager {
     suspend fun download(name: String): Response<ResponseBody>
     suspend fun upload(fileName: String, fileRequestBody: RequestBody): Response<ResponseBody>
     suspend fun send_request(request: RequestBody): Response<ResponseBody>
+    fun unsubscribe_connection_state_change_event(kFunction1: KFunction1<Boolean, Unit>)
 
 
     class Impl(private val settingsManager: SettingsManager,
@@ -61,6 +62,8 @@ interface ConnectionManager {
             return _downloadService!!.sync(_token,  request)
         }
 
+
+
         private fun connect()
         {
             try {
@@ -77,8 +80,12 @@ interface ConnectionManager {
         }
 
 
-        override fun addConnectionStateListener(connectedStateChangeFunc: KFunction1<Boolean, Unit>) {
+        override fun subscribe_connection_state_change_event(connectedStateChangeFunc: KFunction1<Boolean, Unit>) {
             _connectedStateChangeFuncs.add(connectedStateChangeFunc)
+        }
+
+        override fun unsubscribe_connection_state_change_event(connectedStateChangeFunc: KFunction1<Boolean, Unit>) {
+            _connectedStateChangeFuncs.remove(connectedStateChangeFunc)
         }
 
         override fun restart_connection() {

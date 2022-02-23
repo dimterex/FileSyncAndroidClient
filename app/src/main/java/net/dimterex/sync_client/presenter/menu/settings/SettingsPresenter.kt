@@ -19,9 +19,13 @@ class SettingsPresenter(private val view: SettingsView) : BasePresenter(view) {
 
     override fun onCreate(arguments: Bundle?) {
         super.onCreate(arguments)
-
         view.profile = _settingsManager.get_connection_settings()
-        _availableFoldersManager.add_event_listener(this::add_event_listener)
+        _availableFoldersManager.subscribe_added_event(this::add_event_listener)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _availableFoldersManager.unsubscribe_added_event()
     }
 
     private fun add_event_listener(message: String){

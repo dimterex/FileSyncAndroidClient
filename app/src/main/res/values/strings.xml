@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Sync Client</string>
-    <string name="app_version">0.2.3</string>
+    <string name="app_version">0.2.4</string>
 
     <!--Sync-->
     <string name="sync_title">Main</string>
@@ -29,5 +29,16 @@
     <string name="password">Password</string>
     <string name="add">Add</string>
     <string name="save">Save</string>
+
+    <!--Exit-->
+    <string name="exit">Exit</string>
+    <string name="exit_question">Do you want to leave this application?</string>
+
+    <!--Sync info-->
+    <string name="added_count">Added files count:</string>
+    <string name="removed_count">Removed files count</string>
+    <string name="uploaded_count">Uploaded files count</string>
+    <string name="updated_count">Updated files count</string>
+
 
 </resources>

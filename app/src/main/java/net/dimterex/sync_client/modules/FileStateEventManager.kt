@@ -11,12 +11,14 @@ interface FileStateEventManager {
     val logs: ArrayList<FileSyncState>
 
     fun save_event(string: FileSyncState)
-    fun add_event_listener(
-        addEventFunc: KFunction1<FileSyncState, Unit>,
-        updEventFunc: KFunction1<Int, Unit>,
-        clear_event: () -> Unit
-    )
+
     fun clear_log()
+    fun subscribe_added_event(addEventFunc: KFunction1<FileSyncState, Unit>)
+    fun subscribe_updated_event(updEventFunc: KFunction1<Int, Unit>)
+    fun subscribe_clear_event(clear_event:() -> Unit)
+    fun unsubscribe_added_event()
+    fun unsubscribe_updated_event()
+    fun unsubscribe_clear_event()
 
     class Impl(private val _scopeFactory: ScopeFactory) : FileStateEventManager {
 
@@ -27,14 +29,32 @@ interface FileStateEventManager {
 
         override val logs: ArrayList<FileSyncState> = ArrayList<FileSyncState>()
 
-        override fun add_event_listener(addEventFunc: KFunction1<FileSyncState, Unit>, updEventFunc: KFunction1<Int, Unit>,  clear_event: () -> Unit) {
+        override fun clear_log() {
+            _clear_event?.invoke()
+        }
+
+        override fun subscribe_added_event(addEventFunc: KFunction1<FileSyncState, Unit>) {
             _addEventFunc = addEventFunc
+        }
+
+        override fun subscribe_updated_event(updEventFunc: KFunction1<Int, Unit>) {
             _updEventFunc = updEventFunc
+        }
+
+        override fun subscribe_clear_event(clear_event: () -> Unit) {
             _clear_event = clear_event
         }
 
-        override fun clear_log() {
-            _clear_event?.invoke()
+        override fun unsubscribe_added_event() {
+            _addEventFunc = null
+        }
+
+        override fun unsubscribe_updated_event() {
+            _updEventFunc = null
+        }
+
+        override fun unsubscribe_clear_event() {
+            _clear_event = null
         }
 
         override fun save_event(fileSyncState: FileSyncState) {

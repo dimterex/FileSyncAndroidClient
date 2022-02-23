@@ -18,4 +18,9 @@
         app:menu="@menu/settings_fragment_menu"
         android:label="@string/settings_title" />
 
+    <fragment
+            android:id="@+id/menuExit"
+            android:name="net.dimterex.sync_client.ui.folder.exit.ExitFragment"
+            android:label="@string/exit" />
+
 </navigation>

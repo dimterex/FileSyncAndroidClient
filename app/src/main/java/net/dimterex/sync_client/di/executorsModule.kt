@@ -15,7 +15,7 @@ import org.kodein.di.erased.singleton
 fun executorsModule(appContext: Context) = Kodein.Module("executors") {
 
     bind<SyncFilesRequestExecutor>() with singleton  { SyncFilesRequestExecutor(instance(), instance(), instance(), instance()) }
-    bind<SyncFilesResponseExecutor>() with singleton  { SyncFilesResponseExecutor(instance(), instance(), instance(), instance(), instance()) }
+    bind<SyncFilesResponseExecutor>() with singleton  { SyncFilesResponseExecutor(instance(), instance(), instance(), instance(), instance(), instance()) }
     bind<SyncApi>() with eagerSingleton  { SyncApi(instance(), instance(), instance()) }
 
 

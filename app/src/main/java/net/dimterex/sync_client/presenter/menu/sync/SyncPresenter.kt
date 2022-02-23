@@ -28,15 +28,24 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
         super.onCreate(arguments)
 
         view.update(_event_log_manager.logs)
-        _event_log_manager.add_event_listener(this::add_event_listener, this::update_item, this::clear_event)
-        _connectionManager.addConnectionStateListener(this::connectedStateChange)
-        _syncStateEventManager.add_event_listener(this::updateSyncState)
+        _event_log_manager.subscribe_added_event(this::add_event_listener)
+        _event_log_manager.subscribe_updated_event(this::update_item)
+        _event_log_manager.subscribe_clear_event(this::clear_event)
+        _connectionManager.subscribe_connection_state_change_event(this::connectedStateChange)
+        _syncStateEventManager.subscribe_update_event(this::updateSyncState)
 
         _mainScope = _scopeFactory.getMainScope()
-
         connectedStateChange(_connectionManager.isConnected)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _event_log_manager.unsubscribe_added_event()
+        _event_log_manager.unsubscribe_updated_event()
+        _event_log_manager.unsubscribe_clear_event()
+        _connectionManager.unsubscribe_connection_state_change_event(this::connectedStateChange)
+        _syncStateEventManager.unsubscribe_update_event()
+    }
 
     fun connectedStateChange(isConnected: Boolean) {
         _mainScope?.launch {

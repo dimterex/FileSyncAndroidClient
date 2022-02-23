@@ -6,7 +6,8 @@ import kotlin.reflect.KFunction1
 
 interface SyncStateEventManager {
     fun save_event(string: String)
-    fun add_event_listener(updEventFunc: KFunction1<String, Unit>)
+    fun subscribe_update_event(updEventFunc: KFunction1<String, Unit>)
+    fun unsubscribe_update_event()
 
     class Impl(private val _scopeFactory: ScopeFactory) : SyncStateEventManager {
 
@@ -20,8 +21,12 @@ interface SyncStateEventManager {
             }
         }
 
-        override fun add_event_listener(updEventFunc: KFunction1<String, Unit>) {
+        override fun subscribe_update_event(updEventFunc: KFunction1<String, Unit>) {
             _updEventFunc = updEventFunc
+        }
+
+        override fun unsubscribe_update_event() {
+            _updEventFunc = null
         }
     }
 }

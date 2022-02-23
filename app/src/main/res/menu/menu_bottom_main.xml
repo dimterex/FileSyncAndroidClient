@@ -11,4 +11,9 @@
             android:id="@+id/menuSettings"
             android:title="@string/settings_title" />
 
+    <item
+            android:icon="@android:drawable/ic_menu_manage"
+            android:id="@+id/menuExit"
+            android:title="@string/exit" />
+
 </menu>

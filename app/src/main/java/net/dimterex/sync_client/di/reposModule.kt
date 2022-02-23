@@ -22,6 +22,7 @@ val repoModule = Kodein.Module("repo") {
 
     bind<FileStateEventManager>() with singleton { FileStateEventManager.Impl(instance()) }
     bind<SyncStateEventManager>() with singleton { SyncStateEventManager.Impl(instance()) }
+    bind<SyncStateManager>() with singleton { SyncStateManager.Impl() }
     bind<AvailableFoldersManager>() with eagerSingleton { AvailableFoldersManager.Impl(instance()) }
 
     bind<RestClientBuilder>() with singleton { RestClientBuilder() }
