@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Sync Client</string>
-    <string name="app_version">0.2.4</string>
 
     <!--Sync-->
     <string name="sync_title">Main</string>
