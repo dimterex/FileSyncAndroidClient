@@ -12,7 +12,7 @@
             android:title="@string/settings_title" />
 
     <item
-            android:icon="@android:drawable/ic_menu_manage"
+            android:icon="@android:drawable/ic_menu_close_clear_cancel"
             android:id="@+id/menuExit"
             android:title="@string/exit" />
 

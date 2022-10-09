@@ -2,6 +2,7 @@ package net.dimterex.sync_client.modules
 
 import android.net.Uri
 import net.dimterex.sync_client.api.Message.Sync.FileInfoItem
+import net.dimterex.sync_client.api.Message.Sync.FolderItemInfo
 import net.dimterex.sync_client.data.FileInfo
 import net.dimterex.sync_client.data.entries.FolderMappingLocalModel
 import net.dimterex.sync_client.entity.FileSyncType
@@ -10,9 +11,10 @@ import java.io.*
 interface FileManager {
 
     fun joinToString(file_path: List<String>) : String
+    fun toPathArray(file_path: String) : List<String>
     fun getInsideFilePath(file_path: String) : File?
 
-    fun getFileList(): List<FileInfoItem>
+    fun getFolderInfos(): List<FolderItemInfo>
 
     fun getFileOutputStreamAndURI(filename: String): Pair<OutputStream?, Uri>
     fun getFileInfoForUpload(fileName: String): Pair<FileInfo, String>
@@ -29,6 +31,10 @@ interface FileManager {
             return file_path.joinToString(File.separator)
         }
 
+        override fun toPathArray(file_path: String): List<String> {
+            return file_path.split(File.separator)
+        }
+
         override fun getInsideFilePath(file_path: String) : File? {
             _settingsManager.get_folder_mapping().forEach{ x ->
                 if (file_path.startsWith(x.outside_folder)) {
@@ -40,9 +46,12 @@ interface FileManager {
             return null
         }
 
-        override fun getFileList(): List<FileInfoItem> {
-            val fileList = ArrayList<FileInfoItem>()
+        override fun getFolderInfos(): List<FolderItemInfo> {
+            val folderList = ArrayList<FolderItemInfo>()
             _folders.forEach { x ->
+                val folderItem = FolderItemInfo()
+                folderItem.path = x.key.outside_folder.split(File.separator)
+                folderList.add(folderItem)
                 x.value.walk().forEach { file ->
                     if (file.isFile) {
                         val file_name = getAdaptFileNameOutgoing(file.path, x.key.inside_folder, x.key.outside_folder)
@@ -52,11 +61,11 @@ interface FileManager {
                         fileInfoItem.path = path
                         fileInfoItem.size = file.length()
 
-                        fileList.add(fileInfoItem)
+                        folderItem.files.add(fileInfoItem)
                     }
                 }
             }
-            return fileList
+            return folderList
         }
 
 

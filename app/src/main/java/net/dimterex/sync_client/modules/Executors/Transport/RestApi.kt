@@ -1,5 +1,6 @@
 package net.dimterex.sync_client.modules.Executors.Transport
 
+import net.dimterex.sync_client.api.Message.Sync.FileInfoItem
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -20,7 +21,7 @@ interface IRestApi {
     @GET("/api/files/0/download")
     suspend fun download(
         @Query("token") token: String,
-        @Query("file_id") fileId: String?
+        @Query("file_id") fileId: String
     ): Response<ResponseBody>
 
     @Streaming

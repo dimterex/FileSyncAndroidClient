@@ -35,10 +35,12 @@
     <string name="exit_question">Do you want to leave this application?</string>
 
     <!--Sync info-->
-    <string name="added_count">Added files count:</string>
-    <string name="removed_count">Removed files count</string>
-    <string name="uploaded_count">Uploaded files count</string>
-    <string name="updated_count">Updated files count</string>
+    <string name="added_count">Device added files count:</string>
+    <string name="removed_count">Device removed files count</string>
+    <string name="uploaded_count">Device uploaded to server files count</string>
+    <string name="updated_count">Device updated files count</string>
+    <string name="server_removed_count">Server removed files count</string>
+    <string name="database_added_count">Database added files count</string>
 
 
 </resources>

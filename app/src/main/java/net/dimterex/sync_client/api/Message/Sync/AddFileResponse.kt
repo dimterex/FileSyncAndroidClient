@@ -4,7 +4,7 @@ import net.dimterex.sync_client.api.MessageAttr
 import com.google.gson.annotations.SerializedName
 import net.dimterex.sync_client.api.interfaces.IMessage
 
-@MessageAttr(name = "FileAddResponse")
+@MessageAttr(name = "file_add_response")
 class AddFileResponse : IMessage {
 
     @SerializedName("size")

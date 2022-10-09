@@ -5,6 +5,8 @@ import net.dimterex.sync_client.modules.Executors.Transport.IRestApi
 import net.dimterex.sync_client.modules.Executors.Transport.rest.RestClientBuilder
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Response
 import kotlin.reflect.KFunction1
 
@@ -18,8 +20,8 @@ interface ConnectionManager {
     fun setToken(token: String)
 
 
-    suspend fun download(name: String): Response<ResponseBody>
-    suspend fun upload(fileName: String, fileRequestBody: RequestBody): Response<ResponseBody>
+    suspend fun download(name: List<String>): Response<ResponseBody>
+    suspend fun upload(fileName: List<String>, fileRequestBody: RequestBody): Response<ResponseBody>
     suspend fun send_request(request: RequestBody): Response<ResponseBody>
     fun unsubscribe_connection_state_change_event(kFunction1: KFunction1<Boolean, Unit>)
 
@@ -46,23 +48,27 @@ interface ConnectionManager {
             setToken(String())
         }
 
-        override suspend fun download(name: String): Response<ResponseBody> {
-            return _downloadService!!.download(_token, name)
+        override suspend fun download(name: List<String>): Response<ResponseBody> {
+            val test = JSONObject()
+            test.putOpt("path", JSONArray(name))
+            val rawJson = test.toString()
+            return _downloadService!!.download(_token, rawJson)
         }
 
         override fun setToken(token: String) {
             _token = token
         }
 
-        override suspend fun upload(fileName: String, fileRequestBody: RequestBody): Response<ResponseBody> {
-            return _downloadService!!.upload(_token, fileName, fileRequestBody)
+        override suspend fun upload(fileName: List<String>, fileRequestBody: RequestBody): Response<ResponseBody> {
+            val test = JSONObject()
+            test.putOpt("path", JSONArray(fileName))
+            val rawJson = test.toString()
+            return _downloadService!!.upload(_token, rawJson, fileRequestBody)
         }
 
         override suspend fun send_request(request: RequestBody): Response<ResponseBody> {
             return _downloadService!!.sync(_token,  request)
         }
-
-
 
         private fun connect()
         {

@@ -3,7 +3,7 @@ package net.dimterex.sync_client.presenter.menu.sync
 import android.os.Bundle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import net.dimterex.sync_client.api.Message.Sync.SyncFilesRequest
+import net.dimterex.sync_client.api.Message.Sync.SyncStateFilesRequest
 import net.dimterex.sync_client.data.ScopeFactory
 import net.dimterex.sync_client.entity.FileSyncState
 import net.dimterex.sync_client.modules.ConnectionManager
@@ -54,7 +54,7 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
     }
 
     fun sync_execute() {
-        _executerManager.execute(SyncFilesRequest())
+        _executerManager.execute(SyncStateFilesRequest())
     }
 
     fun onRepoPressed(id: String) {

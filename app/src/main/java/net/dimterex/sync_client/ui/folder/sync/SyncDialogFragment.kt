@@ -17,6 +17,8 @@ class SyncDialogFragment : BaseDialogFragment<SyncDialogPresenter>(), SyncDialog
         removed_count_textview.text = "0"
         uploaded_count_textview.text = "0"
         updated_count_textview.text = "0"
+        server_removed_count_textview.text = "0"
+        database_added_count_textview.text = "0"
         btn_apply_sync.setOnClickListener {
             presenter.apply()
             dialog?.dismiss()
@@ -37,5 +39,13 @@ class SyncDialogFragment : BaseDialogFragment<SyncDialogPresenter>(), SyncDialog
 
     override fun update_update_files(updatedFilesCount: Int) {
         updated_count_textview.text = updatedFilesCount.toString()
+    }
+
+    override fun update_server_removed_files(serverRemovedCount: Int) {
+        server_removed_count_textview.text = serverRemovedCount.toString()
+    }
+
+    override fun update_database_added_files(databaseAddedCount: Int) {
+        database_added_count_textview.text = databaseAddedCount.toString()
     }
 }
