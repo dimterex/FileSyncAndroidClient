@@ -16,9 +16,7 @@ interface ConnectionManager {
     fun raiseConnection()
     fun subscribe_connection_state_change_event(connectedStateChangeFunc: KFunction1<Boolean, Unit>)
     fun restart_connection()
-
     fun setToken(token: String)
-
 
     suspend fun download(name: List<String>): Response<ResponseBody>
     suspend fun upload(fileName: List<String>, fileRequestBody: RequestBody): Response<ResponseBody>
@@ -84,7 +82,6 @@ interface ConnectionManager {
                 interrupt()
             }
         }
-
 
         override fun subscribe_connection_state_change_event(connectedStateChangeFunc: KFunction1<Boolean, Unit>) {
             _connectedStateChangeFuncs.add(connectedStateChangeFunc)

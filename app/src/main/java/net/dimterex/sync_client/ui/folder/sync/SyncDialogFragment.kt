@@ -13,16 +13,14 @@ class SyncDialogFragment : BaseDialogFragment<SyncDialogPresenter>(), SyncDialog
     override fun layoutId(): Int = R.layout.sync_dialog_fragment
 
     override fun initView() {
-        added_count_textview.text = "0"
-        removed_count_textview.text = "0"
-        uploaded_count_textview.text = "0"
-        updated_count_textview.text = "0"
-        server_removed_count_textview.text = "0"
-        database_added_count_textview.text = "0"
-        btn_apply_sync.setOnClickListener {
-            presenter.apply()
-            dialog?.dismiss()
-        }
+        added_count_textview.text = "-"
+        removed_count_textview.text = "-"
+        uploaded_count_textview.text = "-"
+        updated_count_textview.text = "-"
+        server_removed_count_textview.text = "-"
+        database_added_count_textview.text = "-"
+        btn_apply_sync.isEnabled = false
+
     }
 
     override fun update_added_files(addedFilesCount: Int) {
@@ -47,5 +45,13 @@ class SyncDialogFragment : BaseDialogFragment<SyncDialogPresenter>(), SyncDialog
 
     override fun update_database_added_files(databaseAddedCount: Int) {
         database_added_count_textview.text = databaseAddedCount.toString()
+    }
+
+    override fun enable_view() {
+        btn_apply_sync.setOnClickListener {
+            presenter.apply()
+            dialog?.dismiss()
+        }
+        btn_apply_sync.isEnabled = true
     }
 }

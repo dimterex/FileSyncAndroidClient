@@ -53,8 +53,14 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
         }
     }
 
-    fun sync_execute() {
-        _executerManager.execute(SyncStateFilesRequest())
+    fun can_sync_execute(): Boolean {
+        if (_connectionManager.isConnected)
+        {
+            _executerManager.execute(SyncStateFilesRequest())
+            return true
+        }
+        _connectionManager.restart_connection()
+        return false
     }
 
     fun onRepoPressed(id: String) {

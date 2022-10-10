@@ -54,7 +54,6 @@ interface JsonManager {
             _messageEnc[classType] = id
         }
 
-
         override fun restResponse(inputStream: String, type: Type) {
             messageReceivedListener(inputStream)
         }

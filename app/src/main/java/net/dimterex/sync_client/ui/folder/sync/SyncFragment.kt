@@ -88,8 +88,10 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.sync_button -> {
-                presenter.sync_execute()
-                SyncDialogFragment().show(this.childFragmentManager, "MyCustomFragment")
+
+                updateSyncState(String())
+                if (presenter.can_sync_execute())
+                    SyncDialogFragment().show(this.childFragmentManager, "SyncDialogFragment")
                 true
             }
             R.id.connectionStatusTextView -> {

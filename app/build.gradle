@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "net.dimterex.sync_client"
         minSdkVersion 16
@@ -17,6 +17,9 @@ android {
     }
     applicationVariants.all { variant ->
         variant.resValue "string", "app_version", variant.versionName
+    }
+    lintOptions {
+        baseline(file("lint-baseline.xml"))
     }
     buildFeatures {
         viewBinding = true

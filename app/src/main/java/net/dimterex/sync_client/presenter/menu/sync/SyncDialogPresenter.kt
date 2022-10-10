@@ -44,13 +44,13 @@ class SyncDialogPresenter(private val view: SyncDialogView) : BasePresenter(view
             view.update_update_files(updatedFilesCount)
             view.update_server_removed_files(serverRemovedCount)
             view.update_database_added_files(databaseAddedCount)
+            view.enable_view()
         }
     }
 
     fun apply() {
         _executerManager.execute(SyncStartFilesRequest())
     }
-
 }
 
 interface SyncDialogView : BaseView {
@@ -60,4 +60,5 @@ interface SyncDialogView : BaseView {
     fun update_update_files(updatedFilesCount: Int)
     fun update_server_removed_files(serverRemovedCount: Int)
     fun update_database_added_files(databaseAddedCount: Int)
+    fun enable_view()
 }
