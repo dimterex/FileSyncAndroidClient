@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import net.dimterex.sync_client.R
 import kotlinx.android.synthetic.main.sync_fragment_main.*
 import net.dimterex.sync_client.entity.FileSyncState
-import net.dimterex.sync_client.entity.FileSyncType
 import net.dimterex.sync_client.presenter.menu.sync.SyncPresenter
 import net.dimterex.sync_client.presenter.menu.sync.SyncView
 import net.dimterex.sync_client.ui.base.BaseFragment

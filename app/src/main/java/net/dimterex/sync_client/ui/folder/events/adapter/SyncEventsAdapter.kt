@@ -16,7 +16,6 @@ import net.dimterex.sync_client.ui.formatter.FileSyncTypeFormatter
 class SyncEventsAdapter(private val repoPressedListener: (id: String) -> Unit, private val _resources: Resources) : BaseListAdapter<LogViewHolder, FileSyncState>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogViewHolder =
-
         LogViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.sync_filestate_item, parent, false),
             FileStatusFormatter(_resources),

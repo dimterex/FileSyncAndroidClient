@@ -36,6 +36,8 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
 
         _mainScope = _scopeFactory.getMainScope()
         connectedStateChange(_connectionManager.isConnected)
+
+
     }
 
     override fun onDestroy() {
@@ -91,7 +93,6 @@ interface SyncView : BaseView {
     fun clear_events()
     fun update(logs: ArrayList<FileSyncState>)
     fun update_position(position: Int)
-
     fun update_connected(isConnected: Boolean)
     fun updateSyncState(state: String)
 }

@@ -31,19 +31,19 @@ class SyncDialogPresenter(private val view: SyncDialogView) : BasePresenter(view
         _syncStateManager.unsubscribe_update()
     }
 
-    private fun update(addedFilesCount: Int,
-                       removedFilesCount: Int,
-                       uploadedFilesCount: Int,
-                       updatedFilesCount: Int,
-                       serverRemovedCount: Int,
-                       databaseAddedCount: Int) {
+    private fun update(addedFiles: List<String>,
+                       removedFiles: List<String>,
+                       uploadedFiles: List<String>,
+                       updatedFiles: List<String>,
+                       serverRemoved: List<String>,
+                       databaseAdded: List<String>) {
         _mainScope?.launch {
-            view.update_added_files(addedFilesCount)
-            view.update_removed_files(removedFilesCount)
-            view.update_uploaded_files(uploadedFilesCount)
-            view.update_update_files(updatedFilesCount)
-            view.update_server_removed_files(serverRemovedCount)
-            view.update_database_added_files(databaseAddedCount)
+            view.update_added_files(addedFiles)
+            view.update_removed_files(removedFiles)
+            view.update_uploaded_files(uploadedFiles)
+            view.update_update_files(updatedFiles)
+            view.update_server_removed_files(serverRemoved)
+            view.update_database_added_files(databaseAdded)
             view.enable_view()
         }
     }
@@ -54,11 +54,11 @@ class SyncDialogPresenter(private val view: SyncDialogView) : BasePresenter(view
 }
 
 interface SyncDialogView : BaseView {
-    fun update_added_files(addedFilesCount: Int)
-    fun update_removed_files(removedFilesCount: Int)
-    fun update_uploaded_files(uploadedFilesCount: Int)
-    fun update_update_files(updatedFilesCount: Int)
-    fun update_server_removed_files(serverRemovedCount: Int)
-    fun update_database_added_files(databaseAddedCount: Int)
+    fun update_added_files(addedFiles: List<String>)
+    fun update_removed_files(removedFiles: List<String>)
+    fun update_uploaded_files(uploadedFiles: List<String>)
+    fun update_update_files(updatedFiles: List<String>)
+    fun update_server_removed_files(serverRemoved: List<String>)
+    fun update_database_added_files(databaseAdded: List<String>)
     fun enable_view()
 }
