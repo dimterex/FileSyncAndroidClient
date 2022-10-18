@@ -44,7 +44,6 @@ class FolderSelectionViewHolder(val view: View, val removeFunc: (oldItem: Folder
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(itemView.context, R.layout.simple_spinner_item, repo.folders)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-
         itemView.inside_folder.text = repo.folFolderMappingLocalModel.inside_folder
 
         val combobox = itemView.row_folder_spinner.editText as? AutoCompleteTextView;

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import net.dimterex.sync_client.R
 import kotlinx.android.synthetic.main.sync_fragment_main.*
 import net.dimterex.sync_client.entity.FileSyncState
+import net.dimterex.sync_client.entity.FileSyncType
 import net.dimterex.sync_client.presenter.menu.sync.SyncPresenter
 import net.dimterex.sync_client.presenter.menu.sync.SyncView
 import net.dimterex.sync_client.ui.base.BaseFragment
@@ -94,6 +95,7 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
                 true
             }
             R.id.connectionStatusTextView -> {
+                add_new_event(FileSyncState("SOME PATh", "outside_path", FileSyncType.UPDATE, "1/4444", 50))
                 true
             }
 

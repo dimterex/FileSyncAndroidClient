@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/button_margin"
->
+        android:layout_margin="@dimen/button_margin">
 
     <TextView
             android:id="@+id/file_path"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_margin="@dimen/button_margin"
             tools:text="PathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPath" />
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
