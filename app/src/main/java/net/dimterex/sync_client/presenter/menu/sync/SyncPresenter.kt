@@ -6,10 +6,7 @@ import kotlinx.coroutines.launch
 import net.dimterex.sync_client.api.Message.Sync.SyncStateFilesRequest
 import net.dimterex.sync_client.data.ScopeFactory
 import net.dimterex.sync_client.entity.FileSyncState
-import net.dimterex.sync_client.modules.ConnectionManager
-import net.dimterex.sync_client.modules.FileStateEventManager
-import net.dimterex.sync_client.modules.ExecuteManager
-import net.dimterex.sync_client.modules.SyncStateEventManager
+import net.dimterex.sync_client.modules.*
 import net.dimterex.sync_client.presenter.base.BasePresenter
 import net.dimterex.sync_client.presenter.base.BaseView
 import org.kodein.di.erased.instance
@@ -21,6 +18,7 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
     private val _connectionManager by instance<ConnectionManager>()
     private val _scopeFactory by instance<ScopeFactory>()
     private val _syncStateEventManager by instance<SyncStateEventManager>()
+    private val _syncStateManager by instance<SyncStateManager>()
 
     private var _mainScope: CoroutineScope? = null
 
@@ -36,8 +34,6 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
 
         _mainScope = _scopeFactory.getMainScope()
         connectedStateChange(_connectionManager.isConnected)
-
-
     }
 
     override fun onDestroy() {
@@ -63,6 +59,10 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
         }
         _connectionManager.restart_connection()
         return false
+    }
+
+    fun executeLast() {
+        _syncStateManager.changeState(false)
     }
 
     fun onRepoPressed(id: String) {

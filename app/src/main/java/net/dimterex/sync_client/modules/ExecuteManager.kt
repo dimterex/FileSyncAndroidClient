@@ -13,9 +13,7 @@ interface ExecuteManager {
 
     fun execute(iMessage: IMessage)
 
-    class Impl(private val _jsonManager : JsonManager,
-               private val _scopeFactory: ScopeFactory
-    ) : ExecuteManager {
+    class Impl(private val _jsonManager : JsonManager) : ExecuteManager {
 
         private val _typesAction: HashMap<Type, IExecute<IMessage>> = HashMap()
 

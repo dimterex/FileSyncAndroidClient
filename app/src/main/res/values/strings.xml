@@ -12,6 +12,7 @@
     <string name="download">Download</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
+    <string name="auto_scroll">Autoscroll</string>
 
     <!--Settings-->
     <string name="settings_title">Settings</string>

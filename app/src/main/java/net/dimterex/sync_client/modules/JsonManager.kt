@@ -1,5 +1,6 @@
 package net.dimterex.sync_client.modules
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import net.dimterex.sync_client.api.interfaces.IMessage
@@ -23,11 +24,11 @@ interface JsonManager {
 
     suspend fun getPostMessage(iMessage: IMessage): Response<ResponseBody>
 
-    class Impl(private val _connection: ConnectionManager,
-               private val _settingsManager: SettingsManager) : JsonManager {
+    class Impl(private val _connection: ConnectionManager) : JsonManager {
         private val _gson : Gson = Gson()
         private val _messageEnc : HashMap<Type, String> = HashMap()
         private val _messageDec : HashMap<String, Type> = HashMap()
+        private val TAG = this::class.java.name
 
         private var _messageReceivedFunc: KFunction1<IMessage, Unit>? = null
 
@@ -37,6 +38,7 @@ interface JsonManager {
 
         private fun messageReceivedListener(raw_string: String)
         {
+            Log.d(TAG, "${raw_string}")
             val messages = _gson.fromJson(raw_string, Array<MessageContainer>::class.java)
             for (message in messages)
             {

@@ -28,22 +28,26 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
 
     private val TAG = this::class.java.name
 
-    private val actionsQueue = Channel<FileInfo>()
-    private val scope: CoroutineScope = _scopeFactory.getScope()
-    private var eventsCount = 0
-    private var finishedCount = 0
+    private val _actionsQueue = Channel<FileInfo>()
+    private val _scope: CoroutineScope = _scopeFactory.getScope()
+    private var _eventsCount = 0
+    private var _finishedCount = 0
+
+    private var _isSyncEnabled: Boolean = false
 
     override fun Execute(param: SyncStartFilesResponse) {
         val syncStateFilesResponse = _syncStateManager.syncStateFilesResponse ?: return
 
-        eventsCount = syncStateFilesResponse.added_files.count() +
+        _syncStateManager.subscribeStateChange(this::onStateChange)
+
+        _eventsCount = syncStateFilesResponse.added_files.count() +
                 syncStateFilesResponse.removed_files.count() +
                 syncStateFilesResponse.uploaded_files.count() +
                 syncStateFilesResponse.updated_files.count()
 
-        finishedCount = 0
+        _finishedCount = 0
 
-        if (eventsCount == 0) {
+        if (_eventsCount == 0) {
             _syncStateEventManager.save_event("Done")
             return
         }
@@ -56,13 +60,13 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
             val insideFilePath = _fileManager.getInsideFilePath(path) ?: continue
 
             corrent_count++
-            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DELETE, "$corrent_count/$eventsCount", 0)
+            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DELETE, "$corrent_count/$_eventsCount", 0)
             _fileState_eventManager.save_event(fileSyncState)
 
             val fileInfo = FileInfo(insideFilePath.path, FileSyncType.DELETE)
 
-            scope.launch {
-                actionsQueue.send(fileInfo)
+            _scope.launch {
+                _actionsQueue.send(fileInfo)
             }
         }
 
@@ -73,11 +77,11 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
 
             val fileInfo = FileInfo(path, FileSyncType.DOWNLOAD, for_download.size)
             corrent_count++
-            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DOWNLOAD, "$corrent_count/$eventsCount", 0)
+            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DOWNLOAD, "$corrent_count/$_eventsCount", 0)
             _fileState_eventManager.save_event(fileSyncState)
 
-            scope.launch {
-                actionsQueue.send(fileInfo)
+            _scope.launch {
+                _actionsQueue.send(fileInfo)
             }
         }
 
@@ -88,12 +92,12 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
             val insideFilePath = _fileManager.getInsideFilePath(path) ?: continue
 
             corrent_count++
-            val fileSyncState = FileSyncState(insideFilePath.path, fileInfo.second, FileSyncType.UPLOAD, "$corrent_count/$eventsCount", 0)
+            val fileSyncState = FileSyncState(insideFilePath.path, fileInfo.second, FileSyncType.UPLOAD, "$corrent_count/$_eventsCount", 0)
 
             val fileInfo2 = FileInfo(path, FileSyncType.UPLOAD)
             _fileState_eventManager.save_event(fileSyncState)
-            scope.launch {
-                actionsQueue.send(fileInfo2)
+            _scope.launch {
+                _actionsQueue.send(fileInfo2)
             }
         }
 
@@ -103,52 +107,39 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
             val insideFilePath = _fileManager.getInsideFilePath(path) ?: continue
 
             corrent_count++
-            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.UPDATE, "$corrent_count/$eventsCount", 0)
+            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.UPDATE, "$corrent_count/$_eventsCount", 0)
             _fileState_eventManager.save_event(fileSyncState)
             val fileInfo = FileInfo(path, FileSyncType.UPDATE, for_update.size)
 
-            scope.launch {
-                actionsQueue.send(fileInfo)
+            _scope.launch {
+                _actionsQueue.send(fileInfo)
             }
         }
 
-        startProcessing()
+        onStateChange(true);
     }
-
 
     @Suppress("BlockingMethodInNonBlockingContext")
     fun startProcessing() {
-        scope.launch {
+        _scope.launch {
 
             /**ALL**/
             launch(Dispatchers.IO) {
                 while (true) {
-                    val item = actionsQueue.receive()
+                    if (!_isSyncEnabled)
+                        break
+
+                    val item = _actionsQueue.receive()
 
                     val job = launch {
-                        if (item.type == FileSyncType.DOWNLOAD)
-                        {
-                            download_file(item)
-                            update_process()
+                        when(item.type) {
+                            FileSyncType.DOWNLOAD -> download_file(item)
+                            FileSyncType.UPLOAD -> upload_file(item)
+                            FileSyncType.DELETE -> remove_file(item)
+                            FileSyncType.UPDATE -> update_file(item)
                         }
+                        update_process()
 
-                        if (item.type == FileSyncType.DELETE)
-                        {
-                            remove_file(item)
-                            update_process()
-                        }
-
-                        if (item.type == FileSyncType.UPLOAD)
-                        {
-                            upload_file(item)
-                            update_process()
-                        }
-
-                        if (item.type == FileSyncType.UPDATE)
-                        {
-                            update_file(item)
-                            update_process()
-                        }
                     }
                     job.join()
                 }
@@ -193,7 +184,7 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
                 }
                 else
                 {
-                    // TODO: Log it
+                    Log.w(TAG, "Cant delete ${item}")
                 }
             }
 
@@ -379,7 +370,14 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
     }
 
     private fun update_process() {
-        finishedCount++
-        _syncStateEventManager.save_event("$finishedCount/$eventsCount")
+        _finishedCount++
+        _syncStateEventManager.save_event("$_finishedCount/$_eventsCount")
+    }
+
+    private fun onStateChange(isSyncEnabled: Boolean) {
+        _isSyncEnabled = isSyncEnabled
+
+        if (_isSyncEnabled)
+            startProcessing()
     }
 }

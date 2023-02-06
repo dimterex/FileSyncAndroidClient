@@ -1,6 +1,7 @@
 package net.dimterex.sync_client.presenter.menu.sync
 
 import android.os.Bundle
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import net.dimterex.sync_client.api.Message.Sync.SyncStartFilesRequest
@@ -17,18 +18,20 @@ class SyncDialogPresenter(private val view: SyncDialogView) : BasePresenter(view
     private val _syncStateManager by instance<SyncStateManager>()
     private val _scopeFactory by instance<ScopeFactory>()
     private val _executerManager by instance<ExecuteManager>()
+    private val TAG = this::class.java.name
 
-    private var _mainScope: CoroutineScope? = null
+    private var _mainScope: CoroutineScope = _scopeFactory.getMainScope()
 
     override fun onCreate(arguments: Bundle?) {
-        super.onCreate(arguments)
         _syncStateManager.subscribe_update(this::update)
-        _mainScope = _scopeFactory.getMainScope()
+        super.onCreate(arguments)
+        Log.d(TAG, "onCreate")
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _syncStateManager.unsubscribe_update()
+        Log.d(TAG, "onDestroy")
     }
 
     private fun update(addedFiles: List<String>,
@@ -37,7 +40,10 @@ class SyncDialogPresenter(private val view: SyncDialogView) : BasePresenter(view
                        updatedFiles: List<String>,
                        serverRemoved: List<String>,
                        databaseAdded: List<String>) {
-        _mainScope?.launch {
+
+        Log.d(TAG, "update: ${addedFiles.count()}")
+        _mainScope.launch {
+            Log.d(TAG, "update in main scope")
             view.update_added_files(addedFiles)
             view.update_removed_files(removedFiles)
             view.update_uploaded_files(uploadedFiles)

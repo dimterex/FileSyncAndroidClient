@@ -1,15 +1,12 @@
 package net.dimterex.sync_client.ui.folder.sync.adapter
 
 import android.content.Context
-import android.database.DataSetObserver
-import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
-import android.widget.ExpandableListAdapter
 import android.widget.TextView
-import kotlinx.android.synthetic.main.sync_filestate_item.view.*
 import net.dimterex.sync_client.R
 import net.dimterex.sync_client.entity.SyncStateModel
 
@@ -17,6 +14,7 @@ import net.dimterex.sync_client.entity.SyncStateModel
 class CustomExpandableListAdapter(private val context: Context) : BaseExpandableListAdapter() {
     private val expandableListTitle: ArrayList<SyncStateModel> = ArrayList<SyncStateModel>()
     private val expandableListDetail: HashMap<SyncStateModel, List<String>> = HashMap<SyncStateModel, List<String>>()
+    private val TAG = this::class.java.name
 
     override fun getChild(listPosition: Int, expandedListPosition: Int): Any {
         return expandableListDetail[expandableListTitle[listPosition]]!!.get(expandedListPosition)
@@ -30,17 +28,18 @@ class CustomExpandableListAdapter(private val context: Context) : BaseExpandable
         listPosition: Int, expandedListPosition: Int,
         isLastChild: Boolean, convertView: View?, parent: ViewGroup?
     ): View {
+        Log.d(TAG, "getChildView")
 
-        var convertView: View? = convertView
+        var newView: View? = convertView
         val expandedListText = getChild(listPosition, expandedListPosition) as String
 
-        if (convertView == null) {
+        if (newView == null) {
             val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertView = layoutInflater.inflate(R.layout.sync_state_element_list_item, null)
+            newView = layoutInflater.inflate(R.layout.sync_state_element_list_item, null)
         }
-        val expandedListTextView = convertView?.findViewById(R.id.file_path) as TextView
+        val expandedListTextView = newView!!.findViewById(R.id.file_path) as TextView
         expandedListTextView.text = expandedListText
-        return convertView
+        return newView
     }
 
     override fun getChildrenCount(listPosition: Int): Int {
@@ -63,23 +62,26 @@ class CustomExpandableListAdapter(private val context: Context) : BaseExpandable
         listPosition: Int, isExpanded: Boolean,
         convertView: View?, parent: ViewGroup?
     ): View {
-        var convertView: View? = convertView
+        Log.d(TAG, "getGroupView")
+        var newView: View? = convertView
         val listTitle = getGroup(listPosition) as SyncStateModel
 
-        if (convertView == null) {
+        if (newView == null) {
             val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertView =  layoutInflater.inflate(R.layout.sync_state_element, null)
+            newView =  layoutInflater.inflate(R.layout.sync_state_element, null)
         }
-        val listTitleTextView = convertView!!.findViewById(R.id.sync_state_element_title) as TextView
+        val listTitleTextView = newView!!.findViewById(R.id.sync_state_element_title) as TextView
         listTitleTextView.text = listTitle.name
 
-        val countTextView = convertView.findViewById(R.id.added_count_textview) as TextView
+        val countTextView = newView.findViewById(R.id.added_count_textview) as TextView
         countTextView.text = listTitle.count
-        return convertView
+        Log.d(TAG, "${countTextView.text}")
+        Log.d(TAG, "${newView}")
+        return newView
     }
 
     override fun hasStableIds(): Boolean {
-        return false
+        return true
     }
 
     override fun isChildSelectable(listPosition: Int, expandedListPosition: Int): Boolean {

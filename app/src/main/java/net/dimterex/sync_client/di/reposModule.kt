@@ -14,11 +14,11 @@ val repoModule = Kodein.Module("repo") {
 
     bind<ConnectionManager>() with singleton { ConnectionManager.Impl(instance(), instance()) }
 
-    bind<JsonManager>() with singleton { JsonManager.Impl(instance(), instance()) }
+    bind<JsonManager>() with singleton { JsonManager.Impl(instance() )}
 
     bind<FileManager>() with singleton { FileManager.Impl(instance()) }
 
-    bind<ExecuteManager>() with singleton { ExecuteManager.Impl(instance(), instance()) }
+    bind<ExecuteManager>() with singleton { ExecuteManager.Impl(instance()) }
 
     bind<FileStateEventManager>() with singleton { FileStateEventManager.Impl(instance()) }
     bind<SyncStateEventManager>() with singleton { SyncStateEventManager.Impl(instance()) }

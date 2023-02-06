@@ -10,6 +10,12 @@
             app:showAsAction="always" />
 
     <item
+            android:id="@+id/autoscroll_button"
+            android:icon="@android:drawable/checkbox_on_background"
+            android:title="@string/auto_scroll"
+            app:showAsAction="collapseActionView" />
+
+    <item
             android:id="@+id/connectionStatusTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,6 +26,6 @@
             android:id="@+id/sync_button"
             android:icon="@android:drawable/ic_popup_sync"
             android:title="@string/btn_sync"
-            app:showAsAction="always"/>
+            app:showAsAction="always" />
 
 </menu>
