@@ -14,7 +14,7 @@ class SyncStateFilesResponse : IMessage {
     var removed_files : List<RemoveFileResponse> = ArrayList()
 
     @SerializedName("uploaded_files")
-    var uploaded_files : List<FileUploadRequest> = ArrayList()
+    var uploaded_files : List<FileUploadResponse> = ArrayList()
 
     @SerializedName("updated_files")
     var updated_files : List<FileUpdatedResponse> = ArrayList()

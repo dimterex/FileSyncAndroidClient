@@ -16,6 +16,11 @@ class CustomExpandableListAdapter(private val context: Context) : BaseExpandable
     private val expandableListDetail: HashMap<SyncStateModel, List<String>> = HashMap<SyncStateModel, List<String>>()
     private val TAG = this::class.java.name
 
+    fun clear() {
+        expandableListTitle.clear()
+        expandableListDetail.clear()
+    }
+
     override fun getChild(listPosition: Int, expandedListPosition: Int): Any {
         return expandableListDetail[expandableListTitle[listPosition]]!!.get(expandedListPosition)
     }

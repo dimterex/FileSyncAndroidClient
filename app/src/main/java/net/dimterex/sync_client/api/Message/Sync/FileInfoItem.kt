@@ -9,4 +9,7 @@ class FileInfoItem {
 
     @SerializedName("size")
     var size : Long = 0
+
+    @SerializedName("timestamp")
+    var timestamp: Long = 0
 }

@@ -27,6 +27,10 @@ class SyncDialogFragment () : BaseDialogFragment<SyncDialogPresenter>(), SyncDia
         settingsConnectionPanel.setAdapter(expandableListAdapter)
     }
 
+    override fun reset() {
+        expandableListAdapter?.clear()
+    }
+
     override fun update_added_files(addedFiles: List<String>) {
         val syncStateModel = SyncStateModel(resources.getString(R.string.added_count), addedFiles.size.toString())
         update(syncStateModel, addedFiles)

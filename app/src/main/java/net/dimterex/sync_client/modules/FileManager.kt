@@ -60,7 +60,7 @@ interface FileManager {
                         val fileInfoItem = FileInfoItem()
                         fileInfoItem.path = path
                         fileInfoItem.size = file.length()
-
+                        fileInfoItem.timestamp = file.lastModified()
                         folderItem.files.add(fileInfoItem)
                     }
                 }

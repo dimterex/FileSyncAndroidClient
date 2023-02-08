@@ -44,6 +44,7 @@ class SyncDialogPresenter(private val view: SyncDialogView) : BasePresenter(view
         Log.d(TAG, "update: ${addedFiles.count()}")
         _mainScope.launch {
             Log.d(TAG, "update in main scope")
+            view.reset()
             view.update_added_files(addedFiles)
             view.update_removed_files(removedFiles)
             view.update_uploaded_files(uploadedFiles)
@@ -60,6 +61,7 @@ class SyncDialogPresenter(private val view: SyncDialogView) : BasePresenter(view
 }
 
 interface SyncDialogView : BaseView {
+    fun reset()
     fun update_added_files(addedFiles: List<String>)
     fun update_removed_files(removedFiles: List<String>)
     fun update_uploaded_files(uploadedFiles: List<String>)

@@ -355,14 +355,14 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
                     lastProgress = progress
                     val fileSyncState = FileSyncState(insideFilePath, fileInfo.name, FileSyncType.DOWNLOAD, String(), progress)
                     _fileState_eventManager.save_event(fileSyncState)
-                    Log.i(TAG, "Process ${progress} download ${fileInfo.name}")
+                    Log.d(TAG, "Process ${progress} download ${fileInfo.name}")
                 }
             }
             outputStream.flush()
             Log.i(TAG, "Ending download ${fileInfo.name}")
 
         } catch (ex: Exception) {
-            println(ex)
+            Log.e(TAG, ex.toString())
         } finally {
             inputStream.close()
             outputStream.close()
