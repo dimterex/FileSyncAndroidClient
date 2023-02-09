@@ -43,20 +43,13 @@ class SettingsPresenter(private val view: SettingsView) : BasePresenter(view) {
     fun save() {
         val new_sync_folder = view.get_sync_folders()
 
-
-        _settingsManager.remove_all_folders()
-
-        new_sync_folder.forEach {
-            _settingsManager.add_folder(it.folFolderMappingLocalModel)
-        }
-
         val connectionSettings = _settingsManager.get_connection_settings()
         connectionSettings.ip_address = view.get_ip_address()
         connectionSettings.ip_port = view.get_ip_port()
         connectionSettings.login = view.get_login()
         connectionSettings.password = view.get_password()
 
-        _settingsManager.save_settings()
+        _settingsManager.update_settings(new_sync_folder.map { it.folFolderMappingLocalModel })
     }
 
 

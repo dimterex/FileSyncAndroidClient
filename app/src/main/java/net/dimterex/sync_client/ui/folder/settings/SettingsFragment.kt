@@ -1,6 +1,7 @@
 package net.dimterex.sync_client.ui.folder.settings
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -17,6 +18,8 @@ import net.dimterex.sync_client.ui.base.BaseFragment
 import net.dimterex.sync_client.ui.folder.sync.adapter.FolderSelectionAdapter
 
 class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
+
+    private val TAG = this::class.java.name
 
     private var _menu: Menu? = null
     private lateinit var adapter: FolderSelectionAdapter
@@ -40,7 +43,6 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
         adapter.items.forEach { x ->
             x.folders.clear()
             x.folders.addAll(_outside_folders)
-//            adapter.notifyItemChanged(adapter.items.indexOf(x))
         }
     }
 
@@ -103,6 +105,7 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
             }
             R.id.addFolderButton -> {
                 adapter.add(FolderSelectModel(createFolderMappingLocalModel(), _outside_folders))
+                folders_list.scrollToPosition(adapter.items.size - 1)
                 true
             }
             R.id.checkConnectionButton -> {
@@ -115,20 +118,15 @@ class SettingsFragment : BaseFragment<SettingsPresenter>(), SettingsView {
     }
 
     private fun createFolderMappingLocalModel(): FolderMappingLocalModel {
-        var i = 0
+        var newId = 0
+        if (adapter.items.size > 0) {
+            var maxValue = adapter.items.maxBy { it.folFolderMappingLocalModel.id }
 
-        for (item in adapter.items)
-        {
-            if (i == item.folFolderMappingLocalModel.id)
-            {
-                i++
-            }
-            else
-            {
-                break
-            }
+            Log.d(TAG, "Max ${maxValue.folFolderMappingLocalModel.id}: ${maxValue.folFolderMappingLocalModel.inside_folder}")
+            newId = maxValue.folFolderMappingLocalModel.id + 1
         }
+        Log.d(TAG, "New id ${newId}")
 
-        return FolderMappingLocalModel(i, String(), String())
+        return FolderMappingLocalModel(newId, String(), String())
     }
 }

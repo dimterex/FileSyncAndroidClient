@@ -55,7 +55,6 @@ class FolderSelectionViewHolder(val view: View, val removeFunc: (oldItem: Folder
             combobox?.setText(repo.folFolderMappingLocalModel.outside_folder)
         }
 
-        // устанавливаем обработчик нажатия
         combobox?.onItemClickListener  = FolderSelectionCallback(repo)
 
         itemView.changeFolderButton.setOnClickListener(openFolderChooser(repo.folFolderMappingLocalModel, itemView))
