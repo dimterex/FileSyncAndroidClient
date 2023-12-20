@@ -2,6 +2,7 @@ package net.dimterex.sync_client.ui.folder.sync
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -13,12 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.sync_fragment_main.*
 import net.dimterex.sync_client.R
 import net.dimterex.sync_client.entity.FileSyncState
+import net.dimterex.sync_client.entity.FileSyncType
 import net.dimterex.sync_client.presenter.menu.sync.SyncPresenter
 import net.dimterex.sync_client.presenter.menu.sync.SyncView
 import net.dimterex.sync_client.ui.base.BaseFragment
 import net.dimterex.sync_client.ui.folder.sync.adapter.SyncEventsAdapter
 import net.dimterex.sync_client.ui.formatter.AutoscrollButtonFormatter
 import net.dimterex.sync_client.ui.formatter.ConnectionIconFormatted
+import kotlin.concurrent.thread
 
 
 class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
@@ -109,6 +112,7 @@ class SyncFragment : BaseFragment<SyncPresenter>(), SyncView {
                 true
             }
             R.id.connectionStatusTextView -> {
+                presenter.test_action()
                 true
             }
 

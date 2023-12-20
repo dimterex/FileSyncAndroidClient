@@ -43,6 +43,7 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
         _eventsCount = syncStateFilesResponse.added_files.count() +
                 syncStateFilesResponse.removed_files.count() +
                 syncStateFilesResponse.uploaded_files.count() +
+                syncStateFilesResponse.server_removed_files.count() +
                 syncStateFilesResponse.updated_files.count()
 
         _finishedCount = 0
@@ -54,16 +55,24 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
 
         var corrent_count = 0
 
+        for (server_removed in syncStateFilesResponse.server_removed_files)
+        {
+            val path = _fileManager.joinToString(server_removed.file_name)
+            corrent_count++
+            val fileSyncState = FileSyncState(path, path, FileSyncType.SERVER_DELETE, "$corrent_count/$_eventsCount", 100)
+            _fileState_eventManager.save_event(fileSyncState)
+        }
+
         for (for_remove in syncStateFilesResponse.removed_files)
         {
             val path = _fileManager.joinToString(for_remove.file_name)
             val insideFilePath = _fileManager.getInsideFilePath(path) ?: continue
 
             corrent_count++
-            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DELETE, "$corrent_count/$_eventsCount", 0)
+            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DEVICE_DELETE, "$corrent_count/$_eventsCount", 0)
             _fileState_eventManager.save_event(fileSyncState)
 
-            val fileInfo = FileInfo(insideFilePath.path, FileSyncType.DELETE)
+            val fileInfo = FileInfo(insideFilePath.path, FileSyncType.DEVICE_DELETE)
 
             _scope.launch {
                 _actionsQueue.send(fileInfo)
@@ -135,8 +144,9 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
                         when(item.type) {
                             FileSyncType.DOWNLOAD -> download_file(item)
                             FileSyncType.UPLOAD -> upload_file(item)
-                            FileSyncType.DELETE -> remove_file(item)
+                            FileSyncType.DEVICE_DELETE -> remove_file(item)
                             FileSyncType.UPDATE -> update_file(item)
+                            else -> {}
                         }
                         update_process()
 
@@ -180,7 +190,7 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
             if (item.exists()) {
                 if (item.delete())
                 {
-                    _fileState_eventManager.save_event(FileSyncState(item.path, item.path, FileSyncType.DELETE, String(),100))
+                    _fileState_eventManager.save_event(FileSyncState(item.path, item.path, FileSyncType.DEVICE_DELETE, String(),100))
                 }
                 else
                 {

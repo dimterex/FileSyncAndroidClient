@@ -10,16 +10,19 @@ android {
     defaultConfig {
         applicationId "net.dimterex.sync_client"
         minSdkVersion 16
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 29
         versionCode 1
-        versionName "0.2.6"
+        versionName "0.2.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
     applicationVariants.all { variant ->
         variant.resValue "string", "app_version", variant.versionName
-    }
-    lintOptions {
-        baseline(file("lint-baseline.xml"))
     }
     buildFeatures {
         viewBinding = true

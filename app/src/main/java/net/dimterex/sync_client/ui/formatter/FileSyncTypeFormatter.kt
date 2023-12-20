@@ -13,7 +13,7 @@ class FileSyncTypeFormatter (private val _resources: Resources) {
         if (fileSyncType == FileSyncType.UPLOAD)
             return _resources.getString(R.string.upload)
 
-        if (fileSyncType == FileSyncType.DELETE)
+        if (fileSyncType == FileSyncType.DEVICE_DELETE)
             return _resources.getString(R.string.remove)
 
         return "$fileSyncType"

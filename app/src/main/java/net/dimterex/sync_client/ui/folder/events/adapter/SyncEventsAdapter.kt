@@ -1,6 +1,8 @@
 package net.dimterex.sync_client.ui.folder.sync.adapter
 
 import android.content.res.Resources
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,10 +38,11 @@ class LogViewHolder(view: View,
     override fun bind(items: List<FileSyncState>, position: Int) {
         val repo = items[position]
 
-        itemView.item_log_order.text = repo.number
+        // itemView.item_log_order.text = repo.number
         itemView.item_log_state.text = fileSyncTypeFormatter.format(repo.state)
         itemView.item_log_name.text = repo.inside_path
-        itemView.item_log_details.text = fileStatusFormatter.format(repo.process)
+        itemView.item_log_details.progress = repo.process
+        itemView.item_log_details.progressDrawable.setColorFilter(fileStatusFormatter.format(repo.process), PorterDuff.Mode.SRC_IN)
 
         itemView.setOnClickListener { listener(repo.inside_path) }
     }

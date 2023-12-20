@@ -1,11 +1,13 @@
 package net.dimterex.sync_client.presenter.menu.sync
 
 import android.os.Bundle
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import net.dimterex.sync_client.api.Message.Sync.SyncStateFilesRequest
 import net.dimterex.sync_client.data.ScopeFactory
 import net.dimterex.sync_client.entity.FileSyncState
+import net.dimterex.sync_client.entity.FileSyncType
 import net.dimterex.sync_client.modules.*
 import net.dimterex.sync_client.presenter.base.BasePresenter
 import net.dimterex.sync_client.presenter.base.BaseView
@@ -63,6 +65,20 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
 
     fun executeLast() {
         _syncStateManager.changeState(false)
+    }
+
+    var count = 0
+    var item = FileSyncState("inside", "outside", FileSyncType.DOWNLOAD, "1", 0)
+
+    fun test_action() {
+        if (count == 0) {
+            _mainScope?.launch { view.add_new_event(item) }
+        }
+
+        item.process = count
+        update_item(0)
+
+        count += 10
     }
 
     fun onRepoPressed(id: String) {

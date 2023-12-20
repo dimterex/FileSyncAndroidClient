@@ -22,7 +22,7 @@ class CustomExpandableListAdapter(private val context: Context) : BaseExpandable
     }
 
     override fun getChild(listPosition: Int, expandedListPosition: Int): Any {
-        return expandableListDetail[expandableListTitle[listPosition]]!!.get(expandedListPosition)
+        return expandableListDetail[expandableListTitle[listPosition]]!![expandedListPosition]
     }
 
     override fun getChildId(listPosition: Int, expandedListPosition: Int): Long {

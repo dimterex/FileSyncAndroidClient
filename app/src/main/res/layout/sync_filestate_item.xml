@@ -8,16 +8,16 @@
     android:layout_margin="@dimen/button_margin">
 
 
-    <TextView
-            android:id="@+id/item_log_order"
+<!--    <TextView-->
+<!--            android:id="@+id/item_log_order"-->
 
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.17"
-            android:layout_margin="@dimen/button_margin"
-            tools:text="999/1000" />
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintWidth_percent="0.17"-->
+<!--            android:layout_margin="@dimen/button_margin"-->
+<!--            tools:text="999/1000" />-->
 
     <TextView
             android:id="@+id/item_log_state"
@@ -25,9 +25,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintWidth_percent="0.2"
-
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/item_log_order"
             app:layout_constraintEnd_toStartOf="@id/item_log_name"
 
             android:layout_margin="@dimen/button_margin"
@@ -37,7 +36,8 @@
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_log_state"
-        app:layout_constraintEnd_toStartOf="@id/item_log_details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
 
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -45,19 +45,15 @@
         android:layout_margin="@dimen/button_margin"
         tools:text="PathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPathPath" />
 
-    <TextView
+    <ProgressBar
             android:id="@+id/item_log_details"
-
-            app:layout_constraintWidth_percent="0.2"
-            app:layout_constraintStart_toEndOf="@id/item_log_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
-            android:layout_margin="@dimen/button_margin"
-            tools:text="State details" />
+            app:layout_constraintTop_toBottomOf="@id/item_log_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/button_margin"
+            tools:progress="100" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
