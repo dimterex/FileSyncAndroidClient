@@ -80,8 +80,8 @@ class CustomExpandableListAdapter(private val context: Context) : BaseExpandable
 
         val countTextView = newView.findViewById(R.id.added_count_textview) as TextView
         countTextView.text = listTitle.count
-        Log.d(TAG, "${countTextView.text}")
-        Log.d(TAG, "${newView}")
+        Log.d(TAG, "Count: ${countTextView.text}")
+        Log.d(TAG, "Title: ${listTitleTextView.text}")
         return newView
     }
 

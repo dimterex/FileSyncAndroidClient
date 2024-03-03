@@ -1,9 +1,9 @@
 package net.dimterex.sync_client.presenter.menu.sync
 
 import android.os.Bundle
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import net.dimterex.sync_client.api.Message.Connection.ConnectionRequest
 import net.dimterex.sync_client.api.Message.Sync.SyncStateFilesRequest
 import net.dimterex.sync_client.data.ScopeFactory
 import net.dimterex.sync_client.entity.FileSyncState
@@ -59,7 +59,9 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
             _executerManager.execute(SyncStateFilesRequest())
             return true
         }
+        _syncStateManager.syncStateFilesResponse = null
         _connectionManager.restart_connection()
+        _executerManager.execute(ConnectionRequest())
         return false
     }
 
@@ -83,7 +85,6 @@ class SyncPresenter(private val view: SyncView) : BasePresenter(view) {
 
     fun onRepoPressed(id: String) {
         println(id)
-//        view.navigateRepoDetails(id)
     }
 
     private fun add_event_listener(message: FileSyncState){

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -19,16 +18,17 @@
                 android:layout_height="wrap_content"
                 android:text="Some text example"
                 style="@style/CustomTextBox"
-                android:layout_weight=".30">
+                android:layout_weight=".20">
         </TextView>
 
         <TextView
                 android:id="@+id/added_count_textview"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="Some count example"
                 style="@style/CustomTextBox"
-                android:layout_weight=".70">
+                android:layout_weight=".80">
         </TextView>
     </LinearLayout>
 

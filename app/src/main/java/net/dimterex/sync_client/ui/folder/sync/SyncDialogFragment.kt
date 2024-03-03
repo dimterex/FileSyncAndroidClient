@@ -1,7 +1,5 @@
 package net.dimterex.sync_client.ui.folder.sync
 
-import android.content.res.Resources
-import android.widget.ExpandableListView
 import kotlinx.android.synthetic.main.sync_dialog_fragment.*
 import net.dimterex.sync_client.R
 import net.dimterex.sync_client.entity.SyncStateModel
@@ -22,9 +20,12 @@ class SyncDialogFragment () : BaseDialogFragment<SyncDialogPresenter>(), SyncDia
 
     override fun initView() {
         btn_apply_sync.isEnabled = false
-
+        dialog?.setCanceledOnTouchOutside(false);
         expandableListAdapter = CustomExpandableListAdapter(context!!)
         settingsConnectionPanel.setAdapter(expandableListAdapter)
+        btn_cancel_sync.setOnClickListener {
+            dialog?.dismiss()
+        }
     }
 
     override fun reset() {
@@ -62,7 +63,6 @@ class SyncDialogFragment () : BaseDialogFragment<SyncDialogPresenter>(), SyncDia
     }
 
     override fun enable_view() {
-
         btn_apply_sync.text = resources.getString(R.string.btn_sync)
         btn_apply_sync.setOnClickListener {
             presenter.apply()
@@ -71,7 +71,7 @@ class SyncDialogFragment () : BaseDialogFragment<SyncDialogPresenter>(), SyncDia
         btn_apply_sync.isEnabled = true
     }
 
-    private fun update(synsStateModel: SyncStateModel, children: List<String>){
+    private fun update(synsStateModel: SyncStateModel, children: List<String>) {
         if (expandableListAdapter == null)
             return
 

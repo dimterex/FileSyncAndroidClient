@@ -5,6 +5,7 @@
     <string name="sync_title">Main</string>
     <string name="btn_sync">Sync</string>
     <string name="btn_syncing">Syncing</string>
+    <string name="btn_cancel">Cancel</string>
     <string name="btn_send_file">Send files</string>
     <string name="waiting">Waiting</string>
     <string name="done">Done</string>

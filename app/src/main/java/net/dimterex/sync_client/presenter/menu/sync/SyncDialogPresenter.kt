@@ -30,6 +30,7 @@ class SyncDialogPresenter(private val view: SyncDialogView) : BasePresenter(view
 
     override fun onDestroy() {
         super.onDestroy()
+        view.reset()
         _syncStateManager.unsubscribe_update()
         Log.d(TAG, "onDestroy")
     }

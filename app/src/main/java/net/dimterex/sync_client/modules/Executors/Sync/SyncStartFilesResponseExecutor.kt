@@ -53,23 +53,23 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
             return
         }
 
-        var corrent_count = 0
+        var currentCount = 0
 
-        for (server_removed in syncStateFilesResponse.server_removed_files)
+        for (serverRemoved in syncStateFilesResponse.server_removed_files)
         {
-            val path = _fileManager.joinToString(server_removed.file_name)
-            corrent_count++
-            val fileSyncState = FileSyncState(path, path, FileSyncType.SERVER_DELETE, "$corrent_count/$_eventsCount", 100)
+            val path = _fileManager.joinToString(serverRemoved.file_name)
+            currentCount++
+            val fileSyncState = FileSyncState(path, path, FileSyncType.SERVER_DELETE, "$currentCount/$_eventsCount", 100)
             _fileState_eventManager.save_event(fileSyncState)
         }
 
-        for (for_remove in syncStateFilesResponse.removed_files)
+        for (forRemove in syncStateFilesResponse.removed_files)
         {
-            val path = _fileManager.joinToString(for_remove.file_name)
+            val path = _fileManager.joinToString(forRemove.file_name)
             val insideFilePath = _fileManager.getInsideFilePath(path) ?: continue
 
-            corrent_count++
-            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DEVICE_DELETE, "$corrent_count/$_eventsCount", 0)
+            currentCount++
+            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DEVICE_DELETE, "$currentCount/$_eventsCount", 0)
             _fileState_eventManager.save_event(fileSyncState)
 
             val fileInfo = FileInfo(insideFilePath.path, FileSyncType.DEVICE_DELETE)
@@ -79,14 +79,14 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
             }
         }
 
-        for (for_download in syncStateFilesResponse.added_files)
+        for (forDownload in syncStateFilesResponse.added_files)
         {
-            val path = _fileManager.joinToString(for_download.file_name)
+            val path = _fileManager.joinToString(forDownload.file_name)
             val insideFilePath = _fileManager.getInsideFilePath(path) ?: continue
 
-            val fileInfo = FileInfo(path, FileSyncType.DOWNLOAD, for_download.size)
-            corrent_count++
-            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DOWNLOAD, "$corrent_count/$_eventsCount", 0)
+            val fileInfo = FileInfo(path, FileSyncType.DOWNLOAD, forDownload.size)
+            currentCount++
+            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.DOWNLOAD, "$currentCount/$_eventsCount", 0)
             _fileState_eventManager.save_event(fileSyncState)
 
             _scope.launch {
@@ -94,14 +94,14 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
             }
         }
 
-        for (for_upload in syncStateFilesResponse.uploaded_files)
+        for (forUpload in syncStateFilesResponse.uploaded_files)
         {
-            val path = _fileManager.joinToString(for_upload.file_name)
+            val path = _fileManager.joinToString(forUpload.file_name)
             val fileInfo = _fileManager.getFileInfoForUpload(path)
             val insideFilePath = _fileManager.getInsideFilePath(path) ?: continue
 
-            corrent_count++
-            val fileSyncState = FileSyncState(insideFilePath.path, fileInfo.second, FileSyncType.UPLOAD, "$corrent_count/$_eventsCount", 0)
+            currentCount++
+            val fileSyncState = FileSyncState(insideFilePath.path, fileInfo.second, FileSyncType.UPLOAD, "$currentCount/$_eventsCount", 0)
 
             val fileInfo2 = FileInfo(path, FileSyncType.UPLOAD)
             _fileState_eventManager.save_event(fileSyncState)
@@ -110,15 +110,15 @@ class SyncStartFilesResponseExecutor(private val _fileManager: FileManager,
             }
         }
 
-        for (for_update in syncStateFilesResponse.updated_files)
+        for (forUpdate in syncStateFilesResponse.updated_files)
         {
-            val path = _fileManager.joinToString(for_update.file_name)
+            val path = _fileManager.joinToString(forUpdate.file_name)
             val insideFilePath = _fileManager.getInsideFilePath(path) ?: continue
 
-            corrent_count++
-            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.UPDATE, "$corrent_count/$_eventsCount", 0)
+            currentCount++
+            val fileSyncState = FileSyncState(insideFilePath.path, path, FileSyncType.UPDATE, "$currentCount/$_eventsCount", 0)
             _fileState_eventManager.save_event(fileSyncState)
-            val fileInfo = FileInfo(path, FileSyncType.UPDATE, for_update.size)
+            val fileInfo = FileInfo(path, FileSyncType.UPDATE, forUpdate.size)
 
             _scope.launch {
                 _actionsQueue.send(fileInfo)

@@ -25,9 +25,8 @@ interface SyncStateManager {
 
         override var syncStateFilesResponse: SyncStateFilesResponse? = null
             set(value) {
-                raise_update(value)
-
                 field = value
+                raise_update(value)
             }
 
         override fun changeState(isSyncEnabled: Boolean) {
@@ -63,6 +62,8 @@ interface SyncStateManager {
             if (_update_func == null) {
                 return
             }
+
+            Log.d(TAG, "Added count: ${value.added_files.count()}")
 
             _update_func!!.invoke(
                 value.added_files.map { x -> x.file_name.last() },

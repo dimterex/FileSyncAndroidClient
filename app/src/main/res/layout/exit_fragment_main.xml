@@ -6,7 +6,7 @@
         android:layout_height="match_parent">
 
     <TextView
-            android:id="@+id/settingsConnectionPanel"
+            android:id="@+id/exitConnectionPanel"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:layout_gravity="center_vertical"
@@ -23,6 +23,6 @@
             android:layout_height="40dp"
             android:layout_margin="16dp"
             android:text="@string/exit"
-            app:layout_constraintTop_toBottomOf="@+id/settingsConnectionPanel" />
+            app:layout_constraintTop_toBottomOf="@+id/exitConnectionPanel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
