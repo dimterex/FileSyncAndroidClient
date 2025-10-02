@@ -23,6 +23,7 @@ interface JsonManager {
     fun restResponse(inputStream: String, type: Type)
 
     suspend fun getPostMessage(iMessage: IMessage): Response<ResponseBody>
+    suspend fun createJsonRequestBody(iMessage: IMessage) : RequestBody
 
     class Impl(private val _connection: ConnectionManager) : JsonManager {
         private val _gson : Gson = Gson()
@@ -64,7 +65,8 @@ interface JsonManager {
             return _connection.send_request(createJsonRequestBody(iMessage))
         }
 
-        private fun createJsonRequestBody(iMessage: IMessage) : RequestBody
+
+        override suspend fun createJsonRequestBody(iMessage: IMessage) : RequestBody
         {
             val msgArr = ArrayList<MessageContainer>()
             val msg: MessageContainer = serialize(iMessage)!!

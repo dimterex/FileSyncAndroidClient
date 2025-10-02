@@ -12,7 +12,7 @@ class ConnectionRequestExecutor(
     private val _jsonManager: JsonManager,
     private val _settingsManager: SettingsManager,
     private val _executerManager: ExecuteManager,
-
+    private val _connectionManager: ConnectionManager,
     private val _scopeFactory: ScopeFactory
 ) : IExecute<ConnectionRequest> {
 
@@ -34,11 +34,13 @@ class ConnectionRequestExecutor(
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    fun startProcessing(param: ConnectionRequest) {
+    fun startProcessing(connectionRequest: ConnectionRequest) {
 
         scope.launch {
             try {
-                val response = _jsonManager.getPostMessage(param)
+                val request = _jsonManager.createJsonRequestBody(connectionRequest)
+                val response = _connectionManager.send_connection_request(request)
+
                 if (!response.isSuccessful)
                     throw Exception("File not found!")
 

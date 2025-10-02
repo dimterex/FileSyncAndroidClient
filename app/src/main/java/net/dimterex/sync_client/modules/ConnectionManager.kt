@@ -21,6 +21,7 @@ interface ConnectionManager {
     suspend fun download(name: List<String>): Response<ResponseBody>
     suspend fun upload(fileName: List<String>, fileRequestBody: RequestBody): Response<ResponseBody>
     suspend fun send_request(request: RequestBody): Response<ResponseBody>
+    suspend fun send_connection_request(request: RequestBody): Response<ResponseBody>
     fun unsubscribe_connection_state_change_event(kFunction1: KFunction1<Boolean, Unit>)
 
 
@@ -32,7 +33,7 @@ interface ConnectionManager {
 
         private val _connectedStateChangeFuncs: ArrayList<KFunction1<Boolean, Unit>>
 
-        private var _downloadService: IRestApi? = null
+        private var _restApi: IRestApi? = null
         private var _token: String = String()
         override var isConnected: Boolean = false
 
@@ -50,7 +51,7 @@ interface ConnectionManager {
             val test = JSONObject()
             test.putOpt("path", JSONArray(name))
             val rawJson = test.toString()
-            return _downloadService!!.download(_token, rawJson)
+            return _restApi!!.download(_token, rawJson)
         }
 
         override fun setToken(token: String) {
@@ -61,11 +62,15 @@ interface ConnectionManager {
             val test = JSONObject()
             test.putOpt("path", JSONArray(fileName))
             val rawJson = test.toString()
-            return _downloadService!!.upload(_token, rawJson, fileRequestBody)
+            return _restApi!!.upload(_token, rawJson, fileRequestBody)
         }
 
         override suspend fun send_request(request: RequestBody): Response<ResponseBody> {
-            return _downloadService!!.sync(_token,  request)
+            return _restApi!!.sync(_token,  request)
+        }
+
+        override suspend fun send_connection_request(request: RequestBody): Response<ResponseBody> {
+            return _restApi!!.connection(_token,  request)
         }
 
         private fun connect()
@@ -75,7 +80,7 @@ interface ConnectionManager {
                 val connectionsLocalModel = settingsManager.get_connection_settings()
 
                 Log.i(TAG, "${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}")
-                _downloadService = _restClientBuilder.createService("${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}", false)
+                _restApi = _restClientBuilder.createService("${connectionsLocalModel.ip_address}:${connectionsLocalModel.ip_port}", false)
 
             } catch (e: Exception) {
                 println(e.toString())
